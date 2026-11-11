@@ -1,0 +1,260 @@
+{
+  "schema_version": "semantic_kb.v1",
+  "skills": {
+    "skill_acquire_object": [
+      {
+        "version": "288e358ee0997fdbc69c8a4d245bee32b0b3f64b93775e2582d2bc7230c947d1",
+        "path": "versions/skill_acquire_object/288e358ee0997fdbc69c8a4d245bee32b0b3f64b93775e2582d2bc7230c947d1.json",
+        "status": "unverified",
+        "source_sha256": [
+          "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "64bba6b880dabaf9c68f4f4c9047ed7d79828e8eb8c0a1eba429af953e47d7a2",
+          "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db"
+        ]
+      },
+      {
+        "version": "f84be075b3f679fae9255c4b90a56769ed65aa122e334a9bf524ddb5007bb78b",
+        "path": "versions/skill_acquire_object/f84be075b3f679fae9255c4b90a56769ed65aa122e334a9bf524ddb5007bb78b.json",
+        "status": "unverified",
+        "source_sha256": [
+          "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "64bba6b880dabaf9c68f4f4c9047ed7d79828e8eb8c0a1eba429af953e47d7a2",
+          "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db"
+        ]
+      },
+      {
+        "version": "c620484dd4368f848220445c1e72c21aa3a92bef1cb788633e0d511815ecb619",
+        "path": "versions/skill_acquire_object/c620484dd4368f848220445c1e72c21aa3a92bef1cb788633e0d511815ecb619.json",
+        "status": "unverified",
+        "source_sha256": [
+          "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "64bba6b880dabaf9c68f4f4c9047ed7d79828e8eb8c0a1eba429af953e47d7a2",
+          "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db"
+        ]
+      }
+    ],
+    "skill_grasp_object": [
+      {
+        "version": "21bbff5259af0e2b50a6c29ad3f9bc5505f9a0cfb95352e252ae8c396c8ff62f",
+        "path": "versions/skill_grasp_object/21bbff5259af0e2b50a6c29ad3f9bc5505f9a0cfb95352e252ae8c396c8ff62f.json",
+        "status": "unverified",
+        "source_sha256": [
+          "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db"
+        ]
+      },
+      {
+        "version": "980cc2ee9ef4ae6ae32bea684ef8c685511af5cb6d238da4ac5be37c2311cc55",
+        "path": "versions/skill_grasp_object/980cc2ee9ef4ae6ae32bea684ef8c685511af5cb6d238da4ac5be37c2311cc55.json",
+        "status": "unverified",
+        "source_sha256": [
+          "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db"
+        ]
+      },
+      {
+        "version": "4c7e1e8d4a01900bb20aac40fbb9c36aed802ff40aa6b7506327161f63e021eb",
+        "path": "versions/skill_grasp_object/4c7e1e8d4a01900bb20aac40fbb9c36aed802ff40aa6b7506327161f63e021eb.json",
+        "status": "unverified",
+        "source_sha256": [
+          "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db"
+        ]
+      }
+    ],
+    "skill_open_object": [
+      {
+        "version": "9104767b1ae797de1460f2ae70fcb2b669fd1929b762989f5b5782aafe2f5213",
+        "path": "versions/skill_open_object/9104767b1ae797de1460f2ae70fcb2b669fd1929b762989f5b5782aafe2f5213.json",
+        "status": "unverified",
+        "source_sha256": [
+          "56456ad2921248480103e61fb2a4dfb9d30a6ef278d72f3b8b6aaa990c70a096"
+        ]
+      },
+      {
+        "version": "7df4191eac88eee79ad2a5b313e5c81747fec52c61f0e4322e7c43c4b29fe6ee",
+        "path": "versions/skill_open_object/7df4191eac88eee79ad2a5b313e5c81747fec52c61f0e4322e7c43c4b29fe6ee.json",
+        "status": "unverified",
+        "source_sha256": [
+          "56456ad2921248480103e61fb2a4dfb9d30a6ef278d72f3b8b6aaa990c70a096"
+        ]
+      },
+      {
+        "version": "177b560f668265a4700b5fe9e1020880e856b0f933a085ba30ccdd04297ef9f8",
+        "path": "versions/skill_open_object/177b560f668265a4700b5fe9e1020880e856b0f933a085ba30ccdd04297ef9f8.json",
+        "status": "unverified",
+        "source_sha256": [
+          "56456ad2921248480103e61fb2a4dfb9d30a6ef278d72f3b8b6aaa990c70a096"
+        ]
+      }
+    ],
+    "skill_place_object": [
+      {
+        "version": "4b407d0734ca6536e3812bfb8d323c43cccd81a7bcd2585ca436b39e1a9af9b2",
+        "path": "versions/skill_place_object/4b407d0734ca6536e3812bfb8d323c43cccd81a7bcd2585ca436b39e1a9af9b2.json",
+        "status": "unverified",
+        "source_sha256": [
+          "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "64bba6b880dabaf9c68f4f4c9047ed7d79828e8eb8c0a1eba429af953e47d7a2",
+          "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "c5151974b28491217a5a7475d3261ff6c1c90a28b27c7e48fcebd1e6089a043d",
+          "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db"
+        ]
+      },
+      {
+        "version": "d0e6e239207d8f681fcd243f996b6e3f6c2493eb380b8fc5fa7dff092ddbad9f",
+        "path": "versions/skill_place_object/d0e6e239207d8f681fcd243f996b6e3f6c2493eb380b8fc5fa7dff092ddbad9f.json",
+        "status": "unverified",
+        "source_sha256": [
+          "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "64bba6b880dabaf9c68f4f4c9047ed7d79828e8eb8c0a1eba429af953e47d7a2",
+          "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "c5151974b28491217a5a7475d3261ff6c1c90a28b27c7e48fcebd1e6089a043d",
+          "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db"
+        ]
+      },
+      {
+        "version": "489d0b0d4aa088665343bf64c81177d87e63ede68e6e394996dfc205b5ebd08f",
+        "path": "versions/skill_place_object/489d0b0d4aa088665343bf64c81177d87e63ede68e6e394996dfc205b5ebd08f.json",
+        "status": "unverified",
+        "source_sha256": [
+          "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "64bba6b880dabaf9c68f4f4c9047ed7d79828e8eb8c0a1eba429af953e47d7a2",
+          "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "c5151974b28491217a5a7475d3261ff6c1c90a28b27c7e48fcebd1e6089a043d",
+          "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db"
+        ]
+      }
+    ],
+    "skill_relocate_and_release": [
+      {
+        "version": "8af7ad36ee6be7a5151ac572ab4d52f8d0a8f0eaa09823635cb043aa579f7522",
+        "path": "versions/skill_relocate_and_release/8af7ad36ee6be7a5151ac572ab4d52f8d0a8f0eaa09823635cb043aa579f7522.json",
+        "status": "unverified",
+        "source_sha256": [
+          "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "64bba6b880dabaf9c68f4f4c9047ed7d79828e8eb8c0a1eba429af953e47d7a2",
+          "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "8ce7588bdfd5c6f7f603e88f1364861fdeb76d318d149a46a059da7536c0a608",
+          "8d8d07c0461817e219c187cf9bb736b9ded46df48bbf554cd068ef4faecdcbc3",
+          "a3b17a9eaf87f0fff255ad581c5e72e3df479d9658e8b8acd9306a28f460a0fc",
+          "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "c5151974b28491217a5a7475d3261ff6c1c90a28b27c7e48fcebd1e6089a043d",
+          "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db"
+        ]
+      },
+      {
+        "version": "fb697809710860a9bed7d39d2a86b35b9e7ad27f82d3059432a47b5df7a4eea4",
+        "path": "versions/skill_relocate_and_release/fb697809710860a9bed7d39d2a86b35b9e7ad27f82d3059432a47b5df7a4eea4.json",
+        "status": "unverified",
+        "source_sha256": [
+          "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "64bba6b880dabaf9c68f4f4c9047ed7d79828e8eb8c0a1eba429af953e47d7a2",
+          "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "8ce7588bdfd5c6f7f603e88f1364861fdeb76d318d149a46a059da7536c0a608",
+          "8d8d07c0461817e219c187cf9bb736b9ded46df48bbf554cd068ef4faecdcbc3",
+          "a3b17a9eaf87f0fff255ad581c5e72e3df479d9658e8b8acd9306a28f460a0fc",
+          "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "c5151974b28491217a5a7475d3261ff6c1c90a28b27c7e48fcebd1e6089a043d",
+          "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db"
+        ]
+      },
+      {
+        "version": "eb78cdaac976a5f3bc48e8881ef94b2309a0bdcc966bd5af2252fa65c4c86bd7",
+        "path": "versions/skill_relocate_and_release/eb78cdaac976a5f3bc48e8881ef94b2309a0bdcc966bd5af2252fa65c4c86bd7.json",
+        "status": "unverified",
+        "source_sha256": [
+          "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "64bba6b880dabaf9c68f4f4c9047ed7d79828e8eb8c0a1eba429af953e47d7a2",
+          "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "8ce7588bdfd5c6f7f603e88f1364861fdeb76d318d149a46a059da7536c0a608",
+          "8d8d07c0461817e219c187cf9bb736b9ded46df48bbf554cd068ef4faecdcbc3",
+          "a3b17a9eaf87f0fff255ad581c5e72e3df479d9658e8b8acd9306a28f460a0fc",
+          "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "c5151974b28491217a5a7475d3261ff6c1c90a28b27c7e48fcebd1e6089a043d",
+          "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db"
+        ]
+      }
+    ],
+    "skill_relocate_object": [
+      {
+        "version": "b262bae96241c160b291e616047f9d83060ae551fd9c93955a8a246c5b9dbe35",
+        "path": "versions/skill_relocate_object/b262bae96241c160b291e616047f9d83060ae551fd9c93955a8a246c5b9dbe35.json",
+        "status": "unverified",
+        "source_sha256": [
+          "8ce7588bdfd5c6f7f603e88f1364861fdeb76d318d149a46a059da7536c0a608",
+          "8d8d07c0461817e219c187cf9bb736b9ded46df48bbf554cd068ef4faecdcbc3",
+          "a3b17a9eaf87f0fff255ad581c5e72e3df479d9658e8b8acd9306a28f460a0fc",
+          "c5151974b28491217a5a7475d3261ff6c1c90a28b27c7e48fcebd1e6089a043d",
+          "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db"
+        ]
+      },
+      {
+        "version": "138c99258a4b2ab832c7f31bc0afbb8b0af8d7d8774deae39ba9ac820ecd90ff",
+        "path": "versions/skill_relocate_object/138c99258a4b2ab832c7f31bc0afbb8b0af8d7d8774deae39ba9ac820ecd90ff.json",
+        "status": "unverified",
+        "source_sha256": [
+          "8ce7588bdfd5c6f7f603e88f1364861fdeb76d318d149a46a059da7536c0a608",
+          "8d8d07c0461817e219c187cf9bb736b9ded46df48bbf554cd068ef4faecdcbc3",
+          "a3b17a9eaf87f0fff255ad581c5e72e3df479d9658e8b8acd9306a28f460a0fc",
+          "c5151974b28491217a5a7475d3261ff6c1c90a28b27c7e48fcebd1e6089a043d",
+          "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db"
+        ]
+      },
+      {
+        "version": "b15070b15355354d6d545e6cd2955d9d26a3ba256c6311f367efb87185742621",
+        "path": "versions/skill_relocate_object/b15070b15355354d6d545e6cd2955d9d26a3ba256c6311f367efb87185742621.json",
+        "status": "unverified",
+        "source_sha256": [
+          "8ce7588bdfd5c6f7f603e88f1364861fdeb76d318d149a46a059da7536c0a608",
+          "8d8d07c0461817e219c187cf9bb736b9ded46df48bbf554cd068ef4faecdcbc3",
+          "a3b17a9eaf87f0fff255ad581c5e72e3df479d9658e8b8acd9306a28f460a0fc",
+          "c5151974b28491217a5a7475d3261ff6c1c90a28b27c7e48fcebd1e6089a043d",
+          "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db"
+        ]
+      }
+    ]
+  }
+}

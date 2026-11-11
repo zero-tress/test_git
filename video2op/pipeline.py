@@ -211,7 +211,7 @@ def run_observation_branches(stage, client, ctx):
         raise errors[0]
 
 
-def run_case(video: Path, force: bool = False, verbose: bool = True) -> dict:
+def run_case(video: Path, force: bool = False, verbose: bool = True, description: str | None = None) -> dict:
     t_start = time.time()
     video = Path(video).resolve()
     if not video.exists():
@@ -243,6 +243,9 @@ def run_case(video: Path, force: bool = False, verbose: bool = True) -> dict:
         "out_dir": out_dir,
         "video_id": media.file_sha1(video)[:16],
     }
+    if description is not None:
+        ctx["text_description"] = {"text": description, "provenance": "text_description",
+                                   "role": "provided_context_not_observed_success"}
     _dump(stages_dir / "s00_probe.json", {"meta": meta, "profile": profile})
 
     errors: list[str] = []
@@ -393,6 +396,8 @@ def run_case(video: Path, force: bool = False, verbose: bool = True) -> dict:
                 print(f"  → 参数净化：改写 {applied} 条，重新校验：{bundle['validation']['summary']}")
 
     # 执行器级动作依赖图（DAG，追溯视图）：在文本净化完成后建图，保证节点文本与产物一致
+    if description is not None:
+        bundle["text_description"] = ctx["text_description"]
     bundle["graph"] = graph.build(bundle["atomic"].get("atomic_actions", []),
                                   bundle.get("relations") or [])
     _dump(out_dir / "result.json", bundle)
@@ -425,14 +430,14 @@ def run_case(video: Path, force: bool = False, verbose: bool = True) -> dict:
     return bundle
 
 
-def run_all(force: bool = False) -> list[dict]:
+def run_all(force: bool = False, description: str | None = None) -> list[dict]:
     videos = sorted(p for p in config.DATA_DIR.glob("*.mp4"))
     if not videos:
         print(f"data/ 下没有 mp4：{config.DATA_DIR}")
         return []
     out = []
     for v in videos:
-        out.append(run_case(v, force=force))
+        out.append(run_case(v, force=force, **({"description": description} if description is not None else {})))
     if out:
         from .knowledge import aggregate, extract, render
         knowledge = aggregate([extract(b, str(config.OUTPUT_DIR / (b["meta"]["name"] + "_semantic_v3") / "result.json")) for b in out])

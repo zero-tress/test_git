@@ -30,12 +30,6 @@ PEER = ROOT / "操作图同事的"
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(PEER))
 
-from robot_operation_graph.atomic_actions import ActionGateway, ActionRegistry, DummyAction
-from robot_operation_graph.executable_graph import GraphInstantiator, TaskContext
-from robot_operation_graph.scheduler import GraphScheduler, TaskStatus
-from robot_operation_graph.semantic_graph import load_operation_graph
-from robot_operation_graph.semantic_graph.loader import GraphValidationError
-from robot_operation_graph.world import SemanticRegistry, WorldState
 
 from video2op import config
 
@@ -65,7 +59,17 @@ def _registry_for(predicates: list[str]) -> SemanticRegistry:
     return registry
 
 
-def main() -> int:
+def _legacy_main() -> int:
+    global ActionGateway, ActionRegistry, DummyAction, GraphInstantiator, TaskContext
+    global GraphScheduler, TaskStatus, load_operation_graph, GraphValidationError, SemanticRegistry, WorldState
+    from robot_operation_graph.atomic_actions import ActionGateway, ActionRegistry, DummyAction
+    from robot_operation_graph.executable_graph import GraphInstantiator, TaskContext
+    from robot_operation_graph.scheduler import GraphScheduler, TaskStatus
+    from robot_operation_graph.semantic_graph import load_operation_graph
+    from robot_operation_graph.semantic_graph.loader import GraphValidationError
+    from robot_operation_graph.world import SemanticRegistry, WorldState
+
+
     case = sys.argv[1] if len(sys.argv) > 1 else None
     if not case:
         dirs = [d for d in config.OUTPUT_DIR.glob("*") if (d / "semantic_graph.yaml").exists()]
@@ -177,6 +181,20 @@ def main() -> int:
     print("      它证明的是：依赖顺序、资源占用、MAINTAIN 生命周期在执行侧跑得通；"
           "它不证明机器人已经能执行这件事。")
     return 0 if ok_struct else 4
+
+
+def main() -> int:
+    if len(sys.argv) > 1:
+        import yaml
+        candidate = Path(sys.argv[1])
+        out = candidate if candidate.is_dir() else config.OUTPUT_DIR / sys.argv[1]
+        graph_path = out / "semantic_graph.yaml"
+        if graph_path.exists() and yaml.safe_load(graph_path.read_text()).get("layer") == "semantic":
+            from video2op.semantic_interface import validate_files
+            result = validate_files(out)
+            print(json.dumps(result, ensure_ascii=False, indent=2))
+            return 0 if result["passed"] else 2
+    return _legacy_main()
 
 
 if __name__ == "__main__":

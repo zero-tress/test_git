@@ -68,6 +68,12 @@ def induce(observations: list[dict]) -> dict:
                         "reviewed_counts": reviewed, "necessity_status": necessity,
                         "causal_status": "not_established",
                         "distinct_video_count": len({r["video_uid"] for r in usable}),
+                        "empirical_assessment": {
+                            "condition_refuted_as_necessary": bool(reviewed["F_success"]),
+                            "failure_trials": sum(reviewed[f"{t}_failure"] for t in ("T", "F", "U")),
+                            "nonexecution_is_censored": True,
+                            "next_step": "needs_controlled_contrast_trials",
+                            "causal_established": False},
                         "conflicted_annotations": sum(bool(r.get("annotation_conflict")) for r in rows),
                         "examples": [{k: v for k, v in r.items() if k != "_identity"} for r in rows],
                         "missing_evidence": [

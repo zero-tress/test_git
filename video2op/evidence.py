@@ -41,3 +41,37 @@ def support(condition: str, op: dict, atomic: list[dict]) -> list[dict]:
         and float(a.get("end", 0)) < float(b.get("end", 0)) <= float(op.get("end", 0)) + 0.05
         and observed_states(b) and not any(matches(condition, s) for s in observed_states(b))
         for b in atomic)]
+
+
+def audit_effects(bundle: dict, reviewed=None) -> dict:
+    """Add verification metadata without treating model-observed as reviewed."""
+    import hashlib
+    from .review import validate_reviewed
+    from .knowledge import extract, video_identity
+    uid, _ = video_identity(bundle)
+    records = validate_reviewed(reviewed or [], extract(bundle, "<evidence-audit>")["instances"])
+    bundle["effect_review_records"] = records
+    reviewed_evidence = [e for r in records for e in r.get("outcome_evidence", [])]
+    actions = {a["id"]: a for a in bundle.get("atomic", {}).get("atomic_actions", [])}
+    report = []
+    for node in bundle.get("operations", {}).get("nodes", []):
+        for j, ev in enumerate(node.get("effect_evidence", [])):
+            condition = ev.get("condition", "")
+            refs = ev.get("atomic_refs", [])
+            confirmed = [e for e in reviewed_evidence if e.get("atomic_ref") in refs
+                         and matches(condition, e.get("quote", ""))]
+            impossible = bool(refs) and all(
+                r not in actions or actions[r].get("inferred")
+                or actions[r].get("media_coverage_status") == "outside_decoded_coverage" for r in refs)
+            status = "verified" if confirmed else "unverifiable" if impossible else "unverified"
+            evidence_id = "effect_" + hashlib.sha256(
+                (uid + str(node["id"]) + str(j) + condition).encode()).hexdigest()[:20]
+            basis = ("scoped_reviewed_state_quote" if confirmed else
+                     "no_observable_source_in_current_actions" if impossible else
+                     "state_goal_needs_grounding" if not refs else "model_observation_requires_review")
+            ev.update(evidence_id=evidence_id, verification_status=status, verification_basis=basis)
+            report.append({"evidence_id": evidence_id, "node_id": node["id"], "condition": condition,
+                           "observation_status": ev.get("status"), "verification_status": status,
+                           "verification_basis": basis, "atomic_refs": refs, "video_sha256": uid})
+    return {"schema_version": "effect_evidence_audit.v1", "records": report,
+            "policy": "Observation status, review status and causal status are distinct."}

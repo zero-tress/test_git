@@ -25,7 +25,9 @@ def main() -> int:
     ap.add_argument("target", help="视频路径，或 all 表示 data/ 下全部")
     ap.add_argument("--force", action="store_true", help="忽略模型缓存重新分析")
     ap.add_argument("--output-root", type=Path, help="另存本次运行产物的目录")
+    ap.add_argument("--description", type=Path, help="UTF-8文字背景文件；与视频观察证据分开")
     args = ap.parse_args()
+    description = args.description.read_text(encoding="utf-8") if args.description else None
     if args.output_root:
         from video2op import config
         config.OUTPUT_DIR = args.output_root.resolve()
@@ -33,10 +35,10 @@ def main() -> int:
 
     try:
         if args.target == "all":
-            results = run_all(force=args.force)
+            results = run_all(force=args.force, **({"description": description} if description is not None else {}))
             failed = [r for r in results if r.get("errors") or not r.get("validation", {}).get("passed")]
             return 1 if failed else 0
-        bundle = run_case(Path(args.target), force=args.force)
+        bundle = run_case(Path(args.target), force=args.force, **({"description": description} if description is not None else {}))
         if not bundle.get("validation", {}).get("passed"):
             print("提示：校验未全部通过，详见产物的 validation 与 needs_review 字段")
         return 1 if bundle.get("errors") or not bundle.get("validation", {}).get("passed") else 0

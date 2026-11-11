@@ -49,7 +49,8 @@
               "place_object",
               "clear_access",
               "open_object",
-              "close_object"
+              "close_object",
+              "relocate_and_release"
             ]
           },
           "causally_verified": {
@@ -95,7 +96,8 @@
           "outcome_status": {
             "enum": [
               "model_grounded_candidate",
-              "unverified"
+              "unverified",
+              "reviewed_reference"
             ]
           }
         }

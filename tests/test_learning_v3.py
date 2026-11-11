@@ -66,8 +66,8 @@ def test_final_graph_matches_project_actor_schema_and_preserves_evidence(tmp_pat
         assert not any(r.get("preferred") for r in n["skill"]["R"])
     semantic.export(b, tmp_path)
     semantic.render(b, tmp_path)
-    assert not (tmp_path / "execution_policy.yaml").exists()
-    assert not (tmp_path / "program.json").exists()
+    assert yaml.safe_load((tmp_path / "execution_policy.yaml").read_text())["status"] == "unbound"
+    assert __import__("json").loads((tmp_path / "program.json").read_text())["execution_verified"] is False
     assert 'class="gs-node' in (tmp_path / "operations.svg").read_text()
     assert "C_pre 前置条件" not in (tmp_path / "operations.svg").read_text()
     page = (tmp_path / "workbench.html").read_text()

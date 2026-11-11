@@ -60,8 +60,17 @@ def run(client: VLMClient, ctx: dict) -> dict:
         VIEWPOINT=viewpoint.get("label_cn", "未知"),
         VISIBLE_PARTS="、".join(viewpoint.get("visible_parts_hint", []) or ["未知"]),
     )
+    description = ctx.get("text_description")
+    if description:
+        text = description["text"] if isinstance(description, dict) else str(description)
+        import json
+        user += "\n用户提供的任务背景（JSON引用数据，非视频事实，不得据此认定动作发生或成功）：\n" + json.dumps(text, ensure_ascii=False)
     payload = client.ask(
         stage="s02a_intent", system=system, user_text=user,
         video=video, video_id=ctx["video_id"], validator=_validate,
     )
-    return _normalize(payload)
+    payload = _normalize(payload)
+    if description:
+        payload["additional_evidence"] = {"provenance": "text_description",
+                                           "role": "provided_context_not_observed_success"}
+    return payload

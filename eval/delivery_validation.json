@@ -1,0 +1,153 @@
+{
+  "pytest": "394 passed in 2.95s",
+  "interface_cases": [
+    {
+      "case": "01_video_01_semantic_v3",
+      "passed": true,
+      "errors": [],
+      "nodes": 6,
+      "validation_kind": "semantic_structure_and_unbound_interfaces",
+      "execution_verified": false
+    },
+    {
+      "case": "02_video_02_semantic_v3",
+      "passed": true,
+      "errors": [],
+      "nodes": 6,
+      "validation_kind": "semantic_structure_and_unbound_interfaces",
+      "execution_verified": false
+    },
+    {
+      "case": "03_video_03_semantic_v3",
+      "passed": true,
+      "errors": [],
+      "nodes": 5,
+      "validation_kind": "semantic_structure_and_unbound_interfaces",
+      "execution_verified": false
+    },
+    {
+      "case": "04_video_04_semantic_v3",
+      "passed": true,
+      "errors": [],
+      "nodes": 3,
+      "validation_kind": "semantic_structure_and_unbound_interfaces",
+      "execution_verified": false
+    },
+    {
+      "case": "05_video_05_semantic_v3",
+      "passed": true,
+      "errors": [],
+      "nodes": 6,
+      "validation_kind": "semantic_structure_and_unbound_interfaces",
+      "execution_verified": false
+    },
+    {
+      "case": "06_video_06_semantic_v3",
+      "passed": true,
+      "errors": [],
+      "nodes": 6,
+      "validation_kind": "semantic_structure_and_unbound_interfaces",
+      "execution_verified": false
+    },
+    {
+      "case": "07_video_07_semantic_v3",
+      "passed": true,
+      "errors": [],
+      "nodes": 6,
+      "validation_kind": "semantic_structure_and_unbound_interfaces",
+      "execution_verified": false
+    },
+    {
+      "case": "08_video_08_semantic_v3",
+      "passed": true,
+      "errors": [],
+      "nodes": 2,
+      "validation_kind": "semantic_structure_and_unbound_interfaces",
+      "execution_verified": false
+    },
+    {
+      "case": "09_video_09_semantic_v3",
+      "passed": true,
+      "errors": [],
+      "nodes": 6,
+      "validation_kind": "semantic_structure_and_unbound_interfaces",
+      "execution_verified": false
+    },
+    {
+      "case": "10_video_10_semantic_v3",
+      "passed": true,
+      "errors": [],
+      "nodes": 6,
+      "validation_kind": "semantic_structure_and_unbound_interfaces",
+      "execution_verified": false
+    },
+    {
+      "case": "11_video_11_semantic_v3",
+      "passed": true,
+      "errors": [],
+      "nodes": 3,
+      "validation_kind": "semantic_structure_and_unbound_interfaces",
+      "execution_verified": false
+    },
+    {
+      "case": "12_video_12_semantic_v3",
+      "passed": true,
+      "errors": [],
+      "nodes": 5,
+      "validation_kind": "semantic_structure_and_unbound_interfaces",
+      "execution_verified": false
+    },
+    {
+      "case": "13_video_13_semantic_v3",
+      "passed": true,
+      "errors": [],
+      "nodes": 4,
+      "validation_kind": "semantic_structure_and_unbound_interfaces",
+      "execution_verified": false
+    },
+    {
+      "case": "14_video_14_semantic_v3",
+      "passed": true,
+      "errors": [],
+      "nodes": 4,
+      "validation_kind": "semantic_structure_and_unbound_interfaces",
+      "execution_verified": false
+    },
+    {
+      "case": "15_video_15_semantic_v3",
+      "passed": true,
+      "errors": [],
+      "nodes": 6,
+      "validation_kind": "semantic_structure_and_unbound_interfaces",
+      "execution_verified": false
+    },
+    {
+      "case": "16_video_16_semantic_v3",
+      "passed": true,
+      "errors": [],
+      "nodes": 5,
+      "validation_kind": "semantic_structure_and_unbound_interfaces",
+      "execution_verified": false
+    }
+  ],
+  "prior_output_changes": [
+    "finalize_experiment.py"
+  ],
+  "unexpected_prior_output_changes": [],
+  "source_media_checked": 22,
+  "effect_verification_counts": {
+    "unverified": 208
+  },
+  "case_warning_counts": {
+    "arm_hand_coordination": 8,
+    "learning_scope": 8,
+    "causal_consistency": 7,
+    "pre_post_consistency": 13,
+    "temporal_consistency": 8,
+    "grasp_preparation": 1
+  },
+  "checklist_counts": {
+    "complete": 27,
+    "partial": 11
+  }
+}

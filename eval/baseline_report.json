@@ -1,0 +1,2804 @@
+{
+  "source_commit": "f32c5630b6d8637e5332e320c2c9ee30cce5e6f5",
+  "baseline": "/home/wj/codex-workspace/videostudy_operation/output/_baseline_20261111",
+  "pytest_returncode": 0,
+  "pytest_output": "........................................................................ [ 19%]\n........................................................................ [ 39%]\n........................................................................ [ 58%]\n........................................................................ [ 78%]\n........................................................................ [ 98%]\n.......                                                                  [100%]\n367 passed in 2.52s\n",
+  "cases": [
+    {
+      "case": "video_01_semantic_v3",
+      "validation": {
+        "passed": true,
+        "summary": "9 项检查，提醒 2，失败 0",
+        "checks": [
+          {
+            "id": "param_discipline",
+            "name": "参数纪律（不出现角度/距离/力值等具体数值）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "time_sanity",
+            "name": "时间合法性",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "references",
+            "name": "引用完整性（节点/动作/关系互相指得上）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "ignored_parts",
+            "name": "不参与操作的部位纪律（操作语义里不含头 / 颈 / 口的内容）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "semantic_schema",
+            "name": "单主体语义契约与结构完整性",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "grasp_preparation",
+            "name": "抓握前手张开与证据来源",
+            "status": "pass",
+            "detail": [
+              {
+                "id": "reach:右手:2",
+                "executor": "右臂",
+                "hand": "右手",
+                "object": "透明塑料盒",
+                "grasp_ref": 2,
+                "approach_ref": 1,
+                "required_state": "右手在抓握前处于透明塑料盒的可抓取位置",
+                "purpose": "右臂带着右手靠近目标，为手建立抓握提供空间条件",
+                "status": "approach_observed",
+                "note": "观察到靠近不等于已证实抓取位姿；目标是否超出整个机械臂工作空间需要另行判断。"
+              },
+              {
+                "id": "ts_5",
+                "issues": [
+                  "conflicts_with_required_order"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "arm_hand_coordination",
+            "name": "臂手功能与抓持生效边界",
+            "status": "warn",
+            "detail": [
+              {
+                "id": "reach:右手:2",
+                "executor": "右臂",
+                "hand": "右手",
+                "object": "透明塑料盒",
+                "grasp_ref": 2,
+                "approach_ref": 1,
+                "required_state": "右手在抓握前处于透明塑料盒的可抓取位置",
+                "purpose": "右臂带着右手靠近目标，为手建立抓握提供空间条件",
+                "status": "approach_observed",
+                "note": "观察到靠近不等于已证实抓取位姿；目标是否超出整个机械臂工作空间需要另行判断。"
+              }
+            ]
+          },
+          {
+            "id": "learning_scope",
+            "name": "学习结果映射与时序语义复核",
+            "status": "warn",
+            "detail": [
+              {
+                "id": "ts_5",
+                "issues": [
+                  "conflicts_with_required_order"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "media_coverage",
+            "name": "源视频解码与证据覆盖",
+            "status": "pass",
+            "detail": []
+          }
+        ],
+        "needs_review": [
+          {
+            "id": "reach:右手:2",
+            "executor": "右臂",
+            "hand": "右手",
+            "object": "透明塑料盒",
+            "grasp_ref": 2,
+            "approach_ref": 1,
+            "required_state": "右手在抓握前处于透明塑料盒的可抓取位置",
+            "purpose": "右臂带着右手靠近目标，为手建立抓握提供空间条件",
+            "status": "approach_observed",
+            "note": "观察到靠近不等于已证实抓取位姿；目标是否超出整个机械臂工作空间需要另行判断。"
+          },
+          {
+            "id": "ts_5",
+            "issues": [
+              "conflicts_with_required_order"
+            ]
+          }
+        ]
+      },
+      "result_sha256": "5d27acc1ea58bcd2f7588a7ec64b1075f9133b9bfeea7010a046547d8566227a"
+    },
+    {
+      "case": "video_02_semantic_v3",
+      "validation": {
+        "passed": true,
+        "summary": "9 项检查，提醒 2，失败 0",
+        "checks": [
+          {
+            "id": "param_discipline",
+            "name": "参数纪律（不出现角度/距离/力值等具体数值）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "time_sanity",
+            "name": "时间合法性",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "references",
+            "name": "引用完整性（节点/动作/关系互相指得上）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "ignored_parts",
+            "name": "不参与操作的部位纪律（操作语义里不含头 / 颈 / 口的内容）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "semantic_schema",
+            "name": "单主体语义契约与结构完整性",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "grasp_preparation",
+            "name": "抓握前手张开与证据来源",
+            "status": "pass",
+            "detail": [
+              {
+                "id": "reach:右手:2",
+                "executor": "右臂",
+                "hand": "右手",
+                "object": "白色包装盒",
+                "grasp_ref": 2,
+                "approach_ref": 1,
+                "required_state": "右手在抓握前处于白色包装盒的可抓取位置",
+                "purpose": "右臂带着右手靠近目标，为手建立抓握提供空间条件",
+                "status": "approach_observed",
+                "note": "观察到靠近不等于已证实抓取位姿；目标是否超出整个机械臂工作空间需要另行判断。"
+              },
+              {
+                "id": "ts_5",
+                "issues": [
+                  "conflicts_with_required_order"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "arm_hand_coordination",
+            "name": "臂手功能与抓持生效边界",
+            "status": "warn",
+            "detail": [
+              {
+                "id": "reach:右手:2",
+                "executor": "右臂",
+                "hand": "右手",
+                "object": "白色包装盒",
+                "grasp_ref": 2,
+                "approach_ref": 1,
+                "required_state": "右手在抓握前处于白色包装盒的可抓取位置",
+                "purpose": "右臂带着右手靠近目标，为手建立抓握提供空间条件",
+                "status": "approach_observed",
+                "note": "观察到靠近不等于已证实抓取位姿；目标是否超出整个机械臂工作空间需要另行判断。"
+              }
+            ]
+          },
+          {
+            "id": "learning_scope",
+            "name": "学习结果映射与时序语义复核",
+            "status": "warn",
+            "detail": [
+              {
+                "id": "ts_5",
+                "issues": [
+                  "conflicts_with_required_order"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "media_coverage",
+            "name": "源视频解码与证据覆盖",
+            "status": "pass",
+            "detail": []
+          }
+        ],
+        "needs_review": [
+          {
+            "id": "reach:右手:2",
+            "executor": "右臂",
+            "hand": "右手",
+            "object": "白色包装盒",
+            "grasp_ref": 2,
+            "approach_ref": 1,
+            "required_state": "右手在抓握前处于白色包装盒的可抓取位置",
+            "purpose": "右臂带着右手靠近目标，为手建立抓握提供空间条件",
+            "status": "approach_observed",
+            "note": "观察到靠近不等于已证实抓取位姿；目标是否超出整个机械臂工作空间需要另行判断。"
+          },
+          {
+            "id": "ts_5",
+            "issues": [
+              "conflicts_with_required_order"
+            ]
+          }
+        ]
+      },
+      "result_sha256": "28971753739a89d1030259c673871ac6af058542bce632efd001ff13992d8e61"
+    },
+    {
+      "case": "video_03_semantic_v3",
+      "validation": {
+        "passed": true,
+        "summary": "9 项检查，提醒 0，失败 0",
+        "checks": [
+          {
+            "id": "param_discipline",
+            "name": "参数纪律（不出现角度/距离/力值等具体数值）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "time_sanity",
+            "name": "时间合法性",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "references",
+            "name": "引用完整性（节点/动作/关系互相指得上）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "ignored_parts",
+            "name": "不参与操作的部位纪律（操作语义里不含头 / 颈 / 口的内容）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "semantic_schema",
+            "name": "单主体语义契约与结构完整性",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "grasp_preparation",
+            "name": "抓握前手张开与证据来源",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "arm_hand_coordination",
+            "name": "臂手功能与抓持生效边界",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "learning_scope",
+            "name": "学习结果映射与时序语义复核",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "media_coverage",
+            "name": "源视频解码与证据覆盖",
+            "status": "pass",
+            "detail": []
+          }
+        ],
+        "needs_review": []
+      },
+      "result_sha256": "98a11361f8f1bddc7bcb141121c8e00b996f2c0b0fc9eeb056129262b9245ff2"
+    },
+    {
+      "case": "video_04_semantic_v3",
+      "validation": {
+        "passed": true,
+        "summary": "9 项检查，提醒 0，失败 0",
+        "checks": [
+          {
+            "id": "param_discipline",
+            "name": "参数纪律（不出现角度/距离/力值等具体数值）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "time_sanity",
+            "name": "时间合法性",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "references",
+            "name": "引用完整性（节点/动作/关系互相指得上）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "ignored_parts",
+            "name": "不参与操作的部位纪律（操作语义里不含头 / 颈 / 口的内容）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "semantic_schema",
+            "name": "单主体语义契约与结构完整性",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "grasp_preparation",
+            "name": "抓握前手张开与证据来源",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "arm_hand_coordination",
+            "name": "臂手功能与抓持生效边界",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "learning_scope",
+            "name": "学习结果映射与时序语义复核",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "media_coverage",
+            "name": "源视频解码与证据覆盖",
+            "status": "pass",
+            "detail": []
+          }
+        ],
+        "needs_review": []
+      },
+      "result_sha256": "504c8589ab9d5c7e505ae70e25e94970b44c8026612e02885a75e9ce8ebc5b47"
+    },
+    {
+      "case": "video_05_semantic_v3",
+      "validation": {
+        "passed": true,
+        "summary": "9 项检查，提醒 3，失败 0",
+        "checks": [
+          {
+            "id": "param_discipline",
+            "name": "参数纪律（不出现角度/距离/力值等具体数值）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "time_sanity",
+            "name": "时间合法性",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "references",
+            "name": "引用完整性（节点/动作/关系互相指得上）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "ignored_parts",
+            "name": "不参与操作的部位纪律（操作语义里不含头 / 颈 / 口的内容）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "semantic_schema",
+            "name": "单主体语义契约与结构完整性",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "grasp_preparation",
+            "name": "抓握前手张开与证据来源",
+            "status": "warn",
+            "detail": [
+              {
+                "id": "preopen:右手:2",
+                "executor": "右手",
+                "grasp_ref": 2,
+                "required_state": "右手在抓握开始前已张开到可包络目标的状态",
+                "required_before": {
+                  "event": "grasp_starts",
+                  "atomic_ref": 2
+                },
+                "status": "unknown",
+                "state_evidence": [],
+                "scope": "internal_grasp_precondition",
+                "note": "开度状态未知；补充必要前提和条件式准备候选，不断言手原先紧握",
+                "candidate_action": {
+                  "action": "张开",
+                  "executor": "右手",
+                  "mode": "transition",
+                  "inferred": true,
+                  "origin": "functional_precondition",
+                  "applicability": "手尚未张开到可包络目标的状态",
+                  "expected_effect": "右手在抓握开始前已张开到可包络目标的状态",
+                  "must_complete_before_atomic_ref": 2,
+                  "observed_time": null,
+                  "atomic_capability": "OperateGripper",
+                  "control_mode": "MODE_SET_WIDTH",
+                  "parameters_status": "unbound"
+                }
+              },
+              {
+                "id": "reach:右手:2",
+                "executor": "右臂",
+                "hand": "右手",
+                "object": "透明塑料盒",
+                "grasp_ref": 2,
+                "approach_ref": 1,
+                "required_state": "右手在抓握前处于透明塑料盒的可抓取位置",
+                "purpose": "右臂带着右手靠近目标，为手建立抓握提供空间条件",
+                "status": "approach_observed",
+                "note": "观察到靠近不等于已证实抓取位姿；目标是否超出整个机械臂工作空间需要另行判断。"
+              },
+              {
+                "id": "ts_5",
+                "issues": [
+                  "conflicts_with_required_order"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "arm_hand_coordination",
+            "name": "臂手功能与抓持生效边界",
+            "status": "warn",
+            "detail": [
+              {
+                "id": "reach:右手:2",
+                "executor": "右臂",
+                "hand": "右手",
+                "object": "透明塑料盒",
+                "grasp_ref": 2,
+                "approach_ref": 1,
+                "required_state": "右手在抓握前处于透明塑料盒的可抓取位置",
+                "purpose": "右臂带着右手靠近目标，为手建立抓握提供空间条件",
+                "status": "approach_observed",
+                "note": "观察到靠近不等于已证实抓取位姿；目标是否超出整个机械臂工作空间需要另行判断。"
+              }
+            ]
+          },
+          {
+            "id": "learning_scope",
+            "name": "学习结果映射与时序语义复核",
+            "status": "warn",
+            "detail": [
+              {
+                "id": "ts_5",
+                "issues": [
+                  "conflicts_with_required_order"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "media_coverage",
+            "name": "源视频解码与证据覆盖",
+            "status": "pass",
+            "detail": []
+          }
+        ],
+        "needs_review": [
+          {
+            "id": "preopen:右手:2",
+            "executor": "右手",
+            "grasp_ref": 2,
+            "required_state": "右手在抓握开始前已张开到可包络目标的状态",
+            "required_before": {
+              "event": "grasp_starts",
+              "atomic_ref": 2
+            },
+            "status": "unknown",
+            "state_evidence": [],
+            "scope": "internal_grasp_precondition",
+            "note": "开度状态未知；补充必要前提和条件式准备候选，不断言手原先紧握",
+            "candidate_action": {
+              "action": "张开",
+              "executor": "右手",
+              "mode": "transition",
+              "inferred": true,
+              "origin": "functional_precondition",
+              "applicability": "手尚未张开到可包络目标的状态",
+              "expected_effect": "右手在抓握开始前已张开到可包络目标的状态",
+              "must_complete_before_atomic_ref": 2,
+              "observed_time": null,
+              "atomic_capability": "OperateGripper",
+              "control_mode": "MODE_SET_WIDTH",
+              "parameters_status": "unbound"
+            }
+          },
+          {
+            "id": "reach:右手:2",
+            "executor": "右臂",
+            "hand": "右手",
+            "object": "透明塑料盒",
+            "grasp_ref": 2,
+            "approach_ref": 1,
+            "required_state": "右手在抓握前处于透明塑料盒的可抓取位置",
+            "purpose": "右臂带着右手靠近目标，为手建立抓握提供空间条件",
+            "status": "approach_observed",
+            "note": "观察到靠近不等于已证实抓取位姿；目标是否超出整个机械臂工作空间需要另行判断。"
+          },
+          {
+            "id": "ts_5",
+            "issues": [
+              "conflicts_with_required_order"
+            ]
+          }
+        ]
+      },
+      "result_sha256": "2b960e1b26df448cbf42902aea57314d41310c8f78bf452b0b6c244b2e99ea90"
+    },
+    {
+      "case": "video_06_semantic_v3",
+      "validation": {
+        "passed": true,
+        "summary": "9 项检查，提醒 2，失败 0",
+        "checks": [
+          {
+            "id": "param_discipline",
+            "name": "参数纪律（不出现角度/距离/力值等具体数值）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "time_sanity",
+            "name": "时间合法性",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "references",
+            "name": "引用完整性（节点/动作/关系互相指得上）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "ignored_parts",
+            "name": "不参与操作的部位纪律（操作语义里不含头 / 颈 / 口的内容）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "semantic_schema",
+            "name": "单主体语义契约与结构完整性",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "grasp_preparation",
+            "name": "抓握前手张开与证据来源",
+            "status": "pass",
+            "detail": [
+              {
+                "id": "reach:右手:2",
+                "executor": "右臂",
+                "hand": "右手",
+                "object": "白色包装盒",
+                "grasp_ref": 2,
+                "approach_ref": 1,
+                "required_state": "右手在抓握前处于白色包装盒的可抓取位置",
+                "purpose": "右臂带着右手靠近目标，为手建立抓握提供空间条件",
+                "status": "approach_observed",
+                "note": "观察到靠近不等于已证实抓取位姿；目标是否超出整个机械臂工作空间需要另行判断。"
+              },
+              {
+                "id": "ts_2",
+                "issues": [
+                  "members_unresolved_or_collapsed"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "arm_hand_coordination",
+            "name": "臂手功能与抓持生效边界",
+            "status": "warn",
+            "detail": [
+              {
+                "id": "reach:右手:2",
+                "executor": "右臂",
+                "hand": "右手",
+                "object": "白色包装盒",
+                "grasp_ref": 2,
+                "approach_ref": 1,
+                "required_state": "右手在抓握前处于白色包装盒的可抓取位置",
+                "purpose": "右臂带着右手靠近目标，为手建立抓握提供空间条件",
+                "status": "approach_observed",
+                "note": "观察到靠近不等于已证实抓取位姿；目标是否超出整个机械臂工作空间需要另行判断。"
+              }
+            ]
+          },
+          {
+            "id": "learning_scope",
+            "name": "学习结果映射与时序语义复核",
+            "status": "warn",
+            "detail": [
+              {
+                "id": "ts_2",
+                "issues": [
+                  "members_unresolved_or_collapsed"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "media_coverage",
+            "name": "源视频解码与证据覆盖",
+            "status": "pass",
+            "detail": []
+          }
+        ],
+        "needs_review": [
+          {
+            "id": "reach:右手:2",
+            "executor": "右臂",
+            "hand": "右手",
+            "object": "白色包装盒",
+            "grasp_ref": 2,
+            "approach_ref": 1,
+            "required_state": "右手在抓握前处于白色包装盒的可抓取位置",
+            "purpose": "右臂带着右手靠近目标，为手建立抓握提供空间条件",
+            "status": "approach_observed",
+            "note": "观察到靠近不等于已证实抓取位姿；目标是否超出整个机械臂工作空间需要另行判断。"
+          },
+          {
+            "id": "ts_2",
+            "issues": [
+              "members_unresolved_or_collapsed"
+            ]
+          }
+        ]
+      },
+      "result_sha256": "19ca6235e1a3a53d9012c9304bc11bb493e829ee1df09c176fb49aec26257235"
+    },
+    {
+      "case": "video_07_semantic_v3",
+      "validation": {
+        "passed": true,
+        "summary": "9 项检查，提醒 2，失败 0",
+        "checks": [
+          {
+            "id": "param_discipline",
+            "name": "参数纪律（不出现角度/距离/力值等具体数值）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "time_sanity",
+            "name": "时间合法性",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "references",
+            "name": "引用完整性（节点/动作/关系互相指得上）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "ignored_parts",
+            "name": "不参与操作的部位纪律（操作语义里不含头 / 颈 / 口的内容）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "semantic_schema",
+            "name": "单主体语义契约与结构完整性",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "grasp_preparation",
+            "name": "抓握前手张开与证据来源",
+            "status": "pass",
+            "detail": [
+              {
+                "id": "reach:右手:2",
+                "executor": "右臂",
+                "hand": "右手",
+                "object": "透明塑料盒",
+                "grasp_ref": 2,
+                "approach_ref": 1,
+                "required_state": "右手在抓握前处于透明塑料盒的可抓取位置",
+                "purpose": "右臂带着右手靠近目标，为手建立抓握提供空间条件",
+                "status": "approach_observed",
+                "note": "观察到靠近不等于已证实抓取位姿；目标是否超出整个机械臂工作空间需要另行判断。"
+              },
+              {
+                "id": "ts_5",
+                "issues": [
+                  "conflicts_with_required_order"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "arm_hand_coordination",
+            "name": "臂手功能与抓持生效边界",
+            "status": "warn",
+            "detail": [
+              {
+                "id": "reach:右手:2",
+                "executor": "右臂",
+                "hand": "右手",
+                "object": "透明塑料盒",
+                "grasp_ref": 2,
+                "approach_ref": 1,
+                "required_state": "右手在抓握前处于透明塑料盒的可抓取位置",
+                "purpose": "右臂带着右手靠近目标，为手建立抓握提供空间条件",
+                "status": "approach_observed",
+                "note": "观察到靠近不等于已证实抓取位姿；目标是否超出整个机械臂工作空间需要另行判断。"
+              }
+            ]
+          },
+          {
+            "id": "learning_scope",
+            "name": "学习结果映射与时序语义复核",
+            "status": "warn",
+            "detail": [
+              {
+                "id": "ts_5",
+                "issues": [
+                  "conflicts_with_required_order"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "media_coverage",
+            "name": "源视频解码与证据覆盖",
+            "status": "pass",
+            "detail": []
+          }
+        ],
+        "needs_review": [
+          {
+            "id": "reach:右手:2",
+            "executor": "右臂",
+            "hand": "右手",
+            "object": "透明塑料盒",
+            "grasp_ref": 2,
+            "approach_ref": 1,
+            "required_state": "右手在抓握前处于透明塑料盒的可抓取位置",
+            "purpose": "右臂带着右手靠近目标，为手建立抓握提供空间条件",
+            "status": "approach_observed",
+            "note": "观察到靠近不等于已证实抓取位姿；目标是否超出整个机械臂工作空间需要另行判断。"
+          },
+          {
+            "id": "ts_5",
+            "issues": [
+              "conflicts_with_required_order"
+            ]
+          }
+        ]
+      },
+      "result_sha256": "05627c42219213ee03484c287188e0640d94ac16d17180b4729aaa92ae1ec05f"
+    },
+    {
+      "case": "video_08_semantic_v3",
+      "validation": {
+        "passed": true,
+        "summary": "9 项检查，提醒 1，失败 0",
+        "checks": [
+          {
+            "id": "param_discipline",
+            "name": "参数纪律（不出现角度/距离/力值等具体数值）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "time_sanity",
+            "name": "时间合法性",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "references",
+            "name": "引用完整性（节点/动作/关系互相指得上）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "ignored_parts",
+            "name": "不参与操作的部位纪律（操作语义里不含头 / 颈 / 口的内容）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "semantic_schema",
+            "name": "单主体语义契约与结构完整性",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "grasp_preparation",
+            "name": "抓握前手张开与证据来源",
+            "status": "pass",
+            "detail": [
+              {
+                "id": "ts_1",
+                "issues": [
+                  "members_unresolved_or_collapsed",
+                  "unresolved_member_reference"
+                ]
+              },
+              {
+                "id": "ts_2",
+                "issues": [
+                  "members_unresolved_or_collapsed",
+                  "unresolved_member_reference"
+                ]
+              },
+              {
+                "id": "ts_3",
+                "issues": [
+                  "members_unresolved_or_collapsed"
+                ]
+              },
+              {
+                "id": "ts_5",
+                "issues": [
+                  "members_unresolved_or_collapsed",
+                  "unresolved_member_reference"
+                ]
+              },
+              {
+                "id": "observed_relation_0",
+                "issues": [
+                  "members_unresolved_or_collapsed"
+                ]
+              },
+              {
+                "id": "observed_relation_1",
+                "issues": [
+                  "members_unresolved_or_collapsed"
+                ]
+              },
+              {
+                "source_node_id": "node_1",
+                "node_id": null,
+                "kind": "C_pre",
+                "text": "塑料盒静止在黑色区域",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {}
+              },
+              {
+                "source_node_id": "node_1",
+                "node_id": null,
+                "kind": "C_post",
+                "text": "左手处于塑料盒的可抓取位置",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {}
+              },
+              {
+                "source_node_id": "node_1",
+                "node_id": null,
+                "kind": "C_const",
+                "text": "不碰撞",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {}
+              },
+              {
+                "source_node_id": "node_1",
+                "node_id": null,
+                "kind": "realization",
+                "text": "臂移动至抓取位置",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {
+                  "candidate": {
+                    "name": "臂移动至抓取位置",
+                    "origin": "observed",
+                    "steps": [
+                      "靠近"
+                    ]
+                  }
+                }
+              },
+              {
+                "source_node_id": "node_1",
+                "node_id": null,
+                "kind": "process",
+                "text": "路径安全",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {}
+              },
+              {
+                "source_node_id": "node_1",
+                "node_id": null,
+                "kind": "completion",
+                "text": "手到达可抓取位置",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {}
+              },
+              {
+                "source_node_id": "node_3",
+                "node_id": null,
+                "kind": "C_pre",
+                "text": "左手处于塑料盒的可抓取位置",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {}
+              },
+              {
+                "source_node_id": "node_3",
+                "node_id": null,
+                "kind": "C_pre",
+                "text": "左手处于张开状态",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {}
+              },
+              {
+                "source_node_id": "node_3",
+                "node_id": null,
+                "kind": "C_post",
+                "text": "左手稳定握持塑料盒",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {}
+              },
+              {
+                "source_node_id": "node_3",
+                "node_id": null,
+                "kind": "C_const",
+                "text": "握持稳定",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {}
+              },
+              {
+                "source_node_id": "node_3",
+                "node_id": null,
+                "kind": "realization",
+                "text": "手指闭合抓握",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {
+                  "candidate": {
+                    "name": "手指闭合抓握",
+                    "origin": "observed",
+                    "steps": [
+                      "抓取"
+                    ]
+                  }
+                }
+              },
+              {
+                "source_node_id": "node_3",
+                "node_id": null,
+                "kind": "process",
+                "text": "接触并施加压力",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {}
+              },
+              {
+                "source_node_id": "node_3",
+                "node_id": null,
+                "kind": "completion",
+                "text": "建立稳定握持",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {}
+              },
+              {
+                "source_node_id": "node_1",
+                "node_id": null,
+                "kind": "C_pre",
+                "text": "塑料盒静止在黑色区域",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {
+                  "condition": "塑料盒静止在黑色区域",
+                  "verdict": "有效",
+                  "confidence": 0.95,
+                  "evidence_kind": "model_counterfactual_review",
+                  "empirically_verified": false,
+                  "positive": {
+                    "text": "塑料盒静止在黑色区域",
+                    "evidence": "t=0.0证据显示盒子位于黑色区域，随后操作发起"
+                  },
+                  "negative_a": {
+                    "text": "塑料盒未在黑色区域（如已在白色区域）",
+                    "reason": "推理：若目标位置已达成或物体不在起始位，搬运操作无意义或无法按原路径执行"
+                  },
+                  "negative_b": {
+                    "text": "塑料盒不在黑色区域",
+                    "reason": "推理：操作者不会向错误位置伸手，或需先重新定位，导致当前靠近动作不发起"
+                  }
+                }
+              },
+              {
+                "source_node_id": "node_1",
+                "node_id": null,
+                "kind": "C_post",
+                "text": "左手处于塑料盒的可抓取位置",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {
+                  "condition": "左手处于塑料盒的可抓取位置",
+                  "verdict": "有效",
+                  "confidence": 0.9,
+                  "evidence_kind": "model_counterfactual_review",
+                  "empirically_verified": false,
+                  "positive": {
+                    "text": "左手处于塑料盒的可抓取位置",
+                    "evidence": "t=1.4证据显示左手伸入并靠近盒子，处于可抓取距离"
+                  },
+                  "negative_a": {
+                    "text": "左手未到达可抓取位置（距离过远）",
+                    "reason": "推理：无法建立抓握，后续抓取动作失败"
+                  },
+                  "negative_b": {
+                    "text": "左手未到达可抓取位置",
+                    "reason": "推理：操作者会继续移动手臂直到进入可抓取范围，当前“靠近”节点未完成，不进入下一节点"
+                  }
+                }
+              },
+              {
+                "source_node_id": "node_3",
+                "node_id": null,
+                "kind": "C_pre",
+                "text": "左手处于塑料盒的可抓取位置",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {
+                  "condition": "左手处于塑料盒的可抓取位置",
+                  "verdict": "有效",
+                  "confidence": 0.9,
+                  "evidence_kind": "model_counterfactual_review",
+                  "empirically_verified": false,
+                  "positive": {
+                    "text": "左手处于塑料盒的可抓取位置",
+                    "evidence": "t=1.5证据显示手掌接触盒子左侧，处于抓取起始位"
+                  },
+                  "negative_a": {
+                    "text": "左手未处于可抓取位置",
+                    "reason": "推理：无法接触物体，抓取动作无法执行"
+                  },
+                  "negative_b": {
+                    "text": "左手未处于可抓取位置",
+                    "reason": "推理：操作者会先执行靠近动作，不会直接尝试抓取"
+                  }
+                }
+              },
+              {
+                "source_node_id": "node_3",
+                "node_id": null,
+                "kind": "C_pre",
+                "text": "左手处于张开状态",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {
+                  "condition": "左手处于张开状态",
+                  "verdict": "有效",
+                  "confidence": 0.85,
+                  "evidence_kind": "model_counterfactual_review",
+                  "empirically_verified": false,
+                  "positive": {
+                    "text": "左手处于张开状态",
+                    "evidence": "t=1.4-1.5证据显示手掌张开并接触盒子，具备抓取条件"
+                  },
+                  "negative_a": {
+                    "text": "左手未处于张开状态",
+                    "reason": "推理：手指无法环绕物体，无法建立有效抓握"
+                  },
+                  "negative_b": {
+                    "text": "左手未处于张开状态",
+                    "reason": "推理：若手未张开，操作者会先执行打开动作，不会直接抓取"
+                  }
+                }
+              },
+              {
+                "source_node_id": "node_3",
+                "node_id": null,
+                "kind": "C_post",
+                "text": "左手稳定握持塑料盒",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {
+                  "condition": "左手稳定握持塑料盒",
+                  "verdict": "有效",
+                  "confidence": 0.9,
+                  "evidence_kind": "model_counterfactual_review",
+                  "empirically_verified": false,
+                  "positive": {
+                    "text": "左手稳定握持塑料盒",
+                    "evidence": "t=2.5证据显示左手抓握盒子并使其离开黑色区域，握持稳定"
+                  },
+                  "negative_a": {
+                    "text": "左手握持不稳定",
+                    "reason": "推理：物体滑落，抓取失败，无法进入移动阶段"
+                  },
+                  "negative_b": {
+                    "text": "左手未稳定握持",
+                    "reason": "推理：若未握牢，操作者会重新调整抓握，不会直接开始移动"
+                  }
+                }
+              },
+              {
+                "source_node_id": "node_1",
+                "node_id": null,
+                "kind": "process",
+                "text": "左臂沿安全路径向塑料盒移动",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {
+                  "origin": "s05_rules"
+                }
+              },
+              {
+                "source_node_id": "node_1",
+                "node_id": null,
+                "kind": "process",
+                "text": "无碰撞障碍物",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {
+                  "origin": "s05_rules"
+                }
+              },
+              {
+                "source_node_id": "node_1",
+                "node_id": null,
+                "kind": "completion",
+                "text": "左手到达塑料盒的可抓取位置",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {
+                  "origin": "s05_rules"
+                }
+              },
+              {
+                "source_node_id": "node_1",
+                "node_id": null,
+                "kind": "failure_signals",
+                "text": "手臂偏离目标",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {
+                  "origin": "s05_rules"
+                }
+              },
+              {
+                "source_node_id": "node_1",
+                "node_id": null,
+                "kind": "failure_signals",
+                "text": "碰撞其他物体",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {
+                  "origin": "s05_rules"
+                }
+              },
+              {
+                "source_node_id": "node_3",
+                "node_id": null,
+                "kind": "process",
+                "text": "手接触物体并施加压力",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {
+                  "origin": "s05_rules"
+                }
+              },
+              {
+                "source_node_id": "node_3",
+                "node_id": null,
+                "kind": "process",
+                "text": "物体随手部轻微移动或受力反馈",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {
+                  "origin": "s05_rules"
+                }
+              },
+              {
+                "source_node_id": "node_3",
+                "node_id": null,
+                "kind": "completion",
+                "text": "建立稳定握持，物体不再相对手滑动",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {
+                  "origin": "s05_rules"
+                }
+              },
+              {
+                "source_node_id": "node_3",
+                "node_id": null,
+                "kind": "failure_signals",
+                "text": "物体滑脱",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {
+                  "origin": "s05_rules"
+                }
+              },
+              {
+                "source_node_id": "node_3",
+                "node_id": null,
+                "kind": "failure_signals",
+                "text": "握持不稳导致物体晃动",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {
+                  "origin": "s05_rules"
+                }
+              }
+            ]
+          },
+          {
+            "id": "arm_hand_coordination",
+            "name": "臂手功能与抓持生效边界",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "learning_scope",
+            "name": "学习结果映射与时序语义复核",
+            "status": "warn",
+            "detail": [
+              {
+                "id": "ts_1",
+                "issues": [
+                  "members_unresolved_or_collapsed",
+                  "unresolved_member_reference"
+                ]
+              },
+              {
+                "id": "ts_2",
+                "issues": [
+                  "members_unresolved_or_collapsed",
+                  "unresolved_member_reference"
+                ]
+              },
+              {
+                "id": "ts_3",
+                "issues": [
+                  "members_unresolved_or_collapsed"
+                ]
+              },
+              {
+                "id": "ts_5",
+                "issues": [
+                  "members_unresolved_or_collapsed",
+                  "unresolved_member_reference"
+                ]
+              },
+              {
+                "id": "observed_relation_0",
+                "issues": [
+                  "members_unresolved_or_collapsed"
+                ]
+              },
+              {
+                "id": "observed_relation_1",
+                "issues": [
+                  "members_unresolved_or_collapsed"
+                ]
+              },
+              {
+                "source_node_id": "node_1",
+                "node_id": null,
+                "kind": "C_pre",
+                "text": "塑料盒静止在黑色区域",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {}
+              },
+              {
+                "source_node_id": "node_1",
+                "node_id": null,
+                "kind": "C_post",
+                "text": "左手处于塑料盒的可抓取位置",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {}
+              },
+              {
+                "source_node_id": "node_1",
+                "node_id": null,
+                "kind": "C_const",
+                "text": "不碰撞",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {}
+              },
+              {
+                "source_node_id": "node_1",
+                "node_id": null,
+                "kind": "realization",
+                "text": "臂移动至抓取位置",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {
+                  "candidate": {
+                    "name": "臂移动至抓取位置",
+                    "origin": "observed",
+                    "steps": [
+                      "靠近"
+                    ]
+                  }
+                }
+              },
+              {
+                "source_node_id": "node_1",
+                "node_id": null,
+                "kind": "process",
+                "text": "路径安全",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {}
+              },
+              {
+                "source_node_id": "node_1",
+                "node_id": null,
+                "kind": "completion",
+                "text": "手到达可抓取位置",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {}
+              },
+              {
+                "source_node_id": "node_3",
+                "node_id": null,
+                "kind": "C_pre",
+                "text": "左手处于塑料盒的可抓取位置",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {}
+              },
+              {
+                "source_node_id": "node_3",
+                "node_id": null,
+                "kind": "C_pre",
+                "text": "左手处于张开状态",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {}
+              },
+              {
+                "source_node_id": "node_3",
+                "node_id": null,
+                "kind": "C_post",
+                "text": "左手稳定握持塑料盒",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {}
+              },
+              {
+                "source_node_id": "node_3",
+                "node_id": null,
+                "kind": "C_const",
+                "text": "握持稳定",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {}
+              },
+              {
+                "source_node_id": "node_3",
+                "node_id": null,
+                "kind": "realization",
+                "text": "手指闭合抓握",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {
+                  "candidate": {
+                    "name": "手指闭合抓握",
+                    "origin": "observed",
+                    "steps": [
+                      "抓取"
+                    ]
+                  }
+                }
+              },
+              {
+                "source_node_id": "node_3",
+                "node_id": null,
+                "kind": "process",
+                "text": "接触并施加压力",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {}
+              },
+              {
+                "source_node_id": "node_3",
+                "node_id": null,
+                "kind": "completion",
+                "text": "建立稳定握持",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {}
+              },
+              {
+                "source_node_id": "node_1",
+                "node_id": null,
+                "kind": "C_pre",
+                "text": "塑料盒静止在黑色区域",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {
+                  "condition": "塑料盒静止在黑色区域",
+                  "verdict": "有效",
+                  "confidence": 0.95,
+                  "evidence_kind": "model_counterfactual_review",
+                  "empirically_verified": false,
+                  "positive": {
+                    "text": "塑料盒静止在黑色区域",
+                    "evidence": "t=0.0证据显示盒子位于黑色区域，随后操作发起"
+                  },
+                  "negative_a": {
+                    "text": "塑料盒未在黑色区域（如已在白色区域）",
+                    "reason": "推理：若目标位置已达成或物体不在起始位，搬运操作无意义或无法按原路径执行"
+                  },
+                  "negative_b": {
+                    "text": "塑料盒不在黑色区域",
+                    "reason": "推理：操作者不会向错误位置伸手，或需先重新定位，导致当前靠近动作不发起"
+                  }
+                }
+              },
+              {
+                "source_node_id": "node_1",
+                "node_id": null,
+                "kind": "C_post",
+                "text": "左手处于塑料盒的可抓取位置",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {
+                  "condition": "左手处于塑料盒的可抓取位置",
+                  "verdict": "有效",
+                  "confidence": 0.9,
+                  "evidence_kind": "model_counterfactual_review",
+                  "empirically_verified": false,
+                  "positive": {
+                    "text": "左手处于塑料盒的可抓取位置",
+                    "evidence": "t=1.4证据显示左手伸入并靠近盒子，处于可抓取距离"
+                  },
+                  "negative_a": {
+                    "text": "左手未到达可抓取位置（距离过远）",
+                    "reason": "推理：无法建立抓握，后续抓取动作失败"
+                  },
+                  "negative_b": {
+                    "text": "左手未到达可抓取位置",
+                    "reason": "推理：操作者会继续移动手臂直到进入可抓取范围，当前“靠近”节点未完成，不进入下一节点"
+                  }
+                }
+              },
+              {
+                "source_node_id": "node_3",
+                "node_id": null,
+                "kind": "C_pre",
+                "text": "左手处于塑料盒的可抓取位置",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {
+                  "condition": "左手处于塑料盒的可抓取位置",
+                  "verdict": "有效",
+                  "confidence": 0.9,
+                  "evidence_kind": "model_counterfactual_review",
+                  "empirically_verified": false,
+                  "positive": {
+                    "text": "左手处于塑料盒的可抓取位置",
+                    "evidence": "t=1.5证据显示手掌接触盒子左侧，处于抓取起始位"
+                  },
+                  "negative_a": {
+                    "text": "左手未处于可抓取位置",
+                    "reason": "推理：无法接触物体，抓取动作无法执行"
+                  },
+                  "negative_b": {
+                    "text": "左手未处于可抓取位置",
+                    "reason": "推理：操作者会先执行靠近动作，不会直接尝试抓取"
+                  }
+                }
+              },
+              {
+                "source_node_id": "node_3",
+                "node_id": null,
+                "kind": "C_pre",
+                "text": "左手处于张开状态",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {
+                  "condition": "左手处于张开状态",
+                  "verdict": "有效",
+                  "confidence": 0.85,
+                  "evidence_kind": "model_counterfactual_review",
+                  "empirically_verified": false,
+                  "positive": {
+                    "text": "左手处于张开状态",
+                    "evidence": "t=1.4-1.5证据显示手掌张开并接触盒子，具备抓取条件"
+                  },
+                  "negative_a": {
+                    "text": "左手未处于张开状态",
+                    "reason": "推理：手指无法环绕物体，无法建立有效抓握"
+                  },
+                  "negative_b": {
+                    "text": "左手未处于张开状态",
+                    "reason": "推理：若手未张开，操作者会先执行打开动作，不会直接抓取"
+                  }
+                }
+              },
+              {
+                "source_node_id": "node_3",
+                "node_id": null,
+                "kind": "C_post",
+                "text": "左手稳定握持塑料盒",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {
+                  "condition": "左手稳定握持塑料盒",
+                  "verdict": "有效",
+                  "confidence": 0.9,
+                  "evidence_kind": "model_counterfactual_review",
+                  "empirically_verified": false,
+                  "positive": {
+                    "text": "左手稳定握持塑料盒",
+                    "evidence": "t=2.5证据显示左手抓握盒子并使其离开黑色区域，握持稳定"
+                  },
+                  "negative_a": {
+                    "text": "左手握持不稳定",
+                    "reason": "推理：物体滑落，抓取失败，无法进入移动阶段"
+                  },
+                  "negative_b": {
+                    "text": "左手未稳定握持",
+                    "reason": "推理：若未握牢，操作者会重新调整抓握，不会直接开始移动"
+                  }
+                }
+              },
+              {
+                "source_node_id": "node_1",
+                "node_id": null,
+                "kind": "process",
+                "text": "左臂沿安全路径向塑料盒移动",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {
+                  "origin": "s05_rules"
+                }
+              },
+              {
+                "source_node_id": "node_1",
+                "node_id": null,
+                "kind": "process",
+                "text": "无碰撞障碍物",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {
+                  "origin": "s05_rules"
+                }
+              },
+              {
+                "source_node_id": "node_1",
+                "node_id": null,
+                "kind": "completion",
+                "text": "左手到达塑料盒的可抓取位置",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {
+                  "origin": "s05_rules"
+                }
+              },
+              {
+                "source_node_id": "node_1",
+                "node_id": null,
+                "kind": "failure_signals",
+                "text": "手臂偏离目标",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {
+                  "origin": "s05_rules"
+                }
+              },
+              {
+                "source_node_id": "node_1",
+                "node_id": null,
+                "kind": "failure_signals",
+                "text": "碰撞其他物体",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {
+                  "origin": "s05_rules"
+                }
+              },
+              {
+                "source_node_id": "node_3",
+                "node_id": null,
+                "kind": "process",
+                "text": "手接触物体并施加压力",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {
+                  "origin": "s05_rules"
+                }
+              },
+              {
+                "source_node_id": "node_3",
+                "node_id": null,
+                "kind": "process",
+                "text": "物体随手部轻微移动或受力反馈",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {
+                  "origin": "s05_rules"
+                }
+              },
+              {
+                "source_node_id": "node_3",
+                "node_id": null,
+                "kind": "completion",
+                "text": "建立稳定握持，物体不再相对手滑动",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {
+                  "origin": "s05_rules"
+                }
+              },
+              {
+                "source_node_id": "node_3",
+                "node_id": null,
+                "kind": "failure_signals",
+                "text": "物体滑脱",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {
+                  "origin": "s05_rules"
+                }
+              },
+              {
+                "source_node_id": "node_3",
+                "node_id": null,
+                "kind": "failure_signals",
+                "text": "握持不稳导致物体晃动",
+                "scope": "unmapped",
+                "status": "needs_review",
+                "claim": {
+                  "origin": "s05_rules"
+                }
+              }
+            ]
+          },
+          {
+            "id": "media_coverage",
+            "name": "源视频解码与证据覆盖",
+            "status": "pass",
+            "detail": []
+          }
+        ],
+        "needs_review": [
+          {
+            "id": "ts_1",
+            "issues": [
+              "members_unresolved_or_collapsed",
+              "unresolved_member_reference"
+            ]
+          },
+          {
+            "id": "ts_2",
+            "issues": [
+              "members_unresolved_or_collapsed",
+              "unresolved_member_reference"
+            ]
+          },
+          {
+            "id": "ts_3",
+            "issues": [
+              "members_unresolved_or_collapsed"
+            ]
+          },
+          {
+            "id": "ts_5",
+            "issues": [
+              "members_unresolved_or_collapsed",
+              "unresolved_member_reference"
+            ]
+          },
+          {
+            "id": "observed_relation_0",
+            "issues": [
+              "members_unresolved_or_collapsed"
+            ]
+          },
+          {
+            "id": "observed_relation_1",
+            "issues": [
+              "members_unresolved_or_collapsed"
+            ]
+          },
+          {
+            "source_node_id": "node_1",
+            "node_id": null,
+            "kind": "C_pre",
+            "text": "塑料盒静止在黑色区域",
+            "scope": "unmapped",
+            "status": "needs_review",
+            "claim": {}
+          },
+          {
+            "source_node_id": "node_1",
+            "node_id": null,
+            "kind": "C_post",
+            "text": "左手处于塑料盒的可抓取位置",
+            "scope": "unmapped",
+            "status": "needs_review",
+            "claim": {}
+          },
+          {
+            "source_node_id": "node_1",
+            "node_id": null,
+            "kind": "C_const",
+            "text": "不碰撞",
+            "scope": "unmapped",
+            "status": "needs_review",
+            "claim": {}
+          },
+          {
+            "source_node_id": "node_1",
+            "node_id": null,
+            "kind": "realization",
+            "text": "臂移动至抓取位置",
+            "scope": "unmapped",
+            "status": "needs_review",
+            "claim": {
+              "candidate": {
+                "name": "臂移动至抓取位置",
+                "origin": "observed",
+                "steps": [
+                  "靠近"
+                ]
+              }
+            }
+          },
+          {
+            "source_node_id": "node_1",
+            "node_id": null,
+            "kind": "process",
+            "text": "路径安全",
+            "scope": "unmapped",
+            "status": "needs_review",
+            "claim": {}
+          },
+          {
+            "source_node_id": "node_1",
+            "node_id": null,
+            "kind": "completion",
+            "text": "手到达可抓取位置",
+            "scope": "unmapped",
+            "status": "needs_review",
+            "claim": {}
+          },
+          {
+            "source_node_id": "node_3",
+            "node_id": null,
+            "kind": "C_pre",
+            "text": "左手处于塑料盒的可抓取位置",
+            "scope": "unmapped",
+            "status": "needs_review",
+            "claim": {}
+          },
+          {
+            "source_node_id": "node_3",
+            "node_id": null,
+            "kind": "C_pre",
+            "text": "左手处于张开状态",
+            "scope": "unmapped",
+            "status": "needs_review",
+            "claim": {}
+          },
+          {
+            "source_node_id": "node_3",
+            "node_id": null,
+            "kind": "C_post",
+            "text": "左手稳定握持塑料盒",
+            "scope": "unmapped",
+            "status": "needs_review",
+            "claim": {}
+          },
+          {
+            "source_node_id": "node_3",
+            "node_id": null,
+            "kind": "C_const",
+            "text": "握持稳定",
+            "scope": "unmapped",
+            "status": "needs_review",
+            "claim": {}
+          },
+          {
+            "source_node_id": "node_3",
+            "node_id": null,
+            "kind": "realization",
+            "text": "手指闭合抓握",
+            "scope": "unmapped",
+            "status": "needs_review",
+            "claim": {
+              "candidate": {
+                "name": "手指闭合抓握",
+                "origin": "observed",
+                "steps": [
+                  "抓取"
+                ]
+              }
+            }
+          },
+          {
+            "source_node_id": "node_3",
+            "node_id": null,
+            "kind": "process",
+            "text": "接触并施加压力",
+            "scope": "unmapped",
+            "status": "needs_review",
+            "claim": {}
+          },
+          {
+            "source_node_id": "node_3",
+            "node_id": null,
+            "kind": "completion",
+            "text": "建立稳定握持",
+            "scope": "unmapped",
+            "status": "needs_review",
+            "claim": {}
+          },
+          {
+            "source_node_id": "node_1",
+            "node_id": null,
+            "kind": "C_pre",
+            "text": "塑料盒静止在黑色区域",
+            "scope": "unmapped",
+            "status": "needs_review",
+            "claim": {
+              "condition": "塑料盒静止在黑色区域",
+              "verdict": "有效",
+              "confidence": 0.95,
+              "evidence_kind": "model_counterfactual_review",
+              "empirically_verified": false,
+              "positive": {
+                "text": "塑料盒静止在黑色区域",
+                "evidence": "t=0.0证据显示盒子位于黑色区域，随后操作发起"
+              },
+              "negative_a": {
+                "text": "塑料盒未在黑色区域（如已在白色区域）",
+                "reason": "推理：若目标位置已达成或物体不在起始位，搬运操作无意义或无法按原路径执行"
+              },
+              "negative_b": {
+                "text": "塑料盒不在黑色区域",
+                "reason": "推理：操作者不会向错误位置伸手，或需先重新定位，导致当前靠近动作不发起"
+              }
+            }
+          },
+          {
+            "source_node_id": "node_1",
+            "node_id": null,
+            "kind": "C_post",
+            "text": "左手处于塑料盒的可抓取位置",
+            "scope": "unmapped",
+            "status": "needs_review",
+            "claim": {
+              "condition": "左手处于塑料盒的可抓取位置",
+              "verdict": "有效",
+              "confidence": 0.9,
+              "evidence_kind": "model_counterfactual_review",
+              "empirically_verified": false,
+              "positive": {
+                "text": "左手处于塑料盒的可抓取位置",
+                "evidence": "t=1.4证据显示左手伸入并靠近盒子，处于可抓取距离"
+              },
+              "negative_a": {
+                "text": "左手未到达可抓取位置（距离过远）",
+                "reason": "推理：无法建立抓握，后续抓取动作失败"
+              },
+              "negative_b": {
+                "text": "左手未到达可抓取位置",
+                "reason": "推理：操作者会继续移动手臂直到进入可抓取范围，当前“靠近”节点未完成，不进入下一节点"
+              }
+            }
+          },
+          {
+            "source_node_id": "node_3",
+            "node_id": null,
+            "kind": "C_pre",
+            "text": "左手处于塑料盒的可抓取位置",
+            "scope": "unmapped",
+            "status": "needs_review",
+            "claim": {
+              "condition": "左手处于塑料盒的可抓取位置",
+              "verdict": "有效",
+              "confidence": 0.9,
+              "evidence_kind": "model_counterfactual_review",
+              "empirically_verified": false,
+              "positive": {
+                "text": "左手处于塑料盒的可抓取位置",
+                "evidence": "t=1.5证据显示手掌接触盒子左侧，处于抓取起始位"
+              },
+              "negative_a": {
+                "text": "左手未处于可抓取位置",
+                "reason": "推理：无法接触物体，抓取动作无法执行"
+              },
+              "negative_b": {
+                "text": "左手未处于可抓取位置",
+                "reason": "推理：操作者会先执行靠近动作，不会直接尝试抓取"
+              }
+            }
+          },
+          {
+            "source_node_id": "node_3",
+            "node_id": null,
+            "kind": "C_pre",
+            "text": "左手处于张开状态",
+            "scope": "unmapped",
+            "status": "needs_review",
+            "claim": {
+              "condition": "左手处于张开状态",
+              "verdict": "有效",
+              "confidence": 0.85,
+              "evidence_kind": "model_counterfactual_review",
+              "empirically_verified": false,
+              "positive": {
+                "text": "左手处于张开状态",
+                "evidence": "t=1.4-1.5证据显示手掌张开并接触盒子，具备抓取条件"
+              },
+              "negative_a": {
+                "text": "左手未处于张开状态",
+                "reason": "推理：手指无法环绕物体，无法建立有效抓握"
+              },
+              "negative_b": {
+                "text": "左手未处于张开状态",
+                "reason": "推理：若手未张开，操作者会先执行打开动作，不会直接抓取"
+              }
+            }
+          },
+          {
+            "source_node_id": "node_3",
+            "node_id": null,
+            "kind": "C_post",
+            "text": "左手稳定握持塑料盒",
+            "scope": "unmapped",
+            "status": "needs_review",
+            "claim": {
+              "condition": "左手稳定握持塑料盒",
+              "verdict": "有效",
+              "confidence": 0.9,
+              "evidence_kind": "model_counterfactual_review",
+              "empirically_verified": false,
+              "positive": {
+                "text": "左手稳定握持塑料盒",
+                "evidence": "t=2.5证据显示左手抓握盒子并使其离开黑色区域，握持稳定"
+              },
+              "negative_a": {
+                "text": "左手握持不稳定",
+                "reason": "推理：物体滑落，抓取失败，无法进入移动阶段"
+              },
+              "negative_b": {
+                "text": "左手未稳定握持",
+                "reason": "推理：若未握牢，操作者会重新调整抓握，不会直接开始移动"
+              }
+            }
+          },
+          {
+            "source_node_id": "node_1",
+            "node_id": null,
+            "kind": "process",
+            "text": "左臂沿安全路径向塑料盒移动",
+            "scope": "unmapped",
+            "status": "needs_review",
+            "claim": {
+              "origin": "s05_rules"
+            }
+          },
+          {
+            "source_node_id": "node_1",
+            "node_id": null,
+            "kind": "process",
+            "text": "无碰撞障碍物",
+            "scope": "unmapped",
+            "status": "needs_review",
+            "claim": {
+              "origin": "s05_rules"
+            }
+          },
+          {
+            "source_node_id": "node_1",
+            "node_id": null,
+            "kind": "completion",
+            "text": "左手到达塑料盒的可抓取位置",
+            "scope": "unmapped",
+            "status": "needs_review",
+            "claim": {
+              "origin": "s05_rules"
+            }
+          },
+          {
+            "source_node_id": "node_1",
+            "node_id": null,
+            "kind": "failure_signals",
+            "text": "手臂偏离目标",
+            "scope": "unmapped",
+            "status": "needs_review",
+            "claim": {
+              "origin": "s05_rules"
+            }
+          },
+          {
+            "source_node_id": "node_1",
+            "node_id": null,
+            "kind": "failure_signals",
+            "text": "碰撞其他物体",
+            "scope": "unmapped",
+            "status": "needs_review",
+            "claim": {
+              "origin": "s05_rules"
+            }
+          },
+          {
+            "source_node_id": "node_3",
+            "node_id": null,
+            "kind": "process",
+            "text": "手接触物体并施加压力",
+            "scope": "unmapped",
+            "status": "needs_review",
+            "claim": {
+              "origin": "s05_rules"
+            }
+          },
+          {
+            "source_node_id": "node_3",
+            "node_id": null,
+            "kind": "process",
+            "text": "物体随手部轻微移动或受力反馈",
+            "scope": "unmapped",
+            "status": "needs_review",
+            "claim": {
+              "origin": "s05_rules"
+            }
+          },
+          {
+            "source_node_id": "node_3",
+            "node_id": null,
+            "kind": "completion",
+            "text": "建立稳定握持，物体不再相对手滑动",
+            "scope": "unmapped",
+            "status": "needs_review",
+            "claim": {
+              "origin": "s05_rules"
+            }
+          },
+          {
+            "source_node_id": "node_3",
+            "node_id": null,
+            "kind": "failure_signals",
+            "text": "物体滑脱",
+            "scope": "unmapped",
+            "status": "needs_review",
+            "claim": {
+              "origin": "s05_rules"
+            }
+          },
+          {
+            "source_node_id": "node_3",
+            "node_id": null,
+            "kind": "failure_signals",
+            "text": "握持不稳导致物体晃动",
+            "scope": "unmapped",
+            "status": "needs_review",
+            "claim": {
+              "origin": "s05_rules"
+            }
+          }
+        ]
+      },
+      "result_sha256": "21987bd928b768b4b2809e9c73317ef92debdb79b6c48f8bf75f1bcddb5e5b0a"
+    },
+    {
+      "case": "video_09_semantic_v3",
+      "validation": {
+        "passed": true,
+        "summary": "9 项检查，提醒 1，失败 0",
+        "checks": [
+          {
+            "id": "param_discipline",
+            "name": "参数纪律（不出现角度/距离/力值等具体数值）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "time_sanity",
+            "name": "时间合法性",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "references",
+            "name": "引用完整性（节点/动作/关系互相指得上）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "ignored_parts",
+            "name": "不参与操作的部位纪律（操作语义里不含头 / 颈 / 口的内容）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "semantic_schema",
+            "name": "单主体语义契约与结构完整性",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "grasp_preparation",
+            "name": "抓握前手张开与证据来源",
+            "status": "pass",
+            "detail": [
+              {
+                "id": "reach:右手:2",
+                "executor": "右臂",
+                "hand": "右手",
+                "object": "透明塑料盒",
+                "grasp_ref": 2,
+                "approach_ref": 1,
+                "required_state": "右手在抓握前处于透明塑料盒的可抓取位置",
+                "purpose": "右臂带着右手靠近目标，为手建立抓握提供空间条件",
+                "status": "approach_observed",
+                "note": "观察到靠近不等于已证实抓取位姿；目标是否超出整个机械臂工作空间需要另行判断。"
+              }
+            ]
+          },
+          {
+            "id": "arm_hand_coordination",
+            "name": "臂手功能与抓持生效边界",
+            "status": "warn",
+            "detail": [
+              {
+                "id": "reach:右手:2",
+                "executor": "右臂",
+                "hand": "右手",
+                "object": "透明塑料盒",
+                "grasp_ref": 2,
+                "approach_ref": 1,
+                "required_state": "右手在抓握前处于透明塑料盒的可抓取位置",
+                "purpose": "右臂带着右手靠近目标，为手建立抓握提供空间条件",
+                "status": "approach_observed",
+                "note": "观察到靠近不等于已证实抓取位姿；目标是否超出整个机械臂工作空间需要另行判断。"
+              }
+            ]
+          },
+          {
+            "id": "learning_scope",
+            "name": "学习结果映射与时序语义复核",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "media_coverage",
+            "name": "源视频解码与证据覆盖",
+            "status": "pass",
+            "detail": []
+          }
+        ],
+        "needs_review": [
+          {
+            "id": "reach:右手:2",
+            "executor": "右臂",
+            "hand": "右手",
+            "object": "透明塑料盒",
+            "grasp_ref": 2,
+            "approach_ref": 1,
+            "required_state": "右手在抓握前处于透明塑料盒的可抓取位置",
+            "purpose": "右臂带着右手靠近目标，为手建立抓握提供空间条件",
+            "status": "approach_observed",
+            "note": "观察到靠近不等于已证实抓取位姿；目标是否超出整个机械臂工作空间需要另行判断。"
+          }
+        ]
+      },
+      "result_sha256": "654a2c3aafd966d9536283441c907b1a960af5f2b8c48bc08916c7020e08a09d"
+    },
+    {
+      "case": "video_10_semantic_v3",
+      "validation": {
+        "passed": true,
+        "summary": "9 项检查，提醒 2，失败 0",
+        "checks": [
+          {
+            "id": "param_discipline",
+            "name": "参数纪律（不出现角度/距离/力值等具体数值）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "time_sanity",
+            "name": "时间合法性",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "references",
+            "name": "引用完整性（节点/动作/关系互相指得上）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "ignored_parts",
+            "name": "不参与操作的部位纪律（操作语义里不含头 / 颈 / 口的内容）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "semantic_schema",
+            "name": "单主体语义契约与结构完整性",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "grasp_preparation",
+            "name": "抓握前手张开与证据来源",
+            "status": "pass",
+            "detail": [
+              {
+                "id": "reach:右手:2",
+                "executor": "右臂",
+                "hand": "右手",
+                "object": "透明塑料盒",
+                "grasp_ref": 2,
+                "approach_ref": 1,
+                "required_state": "右手在抓握前处于透明塑料盒的可抓取位置",
+                "purpose": "右臂带着右手靠近目标，为手建立抓握提供空间条件",
+                "status": "approach_observed",
+                "note": "观察到靠近不等于已证实抓取位姿；目标是否超出整个机械臂工作空间需要另行判断。"
+              },
+              {
+                "id": "ts_5",
+                "issues": [
+                  "conflicts_with_required_order"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "arm_hand_coordination",
+            "name": "臂手功能与抓持生效边界",
+            "status": "warn",
+            "detail": [
+              {
+                "id": "reach:右手:2",
+                "executor": "右臂",
+                "hand": "右手",
+                "object": "透明塑料盒",
+                "grasp_ref": 2,
+                "approach_ref": 1,
+                "required_state": "右手在抓握前处于透明塑料盒的可抓取位置",
+                "purpose": "右臂带着右手靠近目标，为手建立抓握提供空间条件",
+                "status": "approach_observed",
+                "note": "观察到靠近不等于已证实抓取位姿；目标是否超出整个机械臂工作空间需要另行判断。"
+              }
+            ]
+          },
+          {
+            "id": "learning_scope",
+            "name": "学习结果映射与时序语义复核",
+            "status": "warn",
+            "detail": [
+              {
+                "id": "ts_5",
+                "issues": [
+                  "conflicts_with_required_order"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "media_coverage",
+            "name": "源视频解码与证据覆盖",
+            "status": "pass",
+            "detail": []
+          }
+        ],
+        "needs_review": [
+          {
+            "id": "reach:右手:2",
+            "executor": "右臂",
+            "hand": "右手",
+            "object": "透明塑料盒",
+            "grasp_ref": 2,
+            "approach_ref": 1,
+            "required_state": "右手在抓握前处于透明塑料盒的可抓取位置",
+            "purpose": "右臂带着右手靠近目标，为手建立抓握提供空间条件",
+            "status": "approach_observed",
+            "note": "观察到靠近不等于已证实抓取位姿；目标是否超出整个机械臂工作空间需要另行判断。"
+          },
+          {
+            "id": "ts_5",
+            "issues": [
+              "conflicts_with_required_order"
+            ]
+          }
+        ]
+      },
+      "result_sha256": "30e80731cea9423f02f0ef9a645c5d448e33fd3da5bb3405d1dd4d8d099eeeb8"
+    },
+    {
+      "case": "video_11_semantic_v3",
+      "validation": {
+        "passed": true,
+        "summary": "9 项检查，提醒 0，失败 0",
+        "checks": [
+          {
+            "id": "param_discipline",
+            "name": "参数纪律（不出现角度/距离/力值等具体数值）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "time_sanity",
+            "name": "时间合法性",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "references",
+            "name": "引用完整性（节点/动作/关系互相指得上）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "ignored_parts",
+            "name": "不参与操作的部位纪律（操作语义里不含头 / 颈 / 口的内容）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "semantic_schema",
+            "name": "单主体语义契约与结构完整性",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "grasp_preparation",
+            "name": "抓握前手张开与证据来源",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "arm_hand_coordination",
+            "name": "臂手功能与抓持生效边界",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "learning_scope",
+            "name": "学习结果映射与时序语义复核",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "media_coverage",
+            "name": "源视频解码与证据覆盖",
+            "status": "pass",
+            "detail": []
+          }
+        ],
+        "needs_review": []
+      },
+      "result_sha256": "2efe7951160058ba27630a96170d467d3fe8b923349d37641d539fa408764102"
+    },
+    {
+      "case": "video_12_semantic_v3",
+      "validation": {
+        "passed": true,
+        "summary": "9 项检查，提醒 0，失败 0",
+        "checks": [
+          {
+            "id": "param_discipline",
+            "name": "参数纪律（不出现角度/距离/力值等具体数值）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "time_sanity",
+            "name": "时间合法性",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "references",
+            "name": "引用完整性（节点/动作/关系互相指得上）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "ignored_parts",
+            "name": "不参与操作的部位纪律（操作语义里不含头 / 颈 / 口的内容）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "semantic_schema",
+            "name": "单主体语义契约与结构完整性",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "grasp_preparation",
+            "name": "抓握前手张开与证据来源",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "arm_hand_coordination",
+            "name": "臂手功能与抓持生效边界",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "learning_scope",
+            "name": "学习结果映射与时序语义复核",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "media_coverage",
+            "name": "源视频解码与证据覆盖",
+            "status": "pass",
+            "detail": []
+          }
+        ],
+        "needs_review": []
+      },
+      "result_sha256": "6ffa305ba93ecac825059feaeb9253d8f9685e07a4bc7db396b2757dba06be6f"
+    },
+    {
+      "case": "video_13_semantic_v3",
+      "validation": {
+        "passed": true,
+        "summary": "9 项检查，提醒 0，失败 0",
+        "checks": [
+          {
+            "id": "param_discipline",
+            "name": "参数纪律（不出现角度/距离/力值等具体数值）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "time_sanity",
+            "name": "时间合法性",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "references",
+            "name": "引用完整性（节点/动作/关系互相指得上）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "ignored_parts",
+            "name": "不参与操作的部位纪律（操作语义里不含头 / 颈 / 口的内容）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "semantic_schema",
+            "name": "单主体语义契约与结构完整性",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "grasp_preparation",
+            "name": "抓握前手张开与证据来源",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "arm_hand_coordination",
+            "name": "臂手功能与抓持生效边界",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "learning_scope",
+            "name": "学习结果映射与时序语义复核",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "media_coverage",
+            "name": "源视频解码与证据覆盖",
+            "status": "pass",
+            "detail": []
+          }
+        ],
+        "needs_review": []
+      },
+      "result_sha256": "10f76eae6f4c5e46e4f7b8fbe13d08ec66d93cb816c9e5a6b1c610095810e81e"
+    },
+    {
+      "case": "video_14_semantic_v3",
+      "validation": {
+        "passed": true,
+        "summary": "9 项检查，提醒 0，失败 0",
+        "checks": [
+          {
+            "id": "param_discipline",
+            "name": "参数纪律（不出现角度/距离/力值等具体数值）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "time_sanity",
+            "name": "时间合法性",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "references",
+            "name": "引用完整性（节点/动作/关系互相指得上）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "ignored_parts",
+            "name": "不参与操作的部位纪律（操作语义里不含头 / 颈 / 口的内容）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "semantic_schema",
+            "name": "单主体语义契约与结构完整性",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "grasp_preparation",
+            "name": "抓握前手张开与证据来源",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "arm_hand_coordination",
+            "name": "臂手功能与抓持生效边界",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "learning_scope",
+            "name": "学习结果映射与时序语义复核",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "media_coverage",
+            "name": "源视频解码与证据覆盖",
+            "status": "pass",
+            "detail": []
+          }
+        ],
+        "needs_review": []
+      },
+      "result_sha256": "a294f4011d28ad3a80bc915b23251bf38a72b38b35b63aadfc4f25a11f073ee5"
+    },
+    {
+      "case": "video_15_semantic_v3",
+      "validation": {
+        "passed": true,
+        "summary": "9 项检查，提醒 2，失败 0",
+        "checks": [
+          {
+            "id": "param_discipline",
+            "name": "参数纪律（不出现角度/距离/力值等具体数值）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "time_sanity",
+            "name": "时间合法性",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "references",
+            "name": "引用完整性（节点/动作/关系互相指得上）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "ignored_parts",
+            "name": "不参与操作的部位纪律（操作语义里不含头 / 颈 / 口的内容）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "semantic_schema",
+            "name": "单主体语义契约与结构完整性",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "grasp_preparation",
+            "name": "抓握前手张开与证据来源",
+            "status": "pass",
+            "detail": [
+              {
+                "id": "reach:左手:2",
+                "executor": "左臂",
+                "hand": "左手",
+                "object": "透明塑料盒",
+                "grasp_ref": 2,
+                "approach_ref": 1,
+                "required_state": "左手在抓握前处于透明塑料盒的可抓取位置",
+                "purpose": "左臂带着左手靠近目标，为手建立抓握提供空间条件",
+                "status": "approach_observed",
+                "note": "观察到靠近不等于已证实抓取位姿；目标是否超出整个机械臂工作空间需要另行判断。"
+              },
+              {
+                "id": "ts_5",
+                "issues": [
+                  "conflicts_with_required_order"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "arm_hand_coordination",
+            "name": "臂手功能与抓持生效边界",
+            "status": "warn",
+            "detail": [
+              {
+                "id": "reach:左手:2",
+                "executor": "左臂",
+                "hand": "左手",
+                "object": "透明塑料盒",
+                "grasp_ref": 2,
+                "approach_ref": 1,
+                "required_state": "左手在抓握前处于透明塑料盒的可抓取位置",
+                "purpose": "左臂带着左手靠近目标，为手建立抓握提供空间条件",
+                "status": "approach_observed",
+                "note": "观察到靠近不等于已证实抓取位姿；目标是否超出整个机械臂工作空间需要另行判断。"
+              }
+            ]
+          },
+          {
+            "id": "learning_scope",
+            "name": "学习结果映射与时序语义复核",
+            "status": "warn",
+            "detail": [
+              {
+                "id": "ts_5",
+                "issues": [
+                  "conflicts_with_required_order"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "media_coverage",
+            "name": "源视频解码与证据覆盖",
+            "status": "pass",
+            "detail": []
+          }
+        ],
+        "needs_review": [
+          {
+            "id": "reach:左手:2",
+            "executor": "左臂",
+            "hand": "左手",
+            "object": "透明塑料盒",
+            "grasp_ref": 2,
+            "approach_ref": 1,
+            "required_state": "左手在抓握前处于透明塑料盒的可抓取位置",
+            "purpose": "左臂带着左手靠近目标，为手建立抓握提供空间条件",
+            "status": "approach_observed",
+            "note": "观察到靠近不等于已证实抓取位姿；目标是否超出整个机械臂工作空间需要另行判断。"
+          },
+          {
+            "id": "ts_5",
+            "issues": [
+              "conflicts_with_required_order"
+            ]
+          }
+        ]
+      },
+      "result_sha256": "d1696de4b4c350ee59a0044f24b02e3c0a1ffcaad492d916635ca947eb668dce"
+    },
+    {
+      "case": "video_16_semantic_v3",
+      "validation": {
+        "passed": true,
+        "summary": "9 项检查，提醒 0，失败 0",
+        "checks": [
+          {
+            "id": "param_discipline",
+            "name": "参数纪律（不出现角度/距离/力值等具体数值）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "time_sanity",
+            "name": "时间合法性",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "references",
+            "name": "引用完整性（节点/动作/关系互相指得上）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "ignored_parts",
+            "name": "不参与操作的部位纪律（操作语义里不含头 / 颈 / 口的内容）",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "semantic_schema",
+            "name": "单主体语义契约与结构完整性",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "grasp_preparation",
+            "name": "抓握前手张开与证据来源",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "arm_hand_coordination",
+            "name": "臂手功能与抓持生效边界",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "learning_scope",
+            "name": "学习结果映射与时序语义复核",
+            "status": "pass",
+            "detail": []
+          },
+          {
+            "id": "media_coverage",
+            "name": "源视频解码与证据覆盖",
+            "status": "pass",
+            "detail": []
+          }
+        ],
+        "needs_review": []
+      },
+      "result_sha256": "8cdade14e061466e174e0c95ebac40f66926a4b6940ac7ae1f4eba3552fdb081"
+    }
+  ],
+  "policy": "The previous experiment is frozen; changes are generated in a new run."
+}

@@ -71,8 +71,8 @@ def test_complete_offline_pipeline_exports_overall_motion_and_timing(tmp_path, m
     for name in ("result.json", "operations.svg", "report.html", "workbench.html",
                  "semantic_graph.yaml", "action_catalog.json", "performance.json"):
         assert (out / name).is_file(), name
-    assert not (out / "program.json").exists()
-    assert not (out / "execution_policy.yaml").exists()
+    assert __import__("json").loads((out / "program.json").read_text())["status"] == "unbound"
+    assert "status: unbound" in (out / "execution_policy.yaml").read_text()
     assert (old / "result.json").read_text() == "original"
     stored = json.loads((out / "result.json").read_text())
     performance = json.loads((out / "performance.json").read_text())

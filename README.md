@@ -1,3 +1,33 @@
+# 当前交付：视频语义学习（2026-11-11）
+
+当前项目目录：/home/wj/codex-workspace/videostudy_operation；程序与测试均在服务器 conda study 环境运行。
+
+- 当前回归：394 项通过；16 段每段12项结构检查无失败，待复核项保留。
+- 标准技能视图：skill_tuples.json；完整知识与审计：knowledge.json。
+- constraints.json / evaluators.json / effective_conditions.json 保留判据、来源和候选状态；case_predicate_bindings.json 关联案例与跨视频谓词。
+- 给定任务、模型推测意图、局部子任务分别保存。任务 outcome 支持 success / failure / not_executed / unknown；过程掉落单独记录，未标注异常保持 unknown。
+- 语义层额外导出 execution_policy.yaml、program.json，均为 unbound。tools/verify_contract.py 对当前schema只检查结构与引用，不运行机器人。
+- 两套知识用途分开：knowledge_development 只用13段；knowledge_all_16 是含参考标注的事后展示。02/06/14 的独立观察另存 holdout_observations。
+- 最新交付目录：output/semantic_learning_20261111_delivery。完整入口和未完成实证见该目录及根目录《按两张图完成任务验收报告.md》。
+- 支持视角分类和单机位视频；尚未覆盖多视角联合输入。行为子树、机器人执行和反馈闭环属于本轮范围外。
+
+在项目根目录运行：
+
+```bash
+conda run -n study python -B -m pytest -q -p no:cacheprovider
+conda run -n study python -B tools/import_task_observations.py
+conda run -n study python -B tools/finish_semantic_learning.py --out output/<新的实验目录>
+conda run -n study python -B tools/verify_contract.py output/<实验>/knowledge_all_16/cases/<案例>
+conda run -n study python -B tools/kb_query.py skill_relocate_and_release
+conda run -n study python -B run.py data/<视频>.mp4 --description <UTF-8背景文件> --output-root output/<新目录>
+```
+
+背景文字只影响意图上下文，不作为已观察成功的证据。无description时保留原请求内容。
+
+以下保留各历史阶段说明；版本数字属于相应历史记录，当前行为以本节、代码和最新验收报告为准。
+
+---
+
 > **2026-11-02：按子任务目的与效果跨视频归纳。**
 > 意图与动作观察独立并发，条件/评价规则按来源映射到最终图；增加对象任务族、实现分支、真实观察对照统计及视频解码审计。
 > 新入口：`python learn.py --inputs <案例目录...> --out <新目录>`。运行、效果边界与四视频验证见 [语义学习升级_20261102.md](语义学习升级_20261102.md)。
@@ -88,7 +118,7 @@ PRE / POST / CONST，判定只读已有证据（`gates.py`，见 4.10 节）。�
 ## 一、快速开始
 
 ```bash
-cd /data/wj_data/deepseek_videostudy2
+cd /home/wj/codex-workspace/videostudy_operation
 
 # 跑单个视频（结果落在 output/<视频名>/）
 /home/wj/miniconda3/envs/study/bin/python run.py data/搬物体.mp4
@@ -842,7 +872,7 @@ cd 操作图同事的 && python main.py --graph 移动物体   # 用它自己的
 /home/wj/miniconda3/envs/study/bin/python -m pytest tests/ -q
 ```
 
-确定性测试（不调模型，当前 178 条：177 通过，1 条遗留失败见本节末），按文件细分：
+确定性测试不调用模型；2026-11-11 实测 394 项全部通过，按文件细分：
 
 - **test_merge.py**：跨窗口合并确定性——重叠窗口同动作合并、until 局部 id 重映射、状态补链、
   腿部交替识别（双臂不误判）、边界缝合与反义不合并、保持与移动重叠截断、关系去重。
@@ -869,9 +899,7 @@ cd 操作图同事的 && python main.py --graph 移动物体   # 用它自己的
   释放拆分、保持终点资源冲突被报出、谓词名稳定、契约 schema 对齐执行侧、
   子操作展开的保持覆盖与检查点。
 
-已知遗留失败 1 条：`test_ignored_text.py::test_purge_drops_ignored_actions_and_cleans_references`
-（tests/test_ignored_text.py）——它期望 `purge` 把纯头/口内容的节点名清空，而实现按
-`_KEEP_WHEN_EMPTY` 保留原文并记 `unresolved` 留给 s06。两边口径待定，先记录不掩盖。
+2026-11-11 全量回归没有遗留失败。新增交付测试覆盖任务结果分层、审阅边界、留出隔离、七元组守恒与待绑定接口。
 
 ---
 
@@ -918,7 +946,7 @@ tools/                 探针、验证、安装、重建与查看脚本（见第
 - 时间戳来自模型对画面变化的判断，配了帧差运动证据做锚点，但**不是**毫米级标注；
   长视频按窗口切分后合并，边界动作靠"截断标记 + 文本相似"缝合。
 - 遮挡、多人、剧烈镜头运动会让某些部位无法观测，这类情况进入 `missing_or_unclear` 或由规则补全并标记 `inferred=true`。
-- 单视频产物是**这一例怎么做的**，不是普遍规则；跨视频归纳不在本仓库范围内。
+- 单视频保留特例；learn.py 可跨视频归纳目的、实现和候选条件。归纳结果的适用性与因果性按证据另行核验。
 
 ---
 
@@ -1046,7 +1074,7 @@ CLI 薄壳），`pipeline.run_case` 与 `tools/render_case.py` 在渲染阶段�
 重建已有案例（独立输出，保留原结果）：
 
 ```bash
-cd /data/wj_data/deepseek_videostudy2
+cd /home/wj/codex-workspace/videostudy_operation
 /home/wj/miniconda3/envs/study/bin/python tools/rebuild_semantics.py \
   output/搬物体/result.json output/搬物体_语义修订 --refresh-task
 ```

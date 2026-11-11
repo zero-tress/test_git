@@ -44,6 +44,16 @@ def extract(bundle: dict, source: str) -> dict:
                                "target": target, "atomic_refs": n["atomic_refs"],
                                "intent_ids": [], "confidence": None, "outcome": "unknown",
                                "realization": "单节点抓取", "origin": "semantic_leaf_projection"})
+    task_observation = bundle.get("task_observation")
+    if task_observation and task_observation.get("attempted") == "T" and actions:
+        target = next((s.get("target") for s in scopes if s.get("goal_key") == "relocate_object"), None)
+        target = target or next(iter(labels), None) or task_observation.get("target_description", "任务目标对象")
+        scopes.append({"id": "provided_task", "goal_key": "relocate_and_release", "target": target,
+                       "destination": task_observation["task_contract"]["destination"],
+                       "atomic_refs": list(actions), "intent_ids": [], "confidence": None,
+                       "outcome": task_observation["outcome"], "outcome_evidence": task_observation["evidence"],
+                       "realization": task_observation.get("method", "Unknown"),
+                       "instance_scope": "provided_task", "causal_status": "hypothesis"})
     instances, unresolved, observations = [], [], []
     for s in scopes:
         goal, target = s.get("goal_key"), s.get("target")
@@ -80,6 +90,14 @@ def extract(bundle: dict, source: str) -> dict:
                     "causal_status": s.get("causal_status", "hypothesis"),
                     "candidate_conditions": [deepcopy(r) for r in bundle.get("learning_alignment", {}).get("records", [])
                                              if r.get("node_id") in local_ids and r["kind"] in {"C_pre", "C_post", "C_const"}]}
+        instance["skill_ref"] = "skill_" + goal
+        instance["instance_scope"] = s.get("instance_scope", "subtask")
+        instance["evaluation_criteria"] = {key: list(dict.fromkeys(
+            str(v) for n in local_nodes for v in (
+                (n.get("tuple", {}).get("E") or {}).get(key, [])
+                if isinstance(n.get("tuple", {}).get("E"), dict) else [])))
+            for key in ("process", "completion", "failure_signals")}
+        instance["source_node_refs"] = [n["id"] for n in local_nodes]
         effect_issues = []
         if goal == "acquire_object" and not any(n["name"] == "移动" for n in local_nodes):
             effect_issues.append("acquisition_scope_has_no_transport_or_lift_transition")
@@ -95,6 +113,20 @@ def extract(bundle: dict, source: str) -> dict:
         if any(a.get("media_coverage_status") == "outside_decoded_coverage" for a in selected):
             instance["original_model_outcome"] = instance["outcome"]
             instance.update(outcome="unknown", outcome_evidence=[], outcome_status="unverified")
+        if task_observation and goal == "relocate_object":
+            destination = task_observation["task_contract"].get("destination")
+            if s.get("destination") != destination:
+                instance["original_local_outcome"] = instance["outcome"]
+                instance.update(outcome="unknown", outcome_status="unverified")
+                instance["goal_effect_audit"]["issues"].append("local_destination_not_aligned_with_provided_task")
+                instance["goal_effect_audit"]["status"] = "needs_review"
+        if instance["instance_scope"] == "provided_task":
+            instance["task_contract"] = deepcopy(task_observation["task_contract"])
+            instance["task_observation_ref"] = task_observation["observation_id"]
+            instance["outcome_status"] = ("reviewed_reference" if task_observation.get("provenance") == "existing_annotation"
+                                          else "model_grounded_candidate")
+            instance["goal_effect_audit"] = {"status": "verified" if instance["outcome_status"] == "reviewed_reference" else "candidate_requires_entailment_review",
+                                             "issues": [], "verification_basis": task_observation.get("provenance")}
         instances.append(instance)
         for c in (bundle.get("semantic_scope") or {}).get("condition_observations") or []:
             if c.get("subtask_id") == s["id"]:
@@ -104,7 +136,8 @@ def extract(bundle: dict, source: str) -> dict:
                                      "provenance": "model_grounded_candidate"})
     from .semantic import validate as validate_case
     case_validation = bundle.get("validation") or validate_case(bundle)
-    return {"video_uid": uid, "identity_kind": identity_kind, "case_validation": case_validation, "media_quality": bundle.get("meta", {}).get("media_quality", {}), "instances": instances,
+    return {"video_uid": uid, "identity_kind": identity_kind, "source": source,
+            "task_observation": deepcopy(task_observation), "case_validation": case_validation, "media_quality": bundle.get("meta", {}).get("media_quality", {}), "instances": instances,
             "unresolved": unresolved, "observations": observations,
             "video_intents": deepcopy(bundle.get("intents") or {}),
             "temporal_knowledge": deepcopy(bundle.get("temporal_knowledge") or {})}
@@ -138,18 +171,31 @@ def aggregate(cases: list[dict], reviewed: list[dict] | None = None) -> dict:
                 "policy": "First analysis selected; another analysis of identical video is not another demonstration."})
             continue
         sources.setdefault(uid, {"video_uid": uid, "identity_kind": case["identity_kind"],
-                                "source_files": [], "case_validation": case.get("case_validation", {}),
+                                "source_files": [case["source"]] if case.get("source") else [], "case_validation": case.get("case_validation", {}),
                                 "media_quality": case.get("media_quality", {}),
                                 "intent_hypotheses": case["video_intents"],
                                 "temporal_knowledge": case["temporal_knowledge"]})
         for instance in case["instances"]:
             if instance["source"] not in sources[uid]["source_files"]:
                 sources[uid]["source_files"].append(instance["source"])
-            instances.setdefault(instance["instance_id"], instance)
+            instances.setdefault(instance["instance_id"], deepcopy(instance))
         unresolved.extend(case["unresolved"])
         observations.extend(case["observations"])
     # Reviewed rows must name actual loaded instances and evidence; validate in CLI.
-    observations += deepcopy(reviewed or [])
+    # Explicit local reviews apply only to the named instance.
+    from .review import validate_reviewed
+    reviewed = validate_reviewed(reviewed or [], list(instances.values()))
+    for row in reviewed:
+        if row.get("outcome_review"):
+            item = instances[row["instance_id"]]
+            item.setdefault("original_model_outcome", item["outcome"])
+            item.update(outcome=row["outcome"], outcome_evidence=deepcopy(row["outcome_evidence"]),
+                        outcome_status="reviewed_reference")
+    for obs in observations:
+        if obs.get("instance_id") in instances:
+            corrected = instances[obs["instance_id"]]
+            obs.update(outcome=corrected["outcome"], outcome_evidence=deepcopy(corrected["outcome_evidence"]))
+    observations += [deepcopy(r) for r in reviewed if r.get("condition_key")]
     grouped, families = defaultdict(list), defaultdict(list)
     for item in instances.values():
         grouped[item["goal_key"]].append(item)
@@ -192,6 +238,15 @@ def aggregate(cases: list[dict], reviewed: list[dict] | None = None) -> dict:
                   "provenance": "seed goal contracts are declared; observed processes and memberships are induced",
                   "causality": "preceding another object's movement does not establish a prerequisite",
                   "selection": "no controller or execution-policy selection in the learning layer"}}
+    from .task_observations import condition_observations
+    result["task_observations"] = list({c["video_uid"]: deepcopy(c["task_observation"]) for c in reversed(cases) if c.get("task_observation")}.values())
+    result["task_condition_induction"] = induce(condition_observations(result["task_observations"]))
+    for skill in result["skills"]:
+        skill["causal_verification"] = {
+            "status": "not_established",
+            "reasons": ["Observational examples and imported task outcomes are not controlled causal trials.",
+                        "Realization-specific preconditions and effect entailment need further review."],
+            "source_video_sha256": sorted({instances[i]["video_uid"] for i in skill["instance_ids"]})}
     result["validation"] = validate(result)
     return result
 
@@ -243,8 +298,14 @@ def validate(knowledge: dict) -> dict:
         errors.extend(e.message for e in jsonschema.Draft7Validator(schema).iter_errors(knowledge))
     except (OSError, ImportError) as exc:
         errors.append("knowledge schema unavailable: " + str(exc))
+    unverified = [{"instance_id": i["instance_id"], "reason": "outcome_or_goal_entailment_not_reviewed"}
+                  for i in instances.values() if i.get("outcome_status") != "reviewed_reference"
+                  or i.get("goal_effect_audit", {}).get("status") != "verified"]
     return {"passed": not errors, "errors": sorted(set(errors)),
-            "semantic_success_verified": False}
+            "semantic_success_verified": bool(instances) and not errors and not unverified,
+            "verification_basis": {"reviewed_instances": len(instances) - len(unverified),
+                                   "unverified_instances": unverified,
+                                   "causal_policy": "Outcome evidence does not establish universal applicability."}}
 
 
 def render(knowledge: dict) -> str:
@@ -268,7 +329,9 @@ def render(knowledge: dict) -> str:
     summary = {"task_families": knowledge["task_families"],
                "conditions": [{k: v for k, v in c.items() if k != "examples"} for c in knowledge["condition_induction"]["conditions"]],
                "unresolved": knowledge["unresolved"], "validation": knowledge["validation"], "policy": knowledge["policy"],
-               "full_provenance": "knowledge.json"}
+               "task_observations": knowledge.get("task_observations", []),
+               "task_conditions": knowledge.get("task_condition_induction", {}),
+               "standard_skill_view": "skill_tuples.json", "full_provenance": "knowledge.json"}
     summary["media_quality"] = [{"source_files": r["source_files"], "quality": r.get("media_quality", {})}
                                 for r in knowledge["sources"]]
     summary["goal_effect_issues"] = [{"instance_id": i["instance_id"], "target": i["target"],

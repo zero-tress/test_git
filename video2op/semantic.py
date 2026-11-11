@@ -261,6 +261,8 @@ def export(bundle: dict, out: Path) -> None:
     out.mkdir(parents=True, exist_ok=True)
     (out / "semantic_graph.yaml").write_text(yaml.safe_dump(graph, allow_unicode=True, sort_keys=False), encoding="utf-8")
     (out / "action_catalog.json").write_text(json.dumps(catalog(), ensure_ascii=False, indent=2), encoding="utf-8")
+    from .semantic_interface import export as export_interface
+    export_interface(bundle, out)
 
 
 def render(bundle: dict, out: Path) -> None:
@@ -326,7 +328,30 @@ def validate(bundle: dict) -> dict:
     checks.append({"id": "media_coverage", "name": "源视频解码与证据覆盖",
                    "status": "warn" if media_pending else "pass", "detail": media_pending})
     pending += media_pending
+    from .semantic_checks import causal_consistency, pre_post_consistency, temporal_consistency
+    checks.extend([causal_consistency(bundle), pre_post_consistency(bundle), temporal_consistency(bundle)])
+    pending += [d for c in checks[-3:] if c["status"] == "warn" for d in c["detail"]]
     failed = sum(c["status"] == "fail" for c in checks)
     warned = sum(c["status"] == "warn" for c in checks)
+    effect_items = [e for n in (bundle.get("operations") or {}).get("nodes", []) for e in n.get("effect_evidence", [])]
+    operation_by_id = {n["id"]: n for n in (bundle.get("operations") or {}).get("nodes", [])}
+    missing_effects = []
+    for nid, node in graph["nodes"].items():
+        if nid in {"START", "END"}:
+            continue
+        source = graph.get("evidence", {}).get(nid, {}).get("source_node")
+        op = operation_by_id.get(source, {})
+        for pid in node["skill"]["C_post"]:
+            condition = graph["predicates"][pid]["text"]
+            if not any(e.get("condition") == condition and e.get("verification_status") == "verified"
+                       for e in op.get("effect_evidence", [])):
+                missing_effects.append({"node": nid, "condition": condition})
+    success_verified = (failed == 0 and bool(effect_items) and not missing_effects
+                        and all(e.get("verification_status") == "verified" for e in effect_items)
+                        and bool(bundle.get("effect_review_records")))
     return {"passed": failed == 0, "summary": f"{len(checks)} 项检查，提醒 {warned}，失败 {failed}", "checks": checks,
-            "needs_review": graph["x-meta"]["capability_gaps"] + pending}
+            "needs_review": graph["x-meta"]["capability_gaps"] + pending,
+            "semantic_success_verified": success_verified,
+            "verification_basis": {"unverified_effects": len([e for e in effect_items if e.get("verification_status") != "verified"]),
+                                   "missing_reviewed_postconditions": missing_effects,
+                                   "policy": "All node effects require scoped review; structure alone does not prove success."}}

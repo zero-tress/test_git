@@ -2,6 +2,10 @@
 from __future__ import annotations
 
 GOALS = {
+    "relocate_and_release": {"name": "搬移到目标区并结束接触", "purpose": "使目标到达指定区域、静止且与手分离",
+                             "effects": [("at_destination", ("target", "destination"), True),
+                                         ("stationary", ("target",), True),
+                                         ("holding", ("actor", "target"), False)]},
     "grasp_object": {"name": "抓取对象", "purpose": "建立对目标的稳定握持",
                      "effects": [("holding", ("actor", "target"), True)]},
     "acquire_object": {"name": "获取对象", "purpose": "取得目标并持有，脱离原支撑",

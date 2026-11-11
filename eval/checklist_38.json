@@ -1,0 +1,474 @@
+{
+  "schema_version": "diagram_checklist.v1",
+  "scope": "图1①—⑦+A；图2仅语义层及待绑定接口",
+  "mapping_note": "本轮按图重新拆分为38项；原16完成/18部分/4未做没有逐条账本，不沿用。",
+  "status_definition": "complete表示约定机制和相应产物验证完成，不表示所有学习结论均为真或因果已证实。",
+  "items": [
+    {
+      "id": "P01",
+      "box": "①",
+      "requirement": "视频输入",
+      "status": "complete",
+      "mechanism_evidence": [
+        "run.py",
+        "video2op/stages/s02a_intent.py",
+        "output/semantic_learning_20261111_delivery/model_validation/results.json"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "P02",
+      "box": "①",
+      "requirement": "第一视角及视角分类",
+      "status": "complete",
+      "mechanism_evidence": [
+        "run.py",
+        "video2op/stages/s02a_intent.py",
+        "output/semantic_learning_20261111_delivery/model_validation/results.json"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "P03",
+      "box": "①",
+      "requirement": "可选文字描述",
+      "status": "complete",
+      "mechanism_evidence": [
+        "run.py",
+        "video2op/stages/s02a_intent.py",
+        "output/semantic_learning_20261111_delivery/model_validation/results.json"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "P04",
+      "box": "②a",
+      "requirement": "任务多假设意图",
+      "status": "partial",
+      "mechanism_evidence": [
+        "video2op/stages/s03_sync.py",
+        "video2op/learning_alignment.py",
+        "output/semantic_learning_20261111_delivery/model_validation/results.json"
+      ],
+      "remaining": "见验收报告：实视频候选覆盖、逐命题审阅、受控反例或跨实现公共条件证据不足。"
+    },
+    {
+      "id": "P05",
+      "box": "②a",
+      "requirement": "局部子任务与技能候选",
+      "status": "complete",
+      "mechanism_evidence": [
+        "video2op/stages/s03_sync.py",
+        "video2op/learning_alignment.py",
+        "output/semantic_learning_20261111_delivery/model_validation/results.json"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "P06",
+      "box": "②a",
+      "requirement": "置信度与证据",
+      "status": "complete",
+      "mechanism_evidence": [
+        "video2op/stages/s03_sync.py",
+        "video2op/learning_alignment.py",
+        "output/semantic_learning_20261111_delivery/model_validation/results.json"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "P07",
+      "box": "②a",
+      "requirement": "复合任务抽象",
+      "status": "partial",
+      "mechanism_evidence": [
+        "video2op/stages/s03_sync.py",
+        "video2op/learning_alignment.py",
+        "output/semantic_learning_20261111_delivery/model_validation/results.json"
+      ],
+      "remaining": "见验收报告：实视频候选覆盖、逐命题审阅、受控反例或跨实现公共条件证据不足。"
+    },
+    {
+      "id": "P08",
+      "box": "②b",
+      "requirement": "状态抽取",
+      "status": "complete",
+      "mechanism_evidence": [
+        "video2op/semantic.py",
+        "output/semantic_learning_20261111_delivery/knowledge_all_16/cases",
+        "output/semantic_learning_20261111_delivery/knowledge_development/knowledge.json"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "P09",
+      "box": "②b",
+      "requirement": "对象身份与绑定",
+      "status": "complete",
+      "mechanism_evidence": [
+        "video2op/semantic.py",
+        "output/semantic_learning_20261111_delivery/knowledge_all_16/cases",
+        "output/semantic_learning_20261111_delivery/knowledge_development/knowledge.json"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "P10",
+      "box": "②b",
+      "requirement": "对象关系和状态变化",
+      "status": "complete",
+      "mechanism_evidence": [
+        "video2op/semantic.py",
+        "output/semantic_learning_20261111_delivery/knowledge_all_16/cases",
+        "output/semantic_learning_20261111_delivery/knowledge_development/knowledge.json"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "P11",
+      "box": "②b",
+      "requirement": "时序关系表示",
+      "status": "complete",
+      "mechanism_evidence": [
+        "video2op/semantic.py",
+        "output/semantic_learning_20261111_delivery/knowledge_all_16/cases",
+        "output/semantic_learning_20261111_delivery/knowledge_development/knowledge.json"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "P12",
+      "box": "②b",
+      "requirement": "单视频特例操作图",
+      "status": "complete",
+      "mechanism_evidence": [
+        "video2op/semantic.py",
+        "output/semantic_learning_20261111_delivery/knowledge_all_16/cases",
+        "output/semantic_learning_20261111_delivery/knowledge_development/knowledge.json"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "P13",
+      "box": "③",
+      "requirement": "意图解释操作图",
+      "status": "complete",
+      "mechanism_evidence": [
+        "video2op/stages/s03_sync.py",
+        "video2op/semantic_checks.py",
+        "output/semantic_learning_20261111_delivery/delivery_validation.json"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "P14",
+      "box": "③",
+      "requirement": "操作图实现意图",
+      "status": "complete",
+      "mechanism_evidence": [
+        "video2op/stages/s03_sync.py",
+        "video2op/semantic_checks.py",
+        "output/semantic_learning_20261111_delivery/delivery_validation.json"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "P15",
+      "box": "③",
+      "requirement": "前后状态一致性",
+      "status": "partial",
+      "mechanism_evidence": [
+        "video2op/stages/s03_sync.py",
+        "video2op/semantic_checks.py",
+        "output/semantic_learning_20261111_delivery/delivery_validation.json"
+      ],
+      "remaining": "见验收报告：实视频候选覆盖、逐命题审阅、受控反例或跨实现公共条件证据不足。"
+    },
+    {
+      "id": "P16",
+      "box": "③",
+      "requirement": "逐候选置信度更新",
+      "status": "complete",
+      "mechanism_evidence": [
+        "video2op/stages/s03_sync.py",
+        "video2op/semantic_checks.py",
+        "output/semantic_learning_20261111_delivery/delivery_validation.json"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "P17",
+      "box": "④",
+      "requirement": "前置条件观察对照",
+      "status": "partial",
+      "mechanism_evidence": [
+        "video2op/task_observations.py",
+        "video2op/condition_induction.py",
+        "output/semantic_learning_20261111_delivery/knowledge_development/effective_conditions.json"
+      ],
+      "remaining": "见验收报告：实视频候选覆盖、逐命题审阅、受控反例或跨实现公共条件证据不足。"
+    },
+    {
+      "id": "P18",
+      "box": "④",
+      "requirement": "后置条件观察对照",
+      "status": "partial",
+      "mechanism_evidence": [
+        "video2op/task_observations.py",
+        "video2op/condition_induction.py",
+        "output/semantic_learning_20261111_delivery/knowledge_development/effective_conditions.json"
+      ],
+      "remaining": "见验收报告：实视频候选覆盖、逐命题审阅、受控反例或跨实现公共条件证据不足。"
+    },
+    {
+      "id": "P19",
+      "box": "④",
+      "requirement": "成功失败及未执行分开统计",
+      "status": "complete",
+      "mechanism_evidence": [
+        "video2op/task_observations.py",
+        "video2op/condition_induction.py",
+        "output/semantic_learning_20261111_delivery/knowledge_development/effective_conditions.json"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "P20",
+      "box": "④",
+      "requirement": "有效条件与反例证据",
+      "status": "partial",
+      "mechanism_evidence": [
+        "video2op/task_observations.py",
+        "video2op/condition_induction.py",
+        "output/semantic_learning_20261111_delivery/knowledge_development/effective_conditions.json"
+      ],
+      "remaining": "见验收报告：实视频候选覆盖、逐命题审阅、受控反例或跨实现公共条件证据不足。"
+    },
+    {
+      "id": "P21",
+      "box": "⑤",
+      "requirement": "Sequence/Parallel/Alternation语义时序",
+      "status": "partial",
+      "mechanism_evidence": [
+        "video2op/temporal_learning.py",
+        "output/semantic_learning_20261111_delivery/knowledge_development/constraints.json",
+        "output/semantic_learning_20261111_delivery/knowledge_development/evaluators.json"
+      ],
+      "remaining": "见验收报告：实视频候选覆盖、逐命题审阅、受控反例或跨实现公共条件证据不足。"
+    },
+    {
+      "id": "P22",
+      "box": "⑤",
+      "requirement": "独立语义约束产物",
+      "status": "complete",
+      "mechanism_evidence": [
+        "video2op/temporal_learning.py",
+        "output/semantic_learning_20261111_delivery/knowledge_development/constraints.json",
+        "output/semantic_learning_20261111_delivery/knowledge_development/evaluators.json"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "P23",
+      "box": "⑤",
+      "requirement": "评价规则与检测器接口",
+      "status": "complete",
+      "mechanism_evidence": [
+        "video2op/temporal_learning.py",
+        "output/semantic_learning_20261111_delivery/knowledge_development/constraints.json",
+        "output/semantic_learning_20261111_delivery/knowledge_development/evaluators.json"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "P24",
+      "box": "⑥",
+      "requirement": "同义特例聚类",
+      "status": "partial",
+      "mechanism_evidence": [
+        "video2op/holdout.py",
+        "output/semantic_learning_20261111_delivery/holdout_evaluation.json",
+        "output/semantic_learning_20261111_delivery/cluster_comparison.json"
+      ],
+      "remaining": "见验收报告：实视频候选覆盖、逐命题审阅、受控反例或跨实现公共条件证据不足。"
+    },
+    {
+      "id": "P25",
+      "box": "⑥",
+      "requirement": "同一目的的多实现整合",
+      "status": "complete",
+      "mechanism_evidence": [
+        "video2op/holdout.py",
+        "output/semantic_learning_20261111_delivery/holdout_evaluation.json",
+        "output/semantic_learning_20261111_delivery/cluster_comparison.json"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "P26",
+      "box": "⑥",
+      "requirement": "通用语义操作图",
+      "status": "complete",
+      "mechanism_evidence": [
+        "video2op/holdout.py",
+        "output/semantic_learning_20261111_delivery/holdout_evaluation.json",
+        "output/semantic_learning_20261111_delivery/cluster_comparison.json"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "P27",
+      "box": "⑥",
+      "requirement": "冻结知识后的留出解释",
+      "status": "complete",
+      "mechanism_evidence": [
+        "video2op/holdout.py",
+        "output/semantic_learning_20261111_delivery/holdout_evaluation.json",
+        "output/semantic_learning_20261111_delivery/cluster_comparison.json"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "P28",
+      "box": "⑦",
+      "requirement": "类型与引用一致性",
+      "status": "complete",
+      "mechanism_evidence": [
+        "video2op/semantic_checks.py",
+        "video2op/knowledge_base.py",
+        "output/semantic_learning_20261111_delivery/delivery_validation.json",
+        "knowledge_base/index.json"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "P29",
+      "box": "⑦",
+      "requirement": "前后置条件衔接校验",
+      "status": "complete",
+      "mechanism_evidence": [
+        "video2op/semantic_checks.py",
+        "video2op/knowledge_base.py",
+        "output/semantic_learning_20261111_delivery/delivery_validation.json",
+        "knowledge_base/index.json"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "P30",
+      "box": "⑦",
+      "requirement": "时序一致性校验",
+      "status": "complete",
+      "mechanism_evidence": [
+        "video2op/semantic_checks.py",
+        "video2op/knowledge_base.py",
+        "output/semantic_learning_20261111_delivery/delivery_validation.json",
+        "knowledge_base/index.json"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "P31",
+      "box": "⑦",
+      "requirement": "因果合理性",
+      "status": "partial",
+      "mechanism_evidence": [
+        "video2op/semantic_checks.py",
+        "video2op/knowledge_base.py",
+        "output/semantic_learning_20261111_delivery/delivery_validation.json",
+        "knowledge_base/index.json"
+      ],
+      "remaining": "见验收报告：实视频候选覆盖、逐命题审阅、受控反例或跨实现公共条件证据不足。"
+    },
+    {
+      "id": "P32",
+      "box": "⑦",
+      "requirement": "来源与置信记录",
+      "status": "complete",
+      "mechanism_evidence": [
+        "video2op/semantic_checks.py",
+        "video2op/knowledge_base.py",
+        "output/semantic_learning_20261111_delivery/delivery_validation.json",
+        "knowledge_base/index.json"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "P33",
+      "box": "⑦",
+      "requirement": "知识库固化与版本检索",
+      "status": "complete",
+      "mechanism_evidence": [
+        "video2op/semantic_checks.py",
+        "video2op/knowledge_base.py",
+        "output/semantic_learning_20261111_delivery/delivery_validation.json",
+        "knowledge_base/index.json"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "P34",
+      "box": "A",
+      "requirement": "Skill Tuple七字段",
+      "status": "complete",
+      "mechanism_evidence": [
+        "video2op/skill_tuple.py",
+        "output/semantic_learning_20261111_delivery/knowledge_development/skill_tuples.json",
+        "output/semantic_learning_20261111_delivery/temporal_pattern_verification.json"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "P35",
+      "box": "A",
+      "requirement": "实现方式集合R",
+      "status": "complete",
+      "mechanism_evidence": [
+        "video2op/skill_tuple.py",
+        "output/semantic_learning_20261111_delivery/knowledge_development/skill_tuples.json",
+        "output/semantic_learning_20261111_delivery/temporal_pattern_verification.json"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "P36",
+      "box": "A",
+      "requirement": "公共及分支语义约束",
+      "status": "partial",
+      "mechanism_evidence": [
+        "video2op/skill_tuple.py",
+        "output/semantic_learning_20261111_delivery/knowledge_development/skill_tuples.json",
+        "output/semantic_learning_20261111_delivery/temporal_pattern_verification.json"
+      ],
+      "remaining": "见验收报告：实视频候选覆盖、逐命题审阅、受控反例或跨实现公共条件证据不足。"
+    },
+    {
+      "id": "P37",
+      "box": "A",
+      "requirement": "评价规则Evaluator",
+      "status": "complete",
+      "mechanism_evidence": [
+        "video2op/skill_tuple.py",
+        "output/semantic_learning_20261111_delivery/knowledge_development/skill_tuples.json",
+        "output/semantic_learning_20261111_delivery/temporal_pattern_verification.json"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "P38",
+      "box": "A",
+      "requirement": "时序知识与来源",
+      "status": "partial",
+      "mechanism_evidence": [
+        "video2op/skill_tuple.py",
+        "output/semantic_learning_20261111_delivery/knowledge_development/skill_tuples.json",
+        "output/semantic_learning_20261111_delivery/temporal_pattern_verification.json"
+      ],
+      "remaining": "见验收报告：实视频候选覆盖、逐命题审阅、受控反例或跨实现公共条件证据不足。"
+    }
+  ],
+  "counts": {
+    "complete": 27,
+    "partial": 11
+  }
+}

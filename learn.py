@@ -15,32 +15,11 @@ from video2op.stages import s08_scope
 def load_reviewed(path: Path | None, cases: list[dict]) -> list[dict]:
     if path is None:
         return []
-    from video2op.stages.s08_scope import _evidence
+    from video2op.review import validate_reviewed
     rows = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(rows, list):
         raise ValueError("reviewed observations must be a list")
-    instances = {i["instance_id"]: i for c in cases for i in c["instances"]}
-    for r in rows:
-        item = instances.get(r.get("instance_id"))
-        if item is None or r.get("video_uid") != item["video_uid"] or not r.get("reviewer"):
-            raise ValueError("reviewed observation must name a loaded instance, video and reviewer")
-        if r.get("goal_key") != item["goal_key"]:
-            raise ValueError("reviewed observation goal does not match its instance")
-        actions = {a["id"]: a for a in item["observed_process"]}
-        for e in [*r.get("evidence", []), *r.get("outcome_evidence", [])]:
-            _evidence(e, actions)
-        if r.get("truth") in {"T", "F"}:
-            if not r.get("evidence"):
-                raise ValueError("condition truth requires evidence")
-            start = min(a["start"] for a in actions.values())
-            end = max(a["end"] for a in actions.values())
-            for e in r["evidence"]:
-                a = actions[e["atomic_ref"]]
-                t = a["start"] if "before" in e["field"] else a["end"]
-                if (r.get("at", "pre") == "pre" and t > start) or (r.get("at") == "post" and t < end):
-                    raise ValueError("reviewed condition is not at its annotated boundary")
-        r["provenance"] = "reviewed_observation"
-    return rows
+    return validate_reviewed(rows, [i for c in cases for i in c["instances"]])
 
 
 def main(argv=None) -> int:
@@ -49,7 +28,19 @@ def main(argv=None) -> int:
     ap.add_argument("--out", type=Path, required=True, help="新的输出目录，不覆盖原案例")
     ap.add_argument("--refresh-scope", action="store_true", help="访问已配置模型重新识别子任务范围")
     ap.add_argument("--reviewed-observations", type=Path, help="带审阅者和真实证据的条件对照样本JSON")
+    ap.add_argument("--task-predictions", type=Path, help="独立任务审计观察，按视频SHA256关联")
+    ap.add_argument("--observed-truth", type=Path, help="已有任务标注，仅用于显式审阅归纳")
+    ap.add_argument("--allow-holdout-references", action="store_true", help="仅供all-16事后展示，不用于独立留出验收")
     args = ap.parse_args(argv)
+    predictions = {}
+    references = {}
+    if args.task_predictions:
+        predictions = {r["video_uid"]: r for r in json.loads(args.task_predictions.read_text())}
+    if args.observed_truth:
+        from video2op.task_observations import load_references
+        references = load_references(args.observed_truth)
+        if not predictions:
+            raise ValueError("--observed-truth requires --task-predictions so task outcomes cannot silently replace local goals")
     out = args.out.resolve()
     if out.exists() and any(out.iterdir()):
         raise FileExistsError("输出目录已有文件，请指定新目录")
@@ -75,17 +66,56 @@ def main(argv=None) -> int:
         if b.get("semantic_scope", {}).get("subtasks"):
             s08_scope.expand_evidence(b["semantic_scope"], b)
         b["source_video_sha256"], _ = video_identity(b)
+        if predictions:
+            from video2op.task_observations import attach
+            uid = b["source_video_sha256"]
+            if uid not in predictions:
+                raise ValueError("task prediction missing for loaded video " + uid)
+            ref = references.get(uid)
+            if ref and ref.get("split") == "holdout" and not args.allow_holdout_references:
+                raise ValueError("Holdout references cannot enter development induction")
+            attach(b, predictions[uid], ref)
         build_learning_graph(b)
+        if b.get("provided_task_contract"):
+            b["semantic_graph"]["task_intent"] = b["provided_task_contract"]["statement"]
+            b["semantic_graph"]["x-meta"]["provided_task_contract"] = b["provided_task_contract"]
+            b["semantic_graph"]["x-meta"]["task_observation"] = b["task_observation"]
+        from video2op.evidence import audit_effects
+        effect_audit = audit_effects(b)
+        (destination / "effect_evidence_audit.json").write_text(json.dumps(effect_audit, ensure_ascii=False, indent=2))
         b["validation"] = semantic.validate(b)
         (destination / "result.json").write_text(json.dumps(b, ensure_ascii=False, indent=2), encoding="utf-8")
         semantic.export(b, destination)
         semantic.render(b, destination)
         cases.append(extract(b, str(source)))
+        for instance in cases[-1]["instances"]:
+            instance["analysis_source"] = str(destination / "result.json")
+        exported = b["semantic_graph"]["x-meta"]["final_to_export"]
+        local = cases[-1]["instances"]
+        task_graph = {"schema_version": "task_skill_graph.v1", "video_uid": b["source_video_sha256"],
+                      "provided_task": b.get("provided_task_contract"),
+                      "task_observation": b.get("task_observation"),
+                      "nodes": [{"instance_id": i["instance_id"], "skill_ref": i["skill_ref"],
+                                 "scope": i["instance_scope"], "atomic_refs": i["atomic_refs"],
+                                 "operation_node_refs": [exported[n] for n in i["source_node_refs"] if n in exported]}
+                                for i in local],
+                      "contains": [{"parent": p["instance_id"], "child": c["instance_id"]}
+                                   for p in local if p["instance_scope"] == "provided_task"
+                                   for c in local if c["instance_scope"] != "provided_task"
+                                   and set(c["atomic_refs"]) <= set(p["atomic_refs"])]}
+        (destination / "task_skill_graph.json").write_text(json.dumps(task_graph, ensure_ascii=False, indent=2))
         print(f"{source.parent.name}: {len(cases[-1]['instances'])}个技能/子任务实例；{b['validation']['summary']}", flush=True)
     reviewed = load_reviewed(args.reviewed_observations, cases)
     knowledge = aggregate(cases, reviewed)
     (out / "knowledge.json").write_text(json.dumps(knowledge, ensure_ascii=False, indent=2), encoding="utf-8")
-    (out / "review.html").write_text(render(knowledge), encoding="utf-8")
+    from video2op.skill_tuple import export as export_tuples
+    artifacts = export_tuples(knowledge, out)
+    page = render(knowledge)
+    import html
+    page = page.replace("</html>", "<section><h2>跨视频 Skill Tuple 七元组</h2><pre>" +
+                        html.escape(json.dumps(artifacts["skill_tuples"], ensure_ascii=False, indent=2)) +
+                        "</pre></section></html>")
+    (out / "review.html").write_text(page, encoding="utf-8")
     print(f"视频{len(knowledge['sources'])}；语义技能{len(knowledge['skills'])}；"
           f"对象任务族{len(knowledge['task_families'])}；实例{len(knowledge['instances'])}", flush=True)
     return 0 if knowledge["validation"]["passed"] else 1

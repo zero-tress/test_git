@@ -1,0 +1,662 @@
+{
+  "schema_version": "observed_task_truth.v1",
+  "observations": [
+    {
+      "case_id": "01",
+      "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+      "observation_id": "0cf4441971fa94f2a4c9",
+      "task_contract": {
+        "goal_key": "relocate_and_release",
+        "statement": "把盒子从 A 移到 B，结束时盒子停在 B 区内，手已离开",
+        "source_region": "黑色桌垫 A",
+        "destination": "白色桌面 B",
+        "origin": "provided_dataset_task"
+      },
+      "attempted": "T",
+      "outcome": "success",
+      "goal_satisfied_final": "T",
+      "method": "Pull",
+      "drop": "U",
+      "target_description": "透明扁平塑料收纳盒",
+      "initial_state": "黑垫左侧",
+      "obstacle": "无",
+      "evidence": [
+        {
+          "evidence_id": "annotation_01",
+          "source": "/home/wj/codex-workspace/videostudy_operation/data/16段视频_命名标注/标注数据.json",
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "field": "可见证据",
+          "quote": "0.67–1.33秒手从目标一侧抓住盒体；约2.30–3.30秒沿桌面向右拉至白区；约4.93秒撤手，末尾盒子保持静止。",
+          "time_precision": "approximate_observation_points_not_action_boundaries",
+          "provenance": "existing_annotation",
+          "verification_status": "verified",
+          "verification_basis": "imported_existing_reference_not_new_frame_review"
+        }
+      ],
+      "reviewer": {
+        "kind": "existing_reference_import",
+        "identity": null,
+        "note": "原标注未记录审阅者身份，本轮不补造姓名"
+      },
+      "provenance": "existing_annotation",
+      "verification_status": "verified",
+      "split": "development"
+    },
+    {
+      "case_id": "02",
+      "video_uid": "4a246e6099ffb664770d32a7cda944c773b684976990fbffa57526c555c5342c",
+      "observation_id": "250f0f4ab9bbf8194146",
+      "task_contract": {
+        "goal_key": "relocate_and_release",
+        "statement": "把盒子从 A 移到 B，结束时盒子停在 B 区内，手已离开",
+        "source_region": "黑色桌垫 A",
+        "destination": "白色桌面 B",
+        "origin": "provided_dataset_task"
+      },
+      "attempted": "T",
+      "outcome": "success",
+      "goal_satisfied_final": "T",
+      "method": "GraspMove",
+      "drop": "U",
+      "target_description": "白红印刷纸盒（不同于主要塑料盒）",
+      "initial_state": "黑垫左侧",
+      "obstacle": "无",
+      "evidence": [
+        {
+          "evidence_id": "annotation_02",
+          "source": "/home/wj/codex-workspace/videostudy_operation/data/16段视频_命名标注/标注数据.json",
+          "video_uid": "4a246e6099ffb664770d32a7cda944c773b684976990fbffa57526c555c5342c",
+          "field": "可见证据",
+          "quote": "约1.53–3.10秒握住盒子；约3.60–6.70秒抬离桌面向右搬运；约7.23秒落桌，约8.77秒手已离开。",
+          "time_precision": "approximate_observation_points_not_action_boundaries",
+          "provenance": "existing_annotation",
+          "verification_status": "verified",
+          "verification_basis": "imported_existing_reference_not_new_frame_review"
+        }
+      ],
+      "reviewer": {
+        "kind": "existing_reference_import",
+        "identity": null,
+        "note": "原标注未记录审阅者身份，本轮不补造姓名"
+      },
+      "provenance": "existing_annotation",
+      "verification_status": "verified",
+      "split": "holdout"
+    },
+    {
+      "case_id": "03",
+      "video_uid": "93437aa1fe6c2cf85ca0c1389911f04f91561dccc1bbfee4d48e8eb2cf524b10",
+      "observation_id": "d0cf07d5913c7b7cad64",
+      "task_contract": {
+        "goal_key": "relocate_and_release",
+        "statement": "把盒子从 A 移到 B，结束时盒子停在 B 区内，手已离开",
+        "source_region": "黑色桌垫 A",
+        "destination": "白色桌面 B",
+        "origin": "provided_dataset_task"
+      },
+      "attempted": "F",
+      "outcome": "not_executed",
+      "goal_satisfied_final": "F",
+      "method": "None",
+      "drop": "U",
+      "target_description": "透明扁平塑料收纳盒",
+      "initial_state": "黑垫左侧，前方有小透明盒",
+      "obstacle": "小透明盒位于右侧路径上",
+      "evidence": [
+        {
+          "evidence_id": "annotation_03",
+          "source": "/home/wj/codex-workspace/videostudy_operation/data/16段视频_命名标注/标注数据.json",
+          "video_uid": "93437aa1fe6c2cf85ca0c1389911f04f91561dccc1bbfee4d48e8eb2cf524b10",
+          "field": "可见证据",
+          "quote": "约1.00–7.57秒手靠近并在盒体上方/周围做抓握手势；未见盒子被推动或搬运；约8.60秒以后手离开、两盒位置保持。",
+          "time_precision": "approximate_observation_points_not_action_boundaries",
+          "provenance": "existing_annotation",
+          "verification_status": "verified",
+          "verification_basis": "imported_existing_reference_not_new_frame_review"
+        }
+      ],
+      "reviewer": {
+        "kind": "existing_reference_import",
+        "identity": null,
+        "note": "原标注未记录审阅者身份，本轮不补造姓名"
+      },
+      "provenance": "existing_annotation",
+      "verification_status": "verified",
+      "split": "development"
+    },
+    {
+      "case_id": "04",
+      "video_uid": "8d8d07c0461817e219c187cf9bb736b9ded46df48bbf554cd068ef4faecdcbc3",
+      "observation_id": "018051ec4f7e537724b3",
+      "task_contract": {
+        "goal_key": "relocate_and_release",
+        "statement": "把盒子从 A 移到 B，结束时盒子停在 B 区内，手已离开",
+        "source_region": "黑色桌垫 A",
+        "destination": "白色桌面 B",
+        "origin": "provided_dataset_task"
+      },
+      "attempted": "T",
+      "outcome": "failure",
+      "goal_satisfied_final": "F",
+      "method": "Push",
+      "drop": "U",
+      "target_description": "透明扁平塑料收纳盒",
+      "initial_state": "黑垫左侧，右侧小盒挡路",
+      "obstacle": "小透明盒",
+      "evidence": [
+        {
+          "evidence_id": "annotation_04",
+          "source": "/home/wj/codex-workspace/videostudy_operation/data/16段视频_命名标注/标注数据.json",
+          "video_uid": "8d8d07c0461817e219c187cf9bb736b9ded46df48bbf554cd068ef4faecdcbc3",
+          "field": "可见证据",
+          "quote": "约1.47–4.43秒手从左后方接触并向右推盒；约4.80秒盒子碰到小透明盒；末尾盒子被挡在黑垫上，未进白区。",
+          "time_precision": "approximate_observation_points_not_action_boundaries",
+          "provenance": "existing_annotation",
+          "verification_status": "verified",
+          "verification_basis": "imported_existing_reference_not_new_frame_review"
+        }
+      ],
+      "reviewer": {
+        "kind": "existing_reference_import",
+        "identity": null,
+        "note": "原标注未记录审阅者身份，本轮不补造姓名"
+      },
+      "provenance": "existing_annotation",
+      "verification_status": "verified",
+      "split": "development"
+    },
+    {
+      "case_id": "05",
+      "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+      "observation_id": "cd0d6d0f10d4aa898776",
+      "task_contract": {
+        "goal_key": "relocate_and_release",
+        "statement": "把盒子从 A 移到 B，结束时盒子停在 B 区内，手已离开",
+        "source_region": "黑色桌垫 A",
+        "destination": "白色桌面 B",
+        "origin": "provided_dataset_task"
+      },
+      "attempted": "T",
+      "outcome": "success",
+      "goal_satisfied_final": "T",
+      "method": "Pull",
+      "drop": "U",
+      "target_description": "透明扁平塑料收纳盒",
+      "initial_state": "黑垫左侧",
+      "obstacle": "无",
+      "evidence": [
+        {
+          "evidence_id": "annotation_05",
+          "source": "/home/wj/codex-workspace/videostudy_operation/data/16段视频_命名标注/标注数据.json",
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "field": "可见证据",
+          "quote": "约1.43–3.30秒手握住目标侧边缘；约3.80–6.17秒向右拉过黑白分界；约8.07秒撤手，末尾盒子留在白区。",
+          "time_precision": "approximate_observation_points_not_action_boundaries",
+          "provenance": "existing_annotation",
+          "verification_status": "verified",
+          "verification_basis": "imported_existing_reference_not_new_frame_review"
+        }
+      ],
+      "reviewer": {
+        "kind": "existing_reference_import",
+        "identity": null,
+        "note": "原标注未记录审阅者身份，本轮不补造姓名"
+      },
+      "provenance": "existing_annotation",
+      "verification_status": "verified",
+      "split": "development"
+    },
+    {
+      "case_id": "06",
+      "video_uid": "8100923bd1e60c933d00e6f8d59c583311f7ce918d746c9b4433a32d95956ee7",
+      "observation_id": "90618e9ab47e1a4d41ae",
+      "task_contract": {
+        "goal_key": "relocate_and_release",
+        "statement": "把盒子从 A 移到 B，结束时盒子停在 B 区内，手已离开",
+        "source_region": "黑色桌垫 A",
+        "destination": "白色桌面 B",
+        "origin": "provided_dataset_task"
+      },
+      "attempted": "T",
+      "outcome": "success",
+      "goal_satisfied_final": "T",
+      "method": "Pull",
+      "drop": "U",
+      "target_description": "白红印刷纸盒（不同于主要塑料盒）",
+      "initial_state": "黑垫左侧",
+      "obstacle": "无",
+      "evidence": [
+        {
+          "evidence_id": "annotation_06",
+          "source": "/home/wj/codex-workspace/videostudy_operation/data/16段视频_命名标注/标注数据.json",
+          "video_uid": "8100923bd1e60c933d00e6f8d59c583311f7ce918d746c9b4433a32d95956ee7",
+          "field": "可见证据",
+          "quote": "约1.13–1.90秒手从右侧接触纸盒；约2.30–4.20秒沿桌面向右拉到白区；约5.37秒手已离开。",
+          "time_precision": "approximate_observation_points_not_action_boundaries",
+          "provenance": "existing_annotation",
+          "verification_status": "verified",
+          "verification_basis": "imported_existing_reference_not_new_frame_review"
+        }
+      ],
+      "reviewer": {
+        "kind": "existing_reference_import",
+        "identity": null,
+        "note": "原标注未记录审阅者身份，本轮不补造姓名"
+      },
+      "provenance": "existing_annotation",
+      "verification_status": "verified",
+      "split": "holdout"
+    },
+    {
+      "case_id": "07",
+      "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+      "observation_id": "d184730c270c71f61190",
+      "task_contract": {
+        "goal_key": "relocate_and_release",
+        "statement": "把盒子从 A 移到 B，结束时盒子停在 B 区内，手已离开",
+        "source_region": "黑色桌垫 A",
+        "destination": "白色桌面 B",
+        "origin": "provided_dataset_task"
+      },
+      "attempted": "T",
+      "outcome": "success",
+      "goal_satisfied_final": "T",
+      "method": "GraspMove",
+      "drop": "U",
+      "target_description": "透明扁平塑料收纳盒",
+      "initial_state": "黑垫左侧",
+      "obstacle": "无",
+      "evidence": [
+        {
+          "evidence_id": "annotation_07",
+          "source": "/home/wj/codex-workspace/videostudy_operation/data/16段视频_命名标注/标注数据.json",
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "field": "可见证据",
+          "quote": "约0.77–1.50秒握住盒子；约1.77–3.03秒可见离桌并向右搬运；约3.30秒放下，约3.80秒撤手。",
+          "time_precision": "approximate_observation_points_not_action_boundaries",
+          "provenance": "existing_annotation",
+          "verification_status": "verified",
+          "verification_basis": "imported_existing_reference_not_new_frame_review"
+        }
+      ],
+      "reviewer": {
+        "kind": "existing_reference_import",
+        "identity": null,
+        "note": "原标注未记录审阅者身份，本轮不补造姓名"
+      },
+      "provenance": "existing_annotation",
+      "verification_status": "verified",
+      "split": "development"
+    },
+    {
+      "case_id": "08",
+      "video_uid": "64bba6b880dabaf9c68f4f4c9047ed7d79828e8eb8c0a1eba429af953e47d7a2",
+      "observation_id": "a545950f76db5e3c5136",
+      "task_contract": {
+        "goal_key": "relocate_and_release",
+        "statement": "把盒子从 A 移到 B，结束时盒子停在 B 区内，手已离开",
+        "source_region": "黑色桌垫 A",
+        "destination": "白色桌面 B",
+        "origin": "provided_dataset_task"
+      },
+      "attempted": "T",
+      "outcome": "success",
+      "goal_satisfied_final": "T",
+      "method": "Push",
+      "drop": "U",
+      "target_description": "透明扁平塑料收纳盒",
+      "initial_state": "黑垫左侧",
+      "obstacle": "无",
+      "evidence": [
+        {
+          "evidence_id": "annotation_08",
+          "source": "/home/wj/codex-workspace/videostudy_operation/data/16段视频_命名标注/标注数据.json",
+          "video_uid": "64bba6b880dabaf9c68f4f4c9047ed7d79828e8eb8c0a1eba429af953e47d7a2",
+          "field": "可见证据",
+          "quote": "约0.80–1.33秒手从盒子左后侧接触；约1.60–3.50秒向右推动，盒子沿桌面滑入白区；约4.03秒撤手。",
+          "time_precision": "approximate_observation_points_not_action_boundaries",
+          "provenance": "existing_annotation",
+          "verification_status": "verified",
+          "verification_basis": "imported_existing_reference_not_new_frame_review"
+        }
+      ],
+      "reviewer": {
+        "kind": "existing_reference_import",
+        "identity": null,
+        "note": "原标注未记录审阅者身份，本轮不补造姓名"
+      },
+      "provenance": "existing_annotation",
+      "verification_status": "verified",
+      "split": "development"
+    },
+    {
+      "case_id": "09",
+      "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+      "observation_id": "8990eb43b83987de64e2",
+      "task_contract": {
+        "goal_key": "relocate_and_release",
+        "statement": "把盒子从 A 移到 B，结束时盒子停在 B 区内，手已离开",
+        "source_region": "黑色桌垫 A",
+        "destination": "白色桌面 B",
+        "origin": "provided_dataset_task"
+      },
+      "attempted": "T",
+      "outcome": "success",
+      "goal_satisfied_final": "T",
+      "method": "GraspMove",
+      "drop": "T",
+      "target_description": "透明扁平塑料收纳盒",
+      "initial_state": "黑垫左侧",
+      "obstacle": "无",
+      "evidence": [
+        {
+          "evidence_id": "annotation_09",
+          "source": "/home/wj/codex-workspace/videostudy_operation/data/16段视频_命名标注/标注数据.json",
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "field": "可见证据",
+          "quote": "约0.93–1.57秒抓住盒子；约1.90–3.77秒抬起并向右移动；约3.87–4.10秒脱手落桌并发生旋转；4.40秒以后盒子静止在白区。",
+          "time_precision": "approximate_observation_points_not_action_boundaries",
+          "provenance": "existing_annotation",
+          "verification_status": "verified",
+          "verification_basis": "imported_existing_reference_not_new_frame_review"
+        }
+      ],
+      "reviewer": {
+        "kind": "existing_reference_import",
+        "identity": null,
+        "note": "原标注未记录审阅者身份，本轮不补造姓名"
+      },
+      "provenance": "existing_annotation",
+      "verification_status": "verified",
+      "split": "development"
+    },
+    {
+      "case_id": "10",
+      "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+      "observation_id": "e08d9ca09e54f78dd5ee",
+      "task_contract": {
+        "goal_key": "relocate_and_release",
+        "statement": "把盒子从 A 移到 B，结束时盒子停在 B 区内，手已离开",
+        "source_region": "黑色桌垫 A",
+        "destination": "白色桌面 B",
+        "origin": "provided_dataset_task"
+      },
+      "attempted": "T",
+      "outcome": "success",
+      "goal_satisfied_final": "T",
+      "method": "GraspMove",
+      "drop": "U",
+      "target_description": "透明扁平塑料收纳盒",
+      "initial_state": "黑垫左侧",
+      "obstacle": "无",
+      "evidence": [
+        {
+          "evidence_id": "annotation_10",
+          "source": "/home/wj/codex-workspace/videostudy_operation/data/16段视频_命名标注/标注数据.json",
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "field": "可见证据",
+          "quote": "约1.53–3.10秒握住盒子；约3.60–6.20秒抬离桌面并向右搬运；约6.70秒放下，约7.73–8.27秒松手撤离。",
+          "time_precision": "approximate_observation_points_not_action_boundaries",
+          "provenance": "existing_annotation",
+          "verification_status": "verified",
+          "verification_basis": "imported_existing_reference_not_new_frame_review"
+        }
+      ],
+      "reviewer": {
+        "kind": "existing_reference_import",
+        "identity": null,
+        "note": "原标注未记录审阅者身份，本轮不补造姓名"
+      },
+      "provenance": "existing_annotation",
+      "verification_status": "verified",
+      "split": "development"
+    },
+    {
+      "case_id": "11",
+      "video_uid": "56456ad2921248480103e61fb2a4dfb9d30a6ef278d72f3b8b6aaa990c70a096",
+      "observation_id": "5fab9a0cc47ad3c24aa9",
+      "task_contract": {
+        "goal_key": "relocate_and_release",
+        "statement": "把盒子从 A 移到 B，结束时盒子停在 B 区内，手已离开",
+        "source_region": "黑色桌垫 A",
+        "destination": "白色桌面 B",
+        "origin": "provided_dataset_task"
+      },
+      "attempted": "F",
+      "outcome": "not_executed",
+      "goal_satisfied_final": "T",
+      "method": "None",
+      "drop": "U",
+      "target_description": "透明扁平塑料收纳盒",
+      "initial_state": "开始即在白色桌面",
+      "obstacle": "无",
+      "evidence": [
+        {
+          "evidence_id": "annotation_11",
+          "source": "/home/wj/codex-workspace/videostudy_operation/data/16段视频_命名标注/标注数据.json",
+          "video_uid": "56456ad2921248480103e61fb2a4dfb9d30a6ef278d72f3b8b6aaa990c70a096",
+          "field": "可见证据",
+          "quote": "0.00秒盒子已在白区；约0.67–4.30秒手靠近并做抓握手势，盒子未见位移；约4.93秒后手已离开，盒子保持原位。",
+          "time_precision": "approximate_observation_points_not_action_boundaries",
+          "provenance": "existing_annotation",
+          "verification_status": "verified",
+          "verification_basis": "imported_existing_reference_not_new_frame_review"
+        }
+      ],
+      "reviewer": {
+        "kind": "existing_reference_import",
+        "identity": null,
+        "note": "原标注未记录审阅者身份，本轮不补造姓名"
+      },
+      "provenance": "existing_annotation",
+      "verification_status": "verified",
+      "split": "development"
+    },
+    {
+      "case_id": "12",
+      "video_uid": "8ce7588bdfd5c6f7f603e88f1364861fdeb76d318d149a46a059da7536c0a608",
+      "observation_id": "90f583fe24c6a4d6773e",
+      "task_contract": {
+        "goal_key": "relocate_and_release",
+        "statement": "把盒子从 A 移到 B，结束时盒子停在 B 区内，手已离开",
+        "source_region": "黑色桌垫 A",
+        "destination": "白色桌面 B",
+        "origin": "provided_dataset_task"
+      },
+      "attempted": "T",
+      "outcome": "failure",
+      "goal_satisfied_final": "F",
+      "method": "GraspSlide",
+      "drop": "U",
+      "target_description": "透明扁平塑料收纳盒",
+      "initial_state": "黑垫左侧，右侧小盒挡路",
+      "obstacle": "小透明盒",
+      "evidence": [
+        {
+          "evidence_id": "annotation_12",
+          "source": "/home/wj/codex-workspace/videostudy_operation/data/16段视频_命名标注/标注数据.json",
+          "video_uid": "8ce7588bdfd5c6f7f603e88f1364861fdeb76d318d149a46a059da7536c0a608",
+          "field": "可见证据",
+          "quote": "约1.27–2.10秒手握住盒体；约2.50–3.37秒沿桌面向右平移到小盒前；约3.77–5.03秒受阻停留；约5.87秒后手离开，盒子仍在黑垫。",
+          "time_precision": "approximate_observation_points_not_action_boundaries",
+          "provenance": "existing_annotation",
+          "verification_status": "verified",
+          "verification_basis": "imported_existing_reference_not_new_frame_review"
+        }
+      ],
+      "reviewer": {
+        "kind": "existing_reference_import",
+        "identity": null,
+        "note": "原标注未记录审阅者身份，本轮不补造姓名"
+      },
+      "provenance": "existing_annotation",
+      "verification_status": "verified",
+      "split": "development"
+    },
+    {
+      "case_id": "13",
+      "video_uid": "a3b17a9eaf87f0fff255ad581c5e72e3df479d9658e8b8acd9306a28f460a0fc",
+      "observation_id": "1c3e36466927da28b363",
+      "task_contract": {
+        "goal_key": "relocate_and_release",
+        "statement": "把盒子从 A 移到 B，结束时盒子停在 B 区内，手已离开",
+        "source_region": "黑色桌垫 A",
+        "destination": "白色桌面 B",
+        "origin": "provided_dataset_task"
+      },
+      "attempted": "T",
+      "outcome": "success",
+      "goal_satisfied_final": "T",
+      "method": "Push",
+      "drop": "U",
+      "target_description": "透明扁平塑料收纳盒",
+      "initial_state": "黑垫位于画面右侧，盒子在黑垫上",
+      "obstacle": "无",
+      "evidence": [
+        {
+          "evidence_id": "annotation_13",
+          "source": "/home/wj/codex-workspace/videostudy_operation/data/16段视频_命名标注/标注数据.json",
+          "video_uid": "a3b17a9eaf87f0fff255ad581c5e72e3df479d9658e8b8acd9306a28f460a0fc",
+          "field": "可见证据",
+          "quote": "约1.30–2.23秒手从盒子右后方接触；约2.57–4.80秒向左推过黑白分界；约5.13秒撤手，末尾盒子静止在左侧白区。",
+          "time_precision": "approximate_observation_points_not_action_boundaries",
+          "provenance": "existing_annotation",
+          "verification_status": "verified",
+          "verification_basis": "imported_existing_reference_not_new_frame_review"
+        }
+      ],
+      "reviewer": {
+        "kind": "existing_reference_import",
+        "identity": null,
+        "note": "原标注未记录审阅者身份，本轮不补造姓名"
+      },
+      "provenance": "existing_annotation",
+      "verification_status": "verified",
+      "split": "development"
+    },
+    {
+      "case_id": "14",
+      "video_uid": "e6d8d5d5fe0e11bc84c767c6644cab203d4d6ff489f39806ea5225d142e1b4c5",
+      "observation_id": "22943762700b3707e381",
+      "task_contract": {
+        "goal_key": "relocate_and_release",
+        "statement": "把盒子从 A 移到 B，结束时盒子停在 B 区内，手已离开",
+        "source_region": "黑色桌垫 A",
+        "destination": "白色桌面 B",
+        "origin": "provided_dataset_task"
+      },
+      "attempted": "T",
+      "outcome": "success",
+      "goal_satisfied_final": "T",
+      "method": "Push",
+      "drop": "U",
+      "target_description": "白红印刷纸盒（不同于主要塑料盒）",
+      "initial_state": "黑垫左侧",
+      "obstacle": "无",
+      "evidence": [
+        {
+          "evidence_id": "annotation_14",
+          "source": "/home/wj/codex-workspace/videostudy_operation/data/16段视频_命名标注/标注数据.json",
+          "video_uid": "e6d8d5d5fe0e11bc84c767c6644cab203d4d6ff489f39806ea5225d142e1b4c5",
+          "field": "可见证据",
+          "quote": "约1.23–1.87秒手从纸盒左后方接触；约2.17–4.33秒沿桌面向右推入白区；约5.27秒撤手，末尾纸盒留在白区。",
+          "time_precision": "approximate_observation_points_not_action_boundaries",
+          "provenance": "existing_annotation",
+          "verification_status": "verified",
+          "verification_basis": "imported_existing_reference_not_new_frame_review"
+        }
+      ],
+      "reviewer": {
+        "kind": "existing_reference_import",
+        "identity": null,
+        "note": "原标注未记录审阅者身份，本轮不补造姓名"
+      },
+      "provenance": "existing_annotation",
+      "verification_status": "verified",
+      "split": "holdout"
+    },
+    {
+      "case_id": "15",
+      "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+      "observation_id": "5560c4ed6ccfd4fabcdc",
+      "task_contract": {
+        "goal_key": "relocate_and_release",
+        "statement": "把盒子从 A 移到 B，结束时盒子停在 B 区内，手已离开",
+        "source_region": "黑色桌垫 A",
+        "destination": "白色桌面 B",
+        "origin": "provided_dataset_task"
+      },
+      "attempted": "T",
+      "outcome": "success",
+      "goal_satisfied_final": "T",
+      "method": "Pull",
+      "drop": "U",
+      "target_description": "透明扁平塑料收纳盒",
+      "initial_state": "黑垫位于画面右侧，盒子在黑垫上",
+      "obstacle": "无",
+      "evidence": [
+        {
+          "evidence_id": "annotation_15",
+          "source": "/home/wj/codex-workspace/videostudy_operation/data/16段视频_命名标注/标注数据.json",
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "field": "可见证据",
+          "quote": "约1.57–2.70秒手从左侧目标方向抓住盒子；约3.10–4.67秒向左拉至白区；约5.43秒手已离开。",
+          "time_precision": "approximate_observation_points_not_action_boundaries",
+          "provenance": "existing_annotation",
+          "verification_status": "verified",
+          "verification_basis": "imported_existing_reference_not_new_frame_review"
+        }
+      ],
+      "reviewer": {
+        "kind": "existing_reference_import",
+        "identity": null,
+        "note": "原标注未记录审阅者身份，本轮不补造姓名"
+      },
+      "provenance": "existing_annotation",
+      "verification_status": "verified",
+      "split": "development"
+    },
+    {
+      "case_id": "16",
+      "video_uid": "c5151974b28491217a5a7475d3261ff6c1c90a28b27c7e48fcebd1e6089a043d",
+      "observation_id": "6858a95f8d1e71ac7c0e",
+      "task_contract": {
+        "goal_key": "relocate_and_release",
+        "statement": "把盒子从 A 移到 B，结束时盒子停在 B 区内，手已离开",
+        "source_region": "黑色桌垫 A",
+        "destination": "白色桌面 B",
+        "origin": "provided_dataset_task"
+      },
+      "attempted": "T",
+      "outcome": "success",
+      "goal_satisfied_final": "T",
+      "method": "Push",
+      "drop": "U",
+      "target_description": "透明扁平塑料收纳盒",
+      "initial_state": "黑垫左侧",
+      "obstacle": "无",
+      "evidence": [
+        {
+          "evidence_id": "annotation_16",
+          "source": "/home/wj/codex-workspace/videostudy_operation/data/16段视频_命名标注/标注数据.json",
+          "video_uid": "c5151974b28491217a5a7475d3261ff6c1c90a28b27c7e48fcebd1e6089a043d",
+          "field": "可见证据",
+          "quote": "约0.87–2.17秒手从左后侧接触盒子；约2.60–5.20秒向右推入白区；约6.93秒撤手，末尾盒子保持静止。",
+          "time_precision": "approximate_observation_points_not_action_boundaries",
+          "provenance": "existing_annotation",
+          "verification_status": "verified",
+          "verification_basis": "imported_existing_reference_not_new_frame_review"
+        }
+      ],
+      "reviewer": {
+        "kind": "existing_reference_import",
+        "identity": null,
+        "note": "原标注未记录审阅者身份，本轮不补造姓名"
+      },
+      "provenance": "existing_annotation",
+      "verification_status": "verified",
+      "split": "development"
+    }
+  ],
+  "policy": "Existing references; reviewer identity was not recorded; not new manual annotation. Unreported process anomalies remain unknown."
+}

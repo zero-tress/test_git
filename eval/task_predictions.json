@@ -1,0 +1,1098 @@
+[
+  {
+    "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+    "observation_id": "0cf4441971fa94f2a4c9",
+    "task_contract": {
+      "goal_key": "relocate_and_release",
+      "statement": "把盒子从 A 移到 B，结束时盒子停在 B 区内，手已离开",
+      "source_region": "黑色桌垫 A",
+      "destination": "白色桌面 B",
+      "origin": "provided_dataset_task"
+    },
+    "attempted": "T",
+    "outcome": "success",
+    "goal_satisfied_final": "T",
+    "components": {
+      "at_destination": "T",
+      "stationary": "T",
+      "hand_separated": "T"
+    },
+    "original_model_goal": "T",
+    "original_model_outcome": "success",
+    "method": "GraspMove",
+    "drop": "F",
+    "evidence": [
+      {
+        "evidence_id": "d493f87eeb875ec2259d",
+        "source": "/home/wj/codex-workspace/videostudy_operation/output/semantic_16_20261107/task_audit/01/result.json",
+        "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+        "quote": [
+          {
+            "field": "initial_region",
+            "time_start": 0.0,
+            "time_end": 1.0,
+            "observation": "视频开始时，透明盒子位于左侧黑色桌垫（区域A）上"
+          },
+          {
+            "field": "lifted",
+            "time_start": 2.0,
+            "time_end": 3.0,
+            "observation": "在2.0s至3.0s之间，可以清晰看到盒子底部离开黑色表面，处于悬空状态"
+          },
+          {
+            "field": "final_region",
+            "time_start": 5.0,
+            "time_end": 6.3,
+            "observation": "视频结束时，盒子静止在右侧白色桌面（区域B）上"
+          },
+          {
+            "field": "hand_separated_final",
+            "time_start": 6.0,
+            "time_end": 6.3,
+            "observation": "手在6.0s左右松开盒子，随后完全移出画面，与目标物体分离"
+          },
+          {
+            "field": "drop",
+            "time_start": 4.0,
+            "time_end": 5.0,
+            "observation": "放置过程平稳，盒子接触桌面后没有发生弹跳或翻滚，未见掉落迹象"
+          }
+        ],
+        "provenance": "model_task_audit",
+        "verification_status": "unverified"
+      }
+    ],
+    "provenance": "model_task_audit",
+    "verification_status": "unverified",
+    "case_id": "01",
+    "split": "development",
+    "dense_review_available": true,
+    "dense_review_used": false
+  },
+  {
+    "video_uid": "4a246e6099ffb664770d32a7cda944c773b684976990fbffa57526c555c5342c",
+    "observation_id": "250f0f4ab9bbf8194146",
+    "task_contract": {
+      "goal_key": "relocate_and_release",
+      "statement": "把盒子从 A 移到 B，结束时盒子停在 B 区内，手已离开",
+      "source_region": "黑色桌垫 A",
+      "destination": "白色桌面 B",
+      "origin": "provided_dataset_task"
+    },
+    "attempted": "T",
+    "outcome": "success",
+    "goal_satisfied_final": "T",
+    "components": {
+      "at_destination": "T",
+      "stationary": "T",
+      "hand_separated": "T"
+    },
+    "original_model_goal": "T",
+    "original_model_outcome": "success",
+    "method": "GraspMove",
+    "drop": "F",
+    "evidence": [
+      {
+        "evidence_id": "5424ef3d36a1d029d76e",
+        "source": "/home/wj/codex-workspace/videostudy_operation/output/semantic_16_20261107/task_audit/02/result.json",
+        "video_uid": "4a246e6099ffb664770d32a7cda944c773b684976990fbffa57526c555c5342c",
+        "quote": [
+          {
+            "field": "initial_region",
+            "time_start": 0.0,
+            "time_end": 1.0,
+            "observation": "视频开始时，盒子完全位于左侧黑色桌垫A上"
+          },
+          {
+            "field": "lifted",
+            "time_start": 3.5,
+            "time_end": 5.0,
+            "observation": "在3.5s至5.0s之间，盒子底部明显离开黑色表面，处于悬空状态，证明发生了抬起动作"
+          },
+          {
+            "field": "final_region",
+            "time_start": 8.5,
+            "time_end": 9.8,
+            "observation": "视频结束时，盒子完全位于右侧白色桌面B上"
+          },
+          {
+            "field": "hand_separated_final",
+            "time_start": 9.0,
+            "time_end": 9.8,
+            "observation": "9.0s后手完全离开盒子并移出画面，盒子独立静止"
+          },
+          {
+            "field": "drop",
+            "time_start": 0.0,
+            "time_end": 9.8,
+            "observation": "整个过程中盒子运动轨迹平稳，未见突然下坠或撞击桌面的迹象，放置动作受控"
+          }
+        ],
+        "provenance": "model_task_audit",
+        "verification_status": "unverified"
+      }
+    ],
+    "provenance": "model_task_audit",
+    "verification_status": "unverified",
+    "case_id": "02",
+    "split": "holdout",
+    "dense_review_available": false,
+    "dense_review_used": false
+  },
+  {
+    "video_uid": "93437aa1fe6c2cf85ca0c1389911f04f91561dccc1bbfee4d48e8eb2cf524b10",
+    "observation_id": "d0cf07d5913c7b7cad64",
+    "task_contract": {
+      "goal_key": "relocate_and_release",
+      "statement": "把盒子从 A 移到 B，结束时盒子停在 B 区内，手已离开",
+      "source_region": "黑色桌垫 A",
+      "destination": "白色桌面 B",
+      "origin": "provided_dataset_task"
+    },
+    "attempted": "F",
+    "outcome": "not_executed",
+    "goal_satisfied_final": "F",
+    "components": {
+      "at_destination": "F",
+      "stationary": "T",
+      "hand_separated": "T"
+    },
+    "original_model_goal": "F",
+    "original_model_outcome": "not_executed",
+    "method": "None",
+    "drop": "F",
+    "evidence": [
+      {
+        "evidence_id": "cba7b6e1635e242446de",
+        "source": "/home/wj/codex-workspace/videostudy_operation/output/semantic_16_20261107/task_audit/03/result.json",
+        "video_uid": "93437aa1fe6c2cf85ca0c1389911f04f91561dccc1bbfee4d48e8eb2cf524b10",
+        "quote": [
+          {
+            "field": "initial_region",
+            "time_start": 0.0,
+            "time_end": 1.0,
+            "observation": "视频开始时，主要盒子（较大的透明盒）位于左侧黑色桌垫A上"
+          },
+          {
+            "field": "final_region",
+            "time_start": 9.0,
+            "time_end": 9.6,
+            "observation": "视频结束时，主要盒子仍位于左侧黑色桌垫A上，位置未变"
+          },
+          {
+            "field": "attempted",
+            "time_start": 3.0,
+            "time_end": 8.0,
+            "observation": "手虽然接触并按压了盒子，但盒子没有发生位移，也没有被抬起，未执行搬移动作"
+          },
+          {
+            "field": "lifted",
+            "time_start": 0.0,
+            "time_end": 9.6,
+            "observation": "整个过程中，主要盒子始终与黑色桌垫接触，未离开桌面"
+          },
+          {
+            "field": "goal_satisfied_final",
+            "time_start": 9.0,
+            "time_end": 9.6,
+            "observation": "任务要求将盒子移到白色桌面B，但盒子最终仍在黑色桌垫A上，目标未达成"
+          }
+        ],
+        "provenance": "model_task_audit",
+        "verification_status": "unverified"
+      }
+    ],
+    "provenance": "model_task_audit",
+    "verification_status": "unverified",
+    "case_id": "03",
+    "split": "development",
+    "dense_review_available": false,
+    "dense_review_used": false
+  },
+  {
+    "video_uid": "8d8d07c0461817e219c187cf9bb736b9ded46df48bbf554cd068ef4faecdcbc3",
+    "observation_id": "018051ec4f7e537724b3",
+    "task_contract": {
+      "goal_key": "relocate_and_release",
+      "statement": "把盒子从 A 移到 B，结束时盒子停在 B 区内，手已离开",
+      "source_region": "黑色桌垫 A",
+      "destination": "白色桌面 B",
+      "origin": "provided_dataset_task"
+    },
+    "attempted": "T",
+    "outcome": "failure",
+    "goal_satisfied_final": "F",
+    "components": {
+      "at_destination": "F",
+      "stationary": "T",
+      "hand_separated": "T"
+    },
+    "original_model_goal": "F",
+    "original_model_outcome": "failure",
+    "method": "Push",
+    "drop": "F",
+    "evidence": [
+      {
+        "evidence_id": "2fa6f21e573c1bdf49bb",
+        "source": "/home/wj/codex-workspace/videostudy_operation/output/semantic_16_20261107/task_audit/04/result.json",
+        "video_uid": "8d8d07c0461817e219c187cf9bb736b9ded46df48bbf554cd068ef4faecdcbc3",
+        "quote": [
+          {
+            "field": "method",
+            "time_start": 2.5,
+            "time_end": 6.0,
+            "observation": "手从主要盒子的运动后方（左侧）施加推力，使盒子沿桌面滑动，符合Push定义"
+          },
+          {
+            "field": "final_region",
+            "time_start": 6.0,
+            "time_end": 7.0,
+            "observation": "视频结束时，主要盒子仍位于黑色桌垫（A）上，未到达白色桌面（B）"
+          },
+          {
+            "field": "obstacle_on_path",
+            "time_start": 5.0,
+            "time_end": 6.0,
+            "observation": "主要盒子在向右移动过程中撞上了前方的小透明盒，小盒位于其通往白色桌面的路径上"
+          },
+          {
+            "field": "lifted",
+            "time_start": 0.0,
+            "time_end": 7.0,
+            "observation": "整个过程中主要盒子始终与黑色桌垫表面接触，未发生离桌搬移"
+          }
+        ],
+        "provenance": "model_task_audit",
+        "verification_status": "unverified"
+      }
+    ],
+    "provenance": "model_task_audit",
+    "verification_status": "unverified",
+    "case_id": "04",
+    "split": "development",
+    "dense_review_available": false,
+    "dense_review_used": false
+  },
+  {
+    "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+    "observation_id": "cd0d6d0f10d4aa898776",
+    "task_contract": {
+      "goal_key": "relocate_and_release",
+      "statement": "把盒子从 A 移到 B，结束时盒子停在 B 区内，手已离开",
+      "source_region": "黑色桌垫 A",
+      "destination": "白色桌面 B",
+      "origin": "provided_dataset_task"
+    },
+    "attempted": "T",
+    "outcome": "success",
+    "goal_satisfied_final": "T",
+    "components": {
+      "at_destination": "T",
+      "stationary": "T",
+      "hand_separated": "T"
+    },
+    "original_model_goal": "T",
+    "original_model_outcome": "success",
+    "method": "Pull",
+    "drop": "F",
+    "evidence": [
+      {
+        "evidence_id": "c55ce0400e3fade1430c",
+        "source": "/home/wj/codex-workspace/videostudy_operation/output/semantic_16_20261107/task_audit/05/result.json",
+        "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+        "quote": [
+          {
+            "field": "initial_region",
+            "time_start": 0.0,
+            "time_end": 1.0,
+            "observation": "视频开始时，透明盒子位于左侧黑色桌垫区域"
+          },
+          {
+            "field": "method",
+            "time_start": 2.5,
+            "time_end": 7.5,
+            "observation": "手从盒子右侧（运动方向的前方）按住盒子顶部，将其沿桌面拉向右侧白色区域，符合Pull定义"
+          },
+          {
+            "field": "lifted",
+            "time_start": 2.5,
+            "time_end": 7.5,
+            "observation": "移动过程中盒子底部始终接触桌面，未发生抬起离桌的动作"
+          },
+          {
+            "field": "final_region",
+            "time_start": 7.5,
+            "time_end": 9.0,
+            "observation": "移动结束后，盒子完全位于右侧白色桌面区域"
+          },
+          {
+            "field": "hand_separated_final",
+            "time_start": 8.5,
+            "time_end": 9.0,
+            "observation": "视频结束时，手已完全离开盒子并移出画面"
+          },
+          {
+            "field": "final_stationary",
+            "time_start": 8.5,
+            "time_end": 9.0,
+            "observation": "手离开后，盒子在白色桌面上保持静止"
+          }
+        ],
+        "provenance": "model_task_audit",
+        "verification_status": "unverified"
+      }
+    ],
+    "provenance": "model_task_audit",
+    "verification_status": "unverified",
+    "case_id": "05",
+    "split": "development",
+    "dense_review_available": false,
+    "dense_review_used": false
+  },
+  {
+    "video_uid": "8100923bd1e60c933d00e6f8d59c583311f7ce918d746c9b4433a32d95956ee7",
+    "observation_id": "90618e9ab47e1a4d41ae",
+    "task_contract": {
+      "goal_key": "relocate_and_release",
+      "statement": "把盒子从 A 移到 B，结束时盒子停在 B 区内，手已离开",
+      "source_region": "黑色桌垫 A",
+      "destination": "白色桌面 B",
+      "origin": "provided_dataset_task"
+    },
+    "attempted": "T",
+    "outcome": "success",
+    "goal_satisfied_final": "T",
+    "components": {
+      "at_destination": "T",
+      "stationary": "T",
+      "hand_separated": "T"
+    },
+    "original_model_goal": "T",
+    "original_model_outcome": "success",
+    "method": "GraspMove",
+    "drop": "F",
+    "evidence": [
+      {
+        "evidence_id": "d02936170b989b5601bd",
+        "source": "/home/wj/codex-workspace/videostudy_operation/output/semantic_16_20261107/task_audit/06/result.json",
+        "video_uid": "8100923bd1e60c933d00e6f8d59c583311f7ce918d746c9b4433a32d95956ee7",
+        "quote": [
+          {
+            "field": "initial_region",
+            "time_start": 0.0,
+            "time_end": 1.0,
+            "observation": "视频开始时，盒子完全位于左侧黑色桌垫上"
+          },
+          {
+            "field": "lifted",
+            "time_start": 3.0,
+            "time_end": 3.5,
+            "observation": "在搬移过程中，盒子明显被抬起，底部离开黑色支撑面"
+          },
+          {
+            "field": "final_region",
+            "time_start": 5.5,
+            "time_end": 7.3,
+            "observation": "视频结束时，盒子静止在右侧白色桌面上"
+          },
+          {
+            "field": "hand_separated_final",
+            "time_start": 6.0,
+            "time_end": 7.3,
+            "observation": "手在5.5s左右松开盒子，随后完全移出画面，与目标无接触"
+          },
+          {
+            "field": "drop",
+            "time_start": 0.0,
+            "time_end": 7.3,
+            "observation": "整个放置过程平稳，盒子接触桌面后无弹跳或翻滚，未见掉落迹象"
+          }
+        ],
+        "provenance": "model_task_audit",
+        "verification_status": "unverified"
+      }
+    ],
+    "provenance": "model_task_audit",
+    "verification_status": "unverified",
+    "case_id": "06",
+    "split": "holdout",
+    "dense_review_available": true,
+    "dense_review_used": false
+  },
+  {
+    "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+    "observation_id": "d184730c270c71f61190",
+    "task_contract": {
+      "goal_key": "relocate_and_release",
+      "statement": "把盒子从 A 移到 B，结束时盒子停在 B 区内，手已离开",
+      "source_region": "黑色桌垫 A",
+      "destination": "白色桌面 B",
+      "origin": "provided_dataset_task"
+    },
+    "attempted": "T",
+    "outcome": "success",
+    "goal_satisfied_final": "T",
+    "components": {
+      "at_destination": "T",
+      "stationary": "T",
+      "hand_separated": "T"
+    },
+    "original_model_goal": "T",
+    "original_model_outcome": "success",
+    "method": "GraspMove",
+    "drop": "F",
+    "evidence": [
+      {
+        "evidence_id": "d98c9a3b2611a8ded195",
+        "source": "/home/wj/codex-workspace/videostudy_operation/output/semantic_16_20261107/task_audit/07/result.json",
+        "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+        "quote": [
+          {
+            "field": "initial_region",
+            "time_start": 0.0,
+            "time_end": 0.5,
+            "observation": "视频开始时，透明盒子位于左侧黑色桌垫A上"
+          },
+          {
+            "field": "lifted",
+            "time_start": 1.5,
+            "time_end": 2.5,
+            "observation": "手抓起盒子后，盒子明显离开黑色桌面，处于悬空状态"
+          },
+          {
+            "field": "final_region",
+            "time_start": 4.0,
+            "time_end": 4.834,
+            "observation": "视频结束时，盒子静止在右侧白色桌面B上"
+          },
+          {
+            "field": "hand_separated_final",
+            "time_start": 4.5,
+            "time_end": 4.834,
+            "observation": "手在放置盒子后完全离开并移出画面，未再接触盒子"
+          },
+          {
+            "field": "drop",
+            "time_start": 3.5,
+            "time_end": 4.0,
+            "observation": "盒子被平稳放置在白色桌面上，没有发生掉落或剧烈晃动"
+          }
+        ],
+        "provenance": "model_task_audit",
+        "verification_status": "unverified"
+      }
+    ],
+    "provenance": "model_task_audit",
+    "verification_status": "unverified",
+    "case_id": "07",
+    "split": "development",
+    "dense_review_available": false,
+    "dense_review_used": false
+  },
+  {
+    "video_uid": "64bba6b880dabaf9c68f4f4c9047ed7d79828e8eb8c0a1eba429af953e47d7a2",
+    "observation_id": "a545950f76db5e3c5136",
+    "task_contract": {
+      "goal_key": "relocate_and_release",
+      "statement": "把盒子从 A 移到 B，结束时盒子停在 B 区内，手已离开",
+      "source_region": "黑色桌垫 A",
+      "destination": "白色桌面 B",
+      "origin": "provided_dataset_task"
+    },
+    "attempted": "T",
+    "outcome": "success",
+    "goal_satisfied_final": "T",
+    "components": {
+      "at_destination": "T",
+      "stationary": "T",
+      "hand_separated": "T"
+    },
+    "original_model_goal": "T",
+    "original_model_outcome": "success",
+    "method": "Push",
+    "drop": "F",
+    "evidence": [
+      {
+        "evidence_id": "66d73c0a28d23abbad62",
+        "source": "/home/wj/codex-workspace/videostudy_operation/output/semantic_16_20261107/task_audit/08/result.json",
+        "video_uid": "64bba6b880dabaf9c68f4f4c9047ed7d79828e8eb8c0a1eba429af953e47d7a2",
+        "quote": [
+          {
+            "field": "method",
+            "time_start": 2.0,
+            "time_end": 4.0,
+            "observation": "手从盒子后方接触并施力，盒子沿桌面滑动，未发生抓取或抬起动作"
+          },
+          {
+            "field": "final_region",
+            "time_start": 4.5,
+            "time_end": 5.1,
+            "observation": "视频结束时，盒子完全位于白色桌面B上"
+          },
+          {
+            "field": "hand_separated_final",
+            "time_start": 4.5,
+            "time_end": 5.1,
+            "observation": "手已完全离开画面，与盒子无接触"
+          }
+        ],
+        "provenance": "model_task_audit",
+        "verification_status": "unverified"
+      }
+    ],
+    "provenance": "model_task_audit",
+    "verification_status": "unverified",
+    "case_id": "08",
+    "split": "development",
+    "dense_review_available": false,
+    "dense_review_used": false
+  },
+  {
+    "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+    "observation_id": "8990eb43b83987de64e2",
+    "task_contract": {
+      "goal_key": "relocate_and_release",
+      "statement": "把盒子从 A 移到 B，结束时盒子停在 B 区内，手已离开",
+      "source_region": "黑色桌垫 A",
+      "destination": "白色桌面 B",
+      "origin": "provided_dataset_task"
+    },
+    "attempted": "T",
+    "outcome": "success",
+    "goal_satisfied_final": "T",
+    "components": {
+      "at_destination": "T",
+      "stationary": "T",
+      "hand_separated": "T"
+    },
+    "original_model_goal": "T",
+    "original_model_outcome": "success",
+    "method": "GraspMove",
+    "drop": "F",
+    "evidence": [
+      {
+        "evidence_id": "0e2bbdd83b6788b67145",
+        "source": "/home/wj/codex-workspace/videostudy_operation/output/semantic_16_20261107/task_audit/09/result.json",
+        "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+        "quote": [
+          {
+            "field": "initial_region",
+            "time_start": 0.0,
+            "time_end": 1.0,
+            "observation": "视频开始时，透明盒子放置在左侧黑色桌垫A上"
+          },
+          {
+            "field": "lifted",
+            "time_start": 2.0,
+            "time_end": 3.0,
+            "observation": "手握住盒子后将其向上提起，盒子明显离开黑色桌面"
+          },
+          {
+            "field": "final_region",
+            "time_start": 5.0,
+            "time_end": 6.0,
+            "observation": "视频结束时，盒子位于右侧白色桌面B上"
+          },
+          {
+            "field": "hand_separated_final",
+            "time_start": 5.0,
+            "time_end": 6.0,
+            "observation": "手在5.0s左右松开盒子并移出画面，最终状态手与盒子分离"
+          },
+          {
+            "field": "final_stationary",
+            "time_start": 5.0,
+            "time_end": 6.0,
+            "observation": "盒子放置在白色桌面上后保持静止，未发生移动"
+          }
+        ],
+        "provenance": "model_task_audit",
+        "verification_status": "unverified"
+      }
+    ],
+    "provenance": "model_task_audit",
+    "verification_status": "unverified",
+    "case_id": "09",
+    "split": "development",
+    "dense_review_available": true,
+    "dense_review_used": false
+  },
+  {
+    "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+    "observation_id": "e08d9ca09e54f78dd5ee",
+    "task_contract": {
+      "goal_key": "relocate_and_release",
+      "statement": "把盒子从 A 移到 B，结束时盒子停在 B 区内，手已离开",
+      "source_region": "黑色桌垫 A",
+      "destination": "白色桌面 B",
+      "origin": "provided_dataset_task"
+    },
+    "attempted": "T",
+    "outcome": "success",
+    "goal_satisfied_final": "T",
+    "components": {
+      "at_destination": "T",
+      "stationary": "T",
+      "hand_separated": "T"
+    },
+    "original_model_goal": "T",
+    "original_model_outcome": "success",
+    "method": "GraspMove",
+    "drop": "F",
+    "evidence": [
+      {
+        "evidence_id": "e8738999c5543927311b",
+        "source": "/home/wj/codex-workspace/videostudy_operation/output/semantic_16_20261107/task_audit/10/result.json",
+        "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+        "quote": [
+          {
+            "field": "initial_region",
+            "time_start": 0.0,
+            "time_end": 1.0,
+            "observation": "视频开始时，透明盒子静止放置在左侧黑色桌垫上"
+          },
+          {
+            "field": "lifted",
+            "time_start": 3.0,
+            "time_end": 4.0,
+            "observation": "手握住盒子后，盒子明显离开黑色表面，处于悬空状态"
+          },
+          {
+            "field": "method",
+            "time_start": 2.0,
+            "time_end": 7.0,
+            "observation": "手通过抓握盒子顶部将其拿起并搬运，符合GraspMove定义"
+          },
+          {
+            "field": "final_region",
+            "time_start": 7.0,
+            "time_end": 9.8,
+            "observation": "盒子最终放置在右侧白色桌面上"
+          },
+          {
+            "field": "hand_separated_final",
+            "time_start": 8.0,
+            "time_end": 9.8,
+            "observation": "手在8秒左右完全离开盒子并移出画面，盒子独立静止"
+          },
+          {
+            "field": "drop",
+            "time_start": 0.0,
+            "time_end": 9.8,
+            "observation": "放置过程平稳，盒子接触桌面后无弹跳或翻滚，未见掉落迹象"
+          }
+        ],
+        "provenance": "model_task_audit",
+        "verification_status": "unverified"
+      }
+    ],
+    "provenance": "model_task_audit",
+    "verification_status": "unverified",
+    "case_id": "10",
+    "split": "development",
+    "dense_review_available": false,
+    "dense_review_used": false
+  },
+  {
+    "video_uid": "56456ad2921248480103e61fb2a4dfb9d30a6ef278d72f3b8b6aaa990c70a096",
+    "observation_id": "5fab9a0cc47ad3c24aa9",
+    "task_contract": {
+      "goal_key": "relocate_and_release",
+      "statement": "把盒子从 A 移到 B，结束时盒子停在 B 区内，手已离开",
+      "source_region": "黑色桌垫 A",
+      "destination": "白色桌面 B",
+      "origin": "provided_dataset_task"
+    },
+    "attempted": "F",
+    "outcome": "not_executed",
+    "goal_satisfied_final": "T",
+    "components": {
+      "at_destination": "T",
+      "stationary": "T",
+      "hand_separated": "T"
+    },
+    "original_model_goal": "F",
+    "original_model_outcome": "not_executed",
+    "method": "None",
+    "drop": "F",
+    "evidence": [
+      {
+        "evidence_id": "d83a2b6931fa85163fd1",
+        "source": "/home/wj/codex-workspace/videostudy_operation/output/semantic_16_20261107/task_audit/11/result.json",
+        "video_uid": "56456ad2921248480103e61fb2a4dfb9d30a6ef278d72f3b8b6aaa990c70a096",
+        "quote": [
+          {
+            "field": "initial_region",
+            "time_start": 0.0,
+            "time_end": 0.5,
+            "observation": "视频开始时，透明小盒位于白色桌面（区域B）上，距离黑色桌垫（区域A）有一定距离。"
+          },
+          {
+            "field": "attempted",
+            "time_start": 1.5,
+            "time_end": 5.0,
+            "observation": "手虽然接触了盒子，但只是轻触和按压，没有执行推、拉或抓起的动作，盒子位置未变，因此判定未尝试搬移。"
+          },
+          {
+            "field": "final_region",
+            "time_start": 5.5,
+            "time_end": 6.3,
+            "observation": "视频结束时，盒子仍然停留在白色桌面（区域B）的初始位置。"
+          },
+          {
+            "field": "goal_satisfied_final",
+            "time_start": 6.0,
+            "time_end": 6.3,
+            "observation": "任务要求将盒子从A移到B，但盒子初始就在B且未发生移动，因此任务目标未达成。"
+          }
+        ],
+        "provenance": "model_task_audit",
+        "verification_status": "unverified"
+      }
+    ],
+    "provenance": "model_task_audit",
+    "verification_status": "unverified",
+    "case_id": "11",
+    "split": "development",
+    "dense_review_available": true,
+    "dense_review_used": false
+  },
+  {
+    "video_uid": "8ce7588bdfd5c6f7f603e88f1364861fdeb76d318d149a46a059da7536c0a608",
+    "observation_id": "90f583fe24c6a4d6773e",
+    "task_contract": {
+      "goal_key": "relocate_and_release",
+      "statement": "把盒子从 A 移到 B，结束时盒子停在 B 区内，手已离开",
+      "source_region": "黑色桌垫 A",
+      "destination": "白色桌面 B",
+      "origin": "provided_dataset_task"
+    },
+    "attempted": "T",
+    "outcome": "failure",
+    "goal_satisfied_final": "F",
+    "components": {
+      "at_destination": "F",
+      "stationary": "T",
+      "hand_separated": "T"
+    },
+    "original_model_goal": "F",
+    "original_model_outcome": "failure",
+    "method": "Push",
+    "drop": "F",
+    "evidence": [
+      {
+        "evidence_id": "8df47121f860aed0bb59",
+        "source": "/home/wj/codex-workspace/videostudy_operation/output/semantic_16_20261107/task_audit/12/result.json",
+        "video_uid": "8ce7588bdfd5c6f7f603e88f1364861fdeb76d318d149a46a059da7536c0a608",
+        "quote": [
+          {
+            "field": "method",
+            "time_start": 2.0,
+            "time_end": 5.0,
+            "observation": "手从主要盒子的后方（左侧）施力，将其向右推，盒子未离开桌面"
+          },
+          {
+            "field": "final_region",
+            "time_start": 6.0,
+            "time_end": 8.0,
+            "observation": "视频结束时，主要盒子仍位于黑色桌垫A上，未到达白色桌面B"
+          },
+          {
+            "field": "obstacle_on_path",
+            "time_start": 0.0,
+            "time_end": 8.0,
+            "observation": "小透明盒位于主要盒子与白色桌面B之间，构成路径上的障碍物"
+          }
+        ],
+        "provenance": "model_task_audit",
+        "verification_status": "unverified"
+      }
+    ],
+    "provenance": "model_task_audit",
+    "verification_status": "unverified",
+    "case_id": "12",
+    "split": "development",
+    "dense_review_available": true,
+    "dense_review_used": false
+  },
+  {
+    "video_uid": "a3b17a9eaf87f0fff255ad581c5e72e3df479d9658e8b8acd9306a28f460a0fc",
+    "observation_id": "1c3e36466927da28b363",
+    "task_contract": {
+      "goal_key": "relocate_and_release",
+      "statement": "把盒子从 A 移到 B，结束时盒子停在 B 区内，手已离开",
+      "source_region": "黑色桌垫 A",
+      "destination": "白色桌面 B",
+      "origin": "provided_dataset_task"
+    },
+    "attempted": "T",
+    "outcome": "success",
+    "goal_satisfied_final": "T",
+    "components": {
+      "at_destination": "T",
+      "stationary": "T",
+      "hand_separated": "T"
+    },
+    "original_model_goal": "T",
+    "original_model_outcome": "success",
+    "method": "Push",
+    "drop": "F",
+    "evidence": [
+      {
+        "evidence_id": "bd4d19396280c9b9a82b",
+        "source": "/home/wj/codex-workspace/videostudy_operation/output/semantic_16_20261107/task_audit/13/result.json",
+        "video_uid": "a3b17a9eaf87f0fff255ad581c5e72e3df479d9658e8b8acd9306a28f460a0fc",
+        "quote": [
+          {
+            "field": "method",
+            "time_start": 1.5,
+            "time_end": 5.0,
+            "observation": "手从盒子后方（右侧）接触并施力，盒子沿桌面滑动，未发生抓取或抬起动作"
+          },
+          {
+            "field": "initial_region",
+            "time_start": 0.0,
+            "time_end": 0.5,
+            "observation": "视频开始时，盒子完全位于黑色桌垫上"
+          },
+          {
+            "field": "final_region",
+            "time_start": 5.5,
+            "time_end": 6.1,
+            "observation": "视频结束时，盒子完全位于白色桌面上"
+          },
+          {
+            "field": "lifted",
+            "time_start": 0.0,
+            "time_end": 6.1,
+            "observation": "盒子始终与桌面接触，未离开桌面"
+          },
+          {
+            "field": "hand_separated_final",
+            "time_start": 5.0,
+            "time_end": 6.1,
+            "observation": "手在5秒左右离开盒子并移出画面，最终状态手与盒子分离"
+          }
+        ],
+        "provenance": "model_task_audit",
+        "verification_status": "unverified"
+      }
+    ],
+    "provenance": "model_task_audit",
+    "verification_status": "unverified",
+    "case_id": "13",
+    "split": "development",
+    "dense_review_available": false,
+    "dense_review_used": false
+  },
+  {
+    "video_uid": "e6d8d5d5fe0e11bc84c767c6644cab203d4d6ff489f39806ea5225d142e1b4c5",
+    "observation_id": "22943762700b3707e381",
+    "task_contract": {
+      "goal_key": "relocate_and_release",
+      "statement": "把盒子从 A 移到 B，结束时盒子停在 B 区内，手已离开",
+      "source_region": "黑色桌垫 A",
+      "destination": "白色桌面 B",
+      "origin": "provided_dataset_task"
+    },
+    "attempted": "T",
+    "outcome": "success",
+    "goal_satisfied_final": "T",
+    "components": {
+      "at_destination": "T",
+      "stationary": "T",
+      "hand_separated": "T"
+    },
+    "original_model_goal": "T",
+    "original_model_outcome": "success",
+    "method": "Push",
+    "drop": "F",
+    "evidence": [
+      {
+        "evidence_id": "84bafd5f048fb68b2729",
+        "source": "/home/wj/codex-workspace/videostudy_operation/output/semantic_16_20261107/task_audit/14/result.json",
+        "video_uid": "e6d8d5d5fe0e11bc84c767c6644cab203d4d6ff489f39806ea5225d142e1b4c5",
+        "quote": [
+          {
+            "field": "initial_region",
+            "time_start": 0.0,
+            "time_end": 1.0,
+            "observation": "视频开始时，盒子完全位于左侧黑色桌垫区域"
+          },
+          {
+            "field": "method",
+            "time_start": 2.0,
+            "time_end": 5.0,
+            "observation": "手从盒子后方（左侧）接触并施力，盒子沿桌面滑动，符合Push定义"
+          },
+          {
+            "field": "final_region",
+            "time_start": 5.0,
+            "time_end": 5.9,
+            "observation": "视频结束时，盒子完全位于右侧白色桌面区域"
+          },
+          {
+            "field": "lifted",
+            "time_start": 0.0,
+            "time_end": 5.9,
+            "observation": "整个过程中盒子底部始终接触桌面，未发生离桌搬移"
+          },
+          {
+            "field": "hand_separated_final",
+            "time_start": 5.0,
+            "time_end": 5.9,
+            "observation": "手在5秒左右离开盒子并移出画面，最终状态手与物体分离"
+          }
+        ],
+        "provenance": "model_task_audit",
+        "verification_status": "unverified"
+      }
+    ],
+    "provenance": "model_task_audit",
+    "verification_status": "unverified",
+    "case_id": "14",
+    "split": "holdout",
+    "dense_review_available": false,
+    "dense_review_used": false
+  },
+  {
+    "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+    "observation_id": "5560c4ed6ccfd4fabcdc",
+    "task_contract": {
+      "goal_key": "relocate_and_release",
+      "statement": "把盒子从 A 移到 B，结束时盒子停在 B 区内，手已离开",
+      "source_region": "黑色桌垫 A",
+      "destination": "白色桌面 B",
+      "origin": "provided_dataset_task"
+    },
+    "attempted": "T",
+    "outcome": "success",
+    "goal_satisfied_final": "T",
+    "components": {
+      "at_destination": "T",
+      "stationary": "T",
+      "hand_separated": "T"
+    },
+    "original_model_goal": "T",
+    "original_model_outcome": "success",
+    "method": "Pull",
+    "drop": "F",
+    "evidence": [
+      {
+        "evidence_id": "62ce63041752e884caea",
+        "source": "/home/wj/codex-workspace/videostudy_operation/output/semantic_16_20261107/task_audit/15/result.json",
+        "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+        "quote": [
+          {
+            "field": "initial_region",
+            "time_start": 0.0,
+            "time_end": 1.0,
+            "observation": "视频开始时，透明盒子静止放置在右侧的黑色桌垫上"
+          },
+          {
+            "field": "method",
+            "time_start": 2.0,
+            "time_end": 5.0,
+            "observation": "手握住盒子边缘，从盒子后方（靠近身体一侧）向白色桌面方向施力拉动，盒子沿桌面滑动"
+          },
+          {
+            "field": "lifted",
+            "time_start": 2.0,
+            "time_end": 5.0,
+            "observation": "在移动过程中，盒子始终与桌面保持接触，未发生离地搬移"
+          },
+          {
+            "field": "final_region",
+            "time_start": 6.0,
+            "time_end": 7.4,
+            "observation": "视频结束时，盒子完全位于左侧的白色桌面上"
+          },
+          {
+            "field": "hand_separated_final",
+            "time_start": 6.0,
+            "time_end": 7.4,
+            "observation": "手在视频结束前已完全离开盒子并移出画面"
+          }
+        ],
+        "provenance": "model_task_audit",
+        "verification_status": "unverified"
+      }
+    ],
+    "provenance": "model_task_audit",
+    "verification_status": "unverified",
+    "case_id": "15",
+    "split": "development",
+    "dense_review_available": false,
+    "dense_review_used": false
+  },
+  {
+    "video_uid": "c5151974b28491217a5a7475d3261ff6c1c90a28b27c7e48fcebd1e6089a043d",
+    "observation_id": "6858a95f8d1e71ac7c0e",
+    "task_contract": {
+      "goal_key": "relocate_and_release",
+      "statement": "把盒子从 A 移到 B，结束时盒子停在 B 区内，手已离开",
+      "source_region": "黑色桌垫 A",
+      "destination": "白色桌面 B",
+      "origin": "provided_dataset_task"
+    },
+    "attempted": "T",
+    "outcome": "success",
+    "goal_satisfied_final": "T",
+    "components": {
+      "at_destination": "T",
+      "stationary": "T",
+      "hand_separated": "T"
+    },
+    "original_model_goal": "T",
+    "original_model_outcome": "success",
+    "method": "Push",
+    "drop": "F",
+    "evidence": [
+      {
+        "evidence_id": "e4aefffac32e9b260f98",
+        "source": "/home/wj/codex-workspace/videostudy_operation/output/semantic_16_20261107/task_audit/16/result.json",
+        "video_uid": "c5151974b28491217a5a7475d3261ff6c1c90a28b27c7e48fcebd1e6089a043d",
+        "quote": [
+          {
+            "field": "initial_region",
+            "time_start": 0.0,
+            "time_end": 1.0,
+            "observation": "视频开始时，透明盒子静止在左侧黑色桌垫上"
+          },
+          {
+            "field": "method",
+            "time_start": 2.0,
+            "time_end": 6.0,
+            "observation": "手从盒子后方（左侧）接触并施力，盒子沿桌面滑动，未发生抓取或抬起动作"
+          },
+          {
+            "field": "final_region",
+            "time_start": 6.5,
+            "time_end": 8.2,
+            "observation": "盒子最终完全停留在右侧白色桌面上"
+          },
+          {
+            "field": "hand_separated_final",
+            "time_start": 7.0,
+            "time_end": 8.2,
+            "observation": "手已完全移出画面，与盒子无接触"
+          },
+          {
+            "field": "lifted",
+            "time_start": 0.0,
+            "time_end": 8.2,
+            "observation": "整个过程中盒子底部始终接触桌面，未发生离桌搬移"
+          }
+        ],
+        "provenance": "model_task_audit",
+        "verification_status": "unverified"
+      }
+    ],
+    "provenance": "model_task_audit",
+    "verification_status": "unverified",
+    "case_id": "16",
+    "split": "development",
+    "dense_review_available": false,
+    "dense_review_used": false
+  }
+]
