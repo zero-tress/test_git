@@ -1,0 +1,119 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Goal/effect semantic knowledge",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "sources",
+    "skills",
+    "instances",
+    "task_families",
+    "condition_induction",
+    "policy"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "goal_effect_knowledge.v1"
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "video_uid",
+          "identity_kind",
+          "source_files",
+          "intent_hypotheses"
+        ]
+      }
+    },
+    "skills": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "skill_id",
+          "goal_key",
+          "expected_effects",
+          "instance_ids",
+          "realizations",
+          "general_operation_graph",
+          "causally_verified"
+        ],
+        "properties": {
+          "goal_key": {
+            "enum": [
+              "grasp_object",
+              "acquire_object",
+              "relocate_object",
+              "place_object",
+              "clear_access",
+              "open_object",
+              "close_object"
+            ]
+          },
+          "causally_verified": {
+            "const": false
+          },
+          "realizations": {
+            "type": "array",
+            "minItems": 1
+          },
+          "general_operation_graph": {
+            "type": "object",
+            "required": [
+              "nodes",
+              "relations",
+              "alternatives",
+              "execution_status"
+            ]
+          }
+        }
+      }
+    },
+    "instances": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "instance_id",
+          "video_uid",
+          "source",
+          "goal_key",
+          "target",
+          "expected",
+          "atomic_refs",
+          "outcome_status",
+          "operation_subgraph"
+        ],
+        "properties": {
+          "atomic_refs": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "outcome_status": {
+            "enum": [
+              "model_grounded_candidate",
+              "unverified"
+            ]
+          }
+        }
+      }
+    },
+    "task_families": {
+      "type": "array"
+    },
+    "condition_induction": {
+      "type": "object",
+      "required": [
+        "conditions",
+        "rejected",
+        "policy"
+      ]
+    },
+    "policy": {
+      "type": "object"
+    }
+  }
+}

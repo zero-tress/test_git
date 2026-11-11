@@ -1,0 +1,21 @@
+# ruff 配置：保留实质性检查（未定义名、未使用变量、bugbear），
+# 放行本项目有意的风格选择（脚本 shebang、显式 UTF-8 声明）。
+line-length = 118
+target-version = "py311"
+
+[lint]
+select = ["E", "F", "B", "I", "UP", "RUF"]
+ignore = [
+    "EXE001",  # 带 shebang 但未加执行位：一律用 python 显式调用
+    "UP009",   # 保留 UTF-8 声明，便于不同编辑器/平台阅读
+    "RUF007",  # zip 写相邻对更直观
+    "E501",    # 行宽由 line-length 控制
+    "B008",    # 允许函数调用作默认值（本项目未用到，防御性放行）
+    "RUF001",  # 中文全角标点（：（））不算“歧义”，是本项目的正常写法
+    "RUF002",
+    "RUF003",
+]
+
+[lint.per-file-ignores]
+"tools/*" = ["E402"]   # 工具脚本先插 sys.path 再导入
+"tests/*" = ["E402"]

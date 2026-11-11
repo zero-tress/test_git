@@ -1,0 +1,371 @@
+$schema: http://json-schema.org/draft-07/schema#
+$id: urn:video2op:semantic-learning-graph
+title: 视频学习任务语义图（原项目执行主体）
+type: object
+additionalProperties: false
+required:
+- schema_version
+- graph_id
+- task_intent
+- layer
+- start_node
+- end_node
+- objects
+- predicates
+- nodes
+- relations
+properties:
+  schema_version:
+    const: '1.0'
+  graph_id:
+    type: string
+    minLength: 1
+    description: 这张图的稳定身份键；两层必须同值
+  task_intent:
+    type: string
+    minLength: 1
+    description: 任务目的，人读（写清"把什么从哪弄到哪"）
+  layer:
+    const: semantic
+  source:
+    type: string
+    enum:
+    - reasoner
+    - teach
+    - authored
+    description: 这张图怎么来的
+  start_node:
+    const: START
+  end_node:
+    const: END
+  objects:
+    type: object
+    description: 图里所有被操作实体，必须在此登记
+    additionalProperties:
+      type: object
+      additionalProperties: false
+      required:
+      - entity_type
+      - label
+      properties:
+        entity_type:
+          type: string
+          enum:
+          - object
+          - functional_part
+          - interaction_part
+          - tool
+          - environment
+          - region
+        label:
+          type: string
+          minLength: 1
+    minProperties: 1
+  predicates:
+    type: object
+    description: 图上出现的每个条件名都必须在此登记；语义层允许新增谓词
+    additionalProperties:
+      type: object
+      additionalProperties: false
+      required:
+      - text
+      - kind
+      - subject
+      properties:
+        text:
+          type: string
+          minLength: 1
+          description: 条件原文，只命名不改写
+        kind:
+          type: string
+          enum:
+          - start_gate
+          - hold
+          - complete
+          - post
+          - fail
+          - semantic
+        subject:
+          type: string
+          minLength: 1
+          description: 由谁判定（人读）
+        hold_category:
+          type: string
+          enum:
+          - grasp
+          - support
+          - contact
+          - pose
+        hold_scope:
+          type: string
+          enum:
+          - node
+          - cross_node
+          default: node
+          description: 仅 kind=hold 时有意义
+        observable:
+          type: boolean
+          default: true
+          description: C_post / E 用到的谓词必须可观测
+        provider:
+          type: string
+          enum:
+          - perception
+          - control
+          - scheduler
+          - external
+        source_ref:
+          type: string
+          minLength: 1
+          description: 来源引用（本体库条目 / 视频证据）
+    minProperties: 1
+  nodes:
+    type: object
+    description: 语义技能节点；键为节点 id
+    propertyNames:
+      pattern: ^(START|END|N[0-9]+[a-z]?)$
+    additionalProperties:
+      $ref: '#/$defs/node'
+    minProperties: 2
+  relations:
+    type: array
+    items:
+      $ref: '#/$defs/relation'
+    minItems: 1
+  evidence:
+    type: object
+    description: 证据与来源，中间层透传不解读
+    additionalProperties: true
+  x-meta:
+    type: object
+    additionalProperties: true
+$defs:
+  role:
+    type: string
+    enum:
+    - 操作者
+    - 整体
+    - 左臂
+    - 右臂
+    - 左手
+    - 右手
+  predicate_name:
+    type: string
+    pattern: ^[A-Z][A-Za-z0-9_]*$
+  predicate_list:
+    type: array
+    items:
+      $ref: '#/$defs/predicate_name'
+    uniqueItems: true
+  node:
+    type: object
+    additionalProperties: false
+    required:
+    - name
+    - skill
+    properties:
+      name:
+        type: string
+        minLength: 1
+      phase:
+        type: string
+        minLength: 1
+        description: 只用于日志与可视化，不参与调度
+      intent:
+        type: string
+        minLength: 1
+      template_ref:
+        type: string
+        pattern: ^semantic/[a-z][a-z0-9_]*$
+        description: 本节点实例化的技能模板
+      evidence_refs:
+        type: array
+        items:
+          type: string
+        uniqueItems: true
+      skill:
+        $ref: '#/$defs/skill_tuple'
+  skill_tuple:
+    type: object
+    additionalProperties: false
+    description: 技能七元组 X / O / C_pre / C_const / E / C_post / R
+    required:
+    - X
+    - O
+    - C_pre
+    - C_const
+    - E
+    - C_post
+    - R
+    properties:
+      X:
+        $ref: '#/$defs/executor'
+      O:
+        type: array
+        items:
+          type: string
+          minLength: 1
+        uniqueItems: true
+        description: 对哪些对象做，引用 objects
+      C_pre:
+        $ref: '#/$defs/predicate_list'
+        description: 任务级前置条件——什么状态成立时允许开始
+      C_const:
+        $ref: '#/$defs/predicate_list'
+        description: 约束元——过程中必须一直成立；保持类约束写这里，不要写成节点
+      E:
+        type: array
+        items:
+          $ref: '#/$defs/metric'
+        description: 评价指标（语义）——用什么衡量做得好不好
+      C_post:
+        $ref: '#/$defs/predicate_list'
+        description: 任务级后置效果——做完之后世界应该变成什么样
+      R:
+        type: array
+        items:
+          $ref: '#/$defs/candidate'
+        minItems: 1
+        description: 候选实现方式集合——可以怎么做（至少 1 项）
+  executor:
+    type: object
+    additionalProperties: false
+    required:
+    - subject
+    - parts
+    properties:
+      subject:
+        $ref: '#/$defs/role'
+      parts:
+        type: array
+        uniqueItems: true
+        items:
+          enum:
+          - 整体
+          - 左臂
+          - 右臂
+          - 左手
+          - 右手
+  metric:
+    type: object
+    additionalProperties: false
+    required:
+    - name
+    properties:
+      name:
+        type: string
+        minLength: 1
+        description: 评价指标名（如 位置误差 / 方向误差 / 稳定性）
+      target:
+        type: string
+        minLength: 1
+        description: 期望值或方向（人读）
+  candidate:
+    type: object
+    additionalProperties: false
+    description: 语义候选实现方式；执行模板可选，绑定留给下一层
+    required:
+    - id
+    - name
+    properties:
+      id:
+        type: string
+        pattern: ^R[0-9]+$
+      name:
+        type: string
+        minLength: 1
+      template_ref:
+        type: string
+        pattern: ^execution/[a-z][a-z0-9_]*$
+        description: 可选的后续执行模板，不限制本层语义并行
+      origin:
+        type: string
+        enum:
+        - observed
+        - alternative
+        - inferred
+        - system
+      preferred:
+        type: boolean
+        default: false
+        description: 是否首选；同一节点内最多一个为真
+      applicable_when:
+        $ref: '#/$defs/predicate_list'
+        description: 什么条件下适用；转换器按它选候选。必须是已登记的谓词
+      note:
+        type: string
+        minLength: 1
+        description: 为什么列它 / 为什么不选它
+  relation:
+    type: object
+    additionalProperties: false
+    required:
+    - relation
+    - from
+    - to
+    properties:
+      relation:
+        type: string
+        enum:
+        - sequence
+        - parallel
+        - alternation
+        - trigger
+        - maintain_until
+      from:
+        type: string
+        pattern: ^(START|END|N[0-9]+[a-z]?)$
+      to:
+        type: string
+        pattern: ^(START|END|N[0-9]+[a-z]?)$
+      basis:
+        type: string
+        enum:
+        - required_dependency
+        - observed_order
+        - inferred
+        - semantic_independence
+        description: required_dependency 才固化成执行顺序；observed_order 只是示范里的先后
+      when:
+        $ref: '#/$defs/predicate_name'
+        description: trigger 的解锁谓词；也是语义图与执行图之间唯一允许的"进行中触发"表达
+      note:
+        type: string
+        description: 人读说明
+      until_event:
+        type: string
+        enum:
+        - target_starts
+    allOf:
+    - if:
+        properties:
+          relation:
+            const: trigger
+        required:
+        - relation
+      then:
+        required:
+        - when
+    - if:
+        properties:
+          relation:
+            const: maintain_until
+        required:
+        - relation
+      then:
+        required:
+        - when
+    - if:
+        properties:
+          relation:
+            const: sequence
+        required:
+        - relation
+      then:
+        properties:
+          from:
+            not:
+              const: END
+          to:
+            not:
+              const: START

@@ -1,0 +1,31 @@
+# Large experiment artifacts and generated outputs
+/output/*
+# Keep the only pre-11-07 source backup as a version baseline
+!/output/semantic_16_20261107/
+/output/semantic_16_20261107/*
+!/output/semantic_16_20261107/source_backup/
+!/output/semantic_16_20261107/source_backup/**
+
+/backups/
+/logs/
+*.log
+
+# Media: videos are large; keyframes and annotations stay tracked
+*.mp4
+*.avi
+*.mov
+
+# Python caches and virtualenvs
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.venv/
+venv/
+*.egg-info/
+
+# Editor / OS
+*.swp
+.DS_Store
+Thumbs.db
