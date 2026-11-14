@@ -11,7 +11,7 @@ required_body_parts 仅用整体、左臂、右臂、左手、右手，写功能
     {
       "id": "intent_1",
       "statement": "一句话目的，如：把地上的纸箱搬到货架上",
-      "intent_type": "搬运 | 取放 | 饮用 | 开门关 | 倒取 | 擦拭 | 装配 | 其他",
+      "intent_type": "搬运 | 取放 | 开门关 | 倒取 | 擦拭 | 装配 | 其他",
       "confidence": 0.0~1.0,
       "evidence": [{"t": 0.0, "what": "画面证据"}],
       "required_body_parts": [{"part": "左臂", "role": "...", "reason": "..."}],

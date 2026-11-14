@@ -1,0 +1,150 @@
+[
+  {
+    "id": "videos",
+    "name": "视频",
+    "purpose": "管理视频身份、原始MP4字节、浏览器播放副本和数据划分。",
+    "fields": [
+      "id TEXT PK（兼容现有案例）",
+      "sha256 TEXT UNIQUE",
+      "title TEXT",
+      "source_uri TEXT",
+      "split TEXT",
+      "metadata JSONB",
+      "content BYTEA（原始MP4）",
+      "byte_size BIGINT",
+      "playback_content BYTEA",
+      "playback_sha256 TEXT",
+      "playback_metadata JSONB"
+    ],
+    "relations": "一个视频 → 多次分析运行",
+    "question": "是否需要额外管理拍摄场景、操作者和对象类别？",
+    "review_note": "保留",
+    "implementation": "已落实"
+  },
+  {
+    "id": "analysis_runs",
+    "name": "分析运行",
+    "purpose": "记录每次模型分析的配置与过程，支持复现。 现有数据导入记录标记imported；未记录的提示词版本保持空值。",
+    "fields": [
+      "id UUID PK",
+      "video_id FK",
+      "code_version TEXT",
+      "model TEXT",
+      "prompt_version TEXT",
+      "config JSONB",
+      "status TEXT",
+      "created_at TIMESTAMPTZ"
+    ],
+    "relations": "每次运行 → 一个或多个操作图版本",
+    "question": "是否把模型原始响应、耗时和费用单独建表？",
+    "review_note": "保留",
+    "implementation": "已落实"
+  },
+  {
+    "id": "operation_graph_versions",
+    "name": "操作图版本",
+    "purpose": "保存节点、边、条件和时序的结构化主数据。",
+    "fields": [
+      "id UUID PK",
+      "run_id FK",
+      "parent_version_id FK",
+      "graph JSONB",
+      "semantic_hash TEXT",
+      "verification_status TEXT"
+    ],
+    "relations": "一个图版本 → 多份展示产物；多个图可支持同一技能",
+    "question": "节点与边是否需要独立建表，还是先保留在 JSONB 中？",
+    "review_note": "保留",
+    "implementation": "已落实"
+  },
+  {
+    "id": "artifacts",
+    "name": "展示产物与原件",
+    "purpose": "原有SVG、HTML、JSON原件继续保存，并关联已建立的操作图UUID版本。",
+    "fields": [
+      "id TEXT PK（兼容现有产物）",
+      "graph_version_id FK",
+      "filename TEXT",
+      "mime_type TEXT",
+      "content BYTEA",
+      "sha256 TEXT",
+      "renderer_version TEXT",
+      "dependencies JSONB"
+    ],
+    "relations": "产物引用图版本，资源依赖通过产物ID关联",
+    "question": "SVG、HTML 是否也需要单独的可检索 TEXT 列？",
+    "review_note": "保留",
+    "implementation": "已落实"
+  },
+  {
+    "id": "skills",
+    "name": "技能目录",
+    "purpose": "稳定的技能身份，与具体版本分开。",
+    "fields": [
+      "id TEXT PK",
+      "name TEXT",
+      "goal_key TEXT",
+      "description TEXT",
+      "selected_version_id FK"
+    ],
+    "relations": "一个技能 → 多个知识版本",
+    "question": "是否允许人工新增目的类别、合并或拆分技能？",
+    "review_note": "保留",
+    "implementation": "技能侧暂不修改"
+  },
+  {
+    "id": "skill_versions",
+    "name": "技能知识版本",
+    "purpose": "保存七元组、实现方式及候选条件，保持版本不可变。",
+    "fields": [
+      "id UUID PK",
+      "skill_id FK",
+      "parent_version_id FK",
+      "knowledge JSONB",
+      "semantic_hash TEXT",
+      "verification_status TEXT",
+      "publication_status TEXT"
+    ],
+    "relations": "技能版本通过证据关系关联多个视频与操作图",
+    "question": "如何定义审核、发布和停用状态？",
+    "review_note": "保留",
+    "implementation": "技能侧暂不修改"
+  },
+  {
+    "id": "skill_evidence",
+    "name": "知识与证据关系",
+    "purpose": "将技能、实现或某条条件与支持、反例、未知证据关联。",
+    "fields": [
+      "id UUID PK",
+      "skill_version_id FK",
+      "graph_version_id FK",
+      "node_refs JSONB",
+      "claim_ref TEXT",
+      "stance TEXT",
+      "time_range JSONB",
+      "provenance JSONB"
+    ],
+    "relations": "一条知识 ↔ 多条证据；同一证据可支持多条结论",
+    "question": "是否把条件、谓词和证据片段进一步独立建表？",
+    "review_note": "保留",
+    "implementation": "技能侧暂不修改"
+  },
+  {
+    "id": "reviews",
+    "name": "审核与版本选择",
+    "purpose": "保留人工审阅和发布决策，不覆盖模型原始记录。",
+    "fields": [
+      "id UUID PK",
+      "subject_type TEXT",
+      "subject_id TEXT",
+      "reviewer TEXT",
+      "decision TEXT",
+      "comment TEXT",
+      "created_at TIMESTAMPTZ"
+    ],
+    "relations": "审核指向明确的知识、图版本或证据记录",
+    "question": "需要几级审核？是否需要多人账号与角色权限？",
+    "review_note": "保留",
+    "implementation": "已落实"
+  }
+]

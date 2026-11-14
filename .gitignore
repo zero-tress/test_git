@@ -1,12 +1,16 @@
-# Large experiment artifacts and generated outputs
+# Generated outputs; provenance snapshots retain compatibility paths.
 /output/*
-# Keep the only pre-11-07 source backup as a version baseline
-!/output/semantic_16_20261107/
-/output/semantic_16_20261107/*
-!/output/semantic_16_20261107/source_backup/
-!/output/semantic_16_20261107/source_backup/**
-
-/backups/
+!/output/README.md
+!/output/index.html
+/archive/experiments/*
+!/archive/experiments/semantic_16_20261107/
+/archive/experiments/semantic_16_20261107/*
+!/archive/experiments/semantic_16_20261107/source_backup/
+!/archive/experiments/semantic_16_20261107/source_backup/**
+/archive/fixtures/*
+/archive/source_backups/
+/archive/logs/
+/archive/maintenance/*.json
 /logs/
 *.log
 
@@ -29,3 +33,6 @@ venv/
 *.swp
 .DS_Store
 Thumbs.db
+
+# Local PostgreSQL preview data and private socket
+/.runtime/

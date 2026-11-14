@@ -14,7 +14,7 @@ from pathlib import Path
 PKG_DIR = Path(__file__).resolve().parent
 ROOT = PKG_DIR.parent                       # 项目根目录
 DATA_DIR = ROOT / "data"                    # 输入视频
-OUTPUT_DIR = ROOT / "output"                # 产物
+OUTPUT_DIR = ROOT / "output" / "runs"       # 单视频产物；CLI再按运行时间隔离
 PROMPTS_DIR = PKG_DIR / "prompts"           # 外置提示词
 WORK_DIR = OUTPUT_DIR / "_work"             # 切片等中间文件
 

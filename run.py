@@ -11,6 +11,7 @@
 from __future__ import annotations
 
 import argparse
+from datetime import datetime
 import sys
 from pathlib import Path
 
@@ -28,10 +29,11 @@ def main() -> int:
     ap.add_argument("--description", type=Path, help="UTF-8文字背景文件；与视频观察证据分开")
     args = ap.parse_args()
     description = args.description.read_text(encoding="utf-8") if args.description else None
-    if args.output_root:
-        from video2op import config
-        config.OUTPUT_DIR = args.output_root.resolve()
-        config.WORK_DIR = config.OUTPUT_DIR / "_work"
+    from video2op import config
+    config.OUTPUT_DIR = (args.output_root.resolve() if args.output_root else
+                         config.ROOT / "output" / "runs" / datetime.now().strftime("%Y%m%d_%H%M%S_%f"))
+    config.WORK_DIR = config.OUTPUT_DIR / "_work"
+    print(f"输出目录：{config.OUTPUT_DIR}")
 
     try:
         if args.target == "all":

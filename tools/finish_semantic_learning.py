@@ -1,6 +1,7 @@
 """Rebuild reviewed/development and blind holdout artifacts in a new experiment."""
 from pathlib import Path
 import argparse
+from datetime import datetime
 import json
 import subprocess
 import sys
@@ -18,9 +19,12 @@ def save(p, value):
 
 def main(argv=None):
     ap=argparse.ArgumentParser()
-    ap.add_argument("--out",type=Path,default=ROOT/"output/semantic_learning_20261111_delivery")
+    ap.add_argument("--out",type=Path,default=ROOT/"output/runs"/("semantic_learning_"+datetime.now().strftime("%Y%m%d_%H%M%S_%f")))
     args=ap.parse_args(argv)
-    out=args.out.resolve();out.mkdir(parents=True,exist_ok=True)
+    out=args.out.resolve()
+    if out.exists() and any(out.iterdir()):
+        ap.error("输出目录已有文件，请指定新目录；当前交付不会被覆盖")
+    out.mkdir(parents=True,exist_ok=True)
     old=ROOT/"output/semantic_16_20261107"
     manifest=json.loads((old/"manifest.json").read_text())
     groups={"knowledge_development":[r for r in manifest["cases"] if r["split"]=="development"],

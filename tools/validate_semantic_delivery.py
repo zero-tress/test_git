@@ -21,7 +21,7 @@ def main():
     ap=argparse.ArgumentParser()
     ap.add_argument("--out",type=Path,required=True)
     args=ap.parse_args();out=args.out.resolve()
-    model=ROOT/"output/semantic_learning_20261111/model_validation"
+    model=ROOT/"output/current/model_validation"
     if model.exists() and not (out/"model_validation").exists():
         shutil.copytree(model,out/"model_validation")
     baseline=ROOT/"output/_baseline_20261111"
@@ -138,7 +138,7 @@ def main():
               "- model_validation/results.json：真实调用与候选、时序结果。",
               "- eval/manifest.json / eval/baseline_report.json；output/_baseline_20261111保留原实验副本。",""]
     text="\n".join(lines)
-    (ROOT/"按两张图完成任务验收报告.md").write_text(text)
+    (ROOT/"docs/reports/按两张图完成任务验收报告.md").write_text(text)
     (out/"按两张图完成任务验收报告.md").write_text(text)
     print(json.dumps({"tests":report["pytest"],"interfaces":len(interfaces),"ledger":ledger["counts"],
                       "holdout":[(r["case_id"],r["decision"]) for r in held]},ensure_ascii=False))

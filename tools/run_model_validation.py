@@ -1,6 +1,8 @@
 """Exercise existing video/semantic stages on saved ambiguous examples, without reference labels."""
 from pathlib import Path
 import json
+import argparse
+from datetime import datetime
 import sys
 from copy import deepcopy
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -10,9 +12,16 @@ from video2op.stages import s02a_intent, s03_sync, s05_rules
 from video2op.learning_alignment import apply_intent_updates
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "output/semantic_learning_20261111/model_validation"
+OUT = ROOT / "output/runs" / ("model_validation_" + datetime.now().strftime("%Y%m%d_%H%M%S_%f"))
 
 def main():
+    global OUT
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--out", type=Path, default=OUT)
+    args = ap.parse_args()
+    OUT = args.out.resolve()
+    if OUT.exists() and any(OUT.iterdir()):
+        ap.error("输出目录已有文件，请指定新目录")
     OUT.mkdir(parents=True, exist_ok=True)
     config.WORK_DIR = OUT / "work"
     config.VIDEO_TIMEOUT = 180
@@ -20,7 +29,7 @@ def main():
     config.MAX_ATTEMPTS = 2
     choices = [("ambiguous_03", ROOT / "output/semantic_16_20261107/cases/video_03_semantic_v3/result.json"),
                ("ambiguous_11", ROOT / "output/semantic_16_20261107/cases/video_11_semantic_v3/result.json"),
-               ("historical_grasp", ROOT / "output/抓取2_semantic_v3/result.json")]
+               ("historical_grasp", ROOT / "archive/fixtures/抓取2_semantic_v3/result.json")]
     rows = []
     for name, path in choices:
         dest = OUT / name

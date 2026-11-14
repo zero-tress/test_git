@@ -1,0 +1,15 @@
+{
+  "status": "reviewed_keep_all",
+  "notes": {
+    "videos": "保留 ",
+    "analysis_runs": "保留",
+    "operation_graph_versions": "保留",
+    "artifacts": "保留 ",
+    "skills": "保留",
+    "skill_versions": "保留",
+    "skill_evidence": "保留 ",
+    "reviews": "保留 "
+  },
+  "skill_scope": "frozen",
+  "source": "用户提供的知识库表结构审阅意见.json"
+}
