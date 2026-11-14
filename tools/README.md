@@ -22,3 +22,12 @@
 真实模型工具、配置修改工具和执行侧安装工具应按实际任务与服务器规则调用。本次整理未运行它们。
 
 2026-10 的16个一次性补丁和专用实验脚本已移至 archive/tools/，只用于追溯，不作为当前操作入口。通用的 migrate_learning_v3.py 仍被 render_case.py 使用，因此保留。
+
+
+## 跨视频归纳新增工具
+
+- finish_cross_video_generalization.py：以已有开发/留出知识和技能切片构建新交付，不写共享知识库。
+- review_cross_video_samples.py：授权后仅访问现有本机模型端点，独立保存3组样例及失败记录。
+- attach_cross_video_reviews.py：附加模型意见、来源帧和冲突，不自动升级人工/因果状态。
+- verify_cross_video_delivery.py：验证原数据、切片、路径重建、R引用、HTML/SVG/JavaScript及回归。
+- 技能切片入口：python -B -m video2op.skill_clips；使用--help查看必需参数。

@@ -144,20 +144,8 @@ def extract(bundle: dict, source: str) -> dict:
 
 
 def realization_signature(instance: dict) -> str:
-    """Retain process differences while parameterizing side, target identity, and object category."""
-    target = instance["target"]["local_entity"]
-    process = []
-    for a in instance["observed_process"]:
-        text = str(a.get("action") or "")
-        for word in sorted({target, str(a.get("object") or "")}, key=len, reverse=True):
-            if word:
-                text = text.replace(word, "$target")
-        for part in ("左手", "右手"):
-            text = text.replace(part, "$gripper")
-        for part in ("左臂", "右臂"):
-            text = text.replace(part, "$arm")
-        process.append([a.get("functional_role", {}).get("function"), text, a.get("mode")])
-    return digest(process)
+    from .cross_video_alignment import realization_signature as signature
+    return signature(instance)
 
 
 def aggregate(cases: list[dict], reviewed: list[dict] | None = None) -> dict:
@@ -289,6 +277,9 @@ def validate(knowledge: dict) -> dict:
                     if has_path(hard, edge["to"], edge["from"]):
                         errors.append("realization graph contains cycle")
                     hard.append(edge)
+        reconstruction = graph.get("reconstruction_validation", {})
+        if reconstruction.get("passed") is False:
+            errors.append("general graph cannot reconstruct source paths")
         for edge in graph.get("relations", []):
             if not edge.get("realization_guards") or any(g not in paths for g in edge["realization_guards"]):
                 errors.append("general graph edge has unknown realization guard")

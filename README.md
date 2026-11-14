@@ -77,3 +77,33 @@ conda run -n study python -B tools/verify_contract.py output/current/knowledge_a
 6. `holdout.py`、`evidence.py`、`semantic_checks.py` 核验留出解释、证据和结构；`render.py`、`workbench.py` 生成展示。
 
 完整旧设计保存在 [历史 README](docs/history/README_before_20261112.md)，其中版本数字与旧输出路径属于对应历史阶段。
+
+
+## 技能切片与跨视频归纳（2026-11-14）
+
+本轮结果入口：[跨视频归纳交付](output/runs/cross_video_20261114/delivery/index.html)；
+[技能与动作片段](output/runs/cross_video_20261114/skill_clips/index.html)；
+[实施报告](docs/reports/跨视频切片与归纳_实施报告_20261114.md)。
+当前稳定交付未切换；切片边界、分支条件和模型复核状态分别保留。
+
+服务器study环境常用命令：
+
+~~~bash
+# 直接复用已保存分析，导出技能/动作视频，不调用模型
+conda run -n study python -B -m video2op.skill_clips --knowledge output/current/knowledge_all_16/knowledge.json --out output/runs/skill_clips_新实验
+
+# 已导出切片在中断后可使用同一输入与参数显式 --resume；输入变化会拒绝复用
+# 分析新视频并导出片段：运行模型前须已取得网络授权
+conda run -n study python -B run.py data/抓取2.mp4 --export-clips
+
+# 对保存案例归纳并关联切片；未使用 --refresh-scope 时不调用模型
+conda run -n study python -B learn.py --inputs output/current/knowledge_development/cases/01_video_01_semantic_v3/result.json --out output/runs/learning_新实验 --clip-manifest output/runs/cross_video_20261114/skill_clips/manifest.json
+
+# 对冻结知识构建支路/功能归纳新交付，不改写当前交付或共享版本库
+conda run -n study python -B tools/finish_cross_video_generalization.py --clips output/runs/cross_video_20261114/skill_clips/manifest.json --out output/runs/generalization_新实验
+
+# 完整离线验证：源文件、片段、路径、链接、测试与静态检查
+conda run -n study python -B tools/verify_cross_video_delivery.py --delivery output/runs/cross_video_20261114/delivery --clips output/runs/cross_video_20261114/skill_clips/manifest.json
+~~~
+
+真实模型复核脚本为tools/review_cross_video_samples.py。必须先获得仅访问现有本机模型服务的网络授权，再使用--allow-local-model；仅处理3个代表样例，失败重试保留独立记录。tools/attach_cross_video_reviews.py只附加候选证据，保持冻结知识与原片段不变。新导出片段保留源分辨率和帧率；已有media.make_clip仍负责供模型使用的压缩窗口。

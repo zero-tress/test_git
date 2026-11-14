@@ -26,6 +26,7 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="按局部目的/目标效果跨视频归纳，保留对象与实现方式")
     ap.add_argument("--inputs", nargs="+", required=True, help="result.json或其所在案例目录")
     ap.add_argument("--out", type=Path, required=True, help="新的输出目录，不覆盖原案例")
+    ap.add_argument("--clip-manifest", type=Path, help="关联已导出的技能切片manifest.json")
     ap.add_argument("--refresh-scope", action="store_true", help="访问已配置模型重新识别子任务范围")
     ap.add_argument("--reviewed-observations", type=Path, help="带审阅者和真实证据的条件对照样本JSON")
     ap.add_argument("--task-predictions", type=Path, help="独立任务审计观察，按视频SHA256关联")
@@ -108,8 +109,9 @@ def main(argv=None) -> int:
     reviewed = load_reviewed(args.reviewed_observations, cases)
     knowledge = aggregate(cases, reviewed)
     (out / "knowledge.json").write_text(json.dumps(knowledge, ensure_ascii=False, indent=2), encoding="utf-8")
-    from video2op.skill_tuple import export as export_tuples
-    artifacts = export_tuples(knowledge, out)
+    from video2op.cross_video_delivery import export as export_cross_video
+    export_cross_video(knowledge, out, args.clip_manifest)
+    artifacts = {"skill_tuples": json.loads((out / "skill_tuples.json").read_text())}
     page = render(knowledge)
     import html
     page = page.replace("</html>", "<section><h2>跨视频 Skill Tuple 七元组</h2><pre>" +
