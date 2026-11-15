@@ -3,8 +3,8 @@
   "action_catalog": "action_catalog.json",
   "declared_templates": "skill_templates.json",
   "learned_catalog": "learned_skill_catalog.json",
-  "learned_version": "e78d5ff656fdc97960e1",
+  "learned_version": "517053fc8607a4690891",
   "source_split": "development",
-  "learning_source": "/home/wj/codex-workspace/videostudy_operation/output/runs/single_video_layout_20261115/knowledge_development",
+  "learning_source": "/home/wj/codex-workspace/videostudy_operation/output/runs/reanalysis_16_8032_20261115/delivery/knowledge_development",
   "learning_tracks": "learning_tracks/index.json"
 }

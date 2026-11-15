@@ -38,22 +38,32 @@ def _validate(payload: object) -> None:
         if not isinstance(caps, list) or not caps or not all(isinstance(c, str) and c.strip() for c in caps):
             raise ValidationFailure(f"task_nodes[{i}] required_capabilities 必须是非空字符串数组")
         from ..semantic import canonical
+
         canonical(n["name"])
         actor = n.get("tuple", {}).get("X") or {}
         parts = actor.get("parts") or []
         if len(parts) != 1 or actor.get("subject") != parts[0]:
             raise ValidationFailure("一个节点只允许一个执行主体，X.subject 与唯一的 X.parts 一致；请拆开臂与手")
-        allowed = ({"打开", "抓取", "释放", "接触", "按压"} if parts[0].endswith("手") else
-                   {"靠近", "移动", "撤回", "推", "拉", "旋转", "按压"} if parts[0].endswith("臂") else
-                   {"上升", "下降", "向目标移动", "移动"})
+        allowed = (
+            {"打开", "抓取", "释放", "接触", "按压"}
+            if parts[0].endswith("手")
+            else {"靠近", "移动", "撤回", "推", "拉", "旋转", "按压"}
+            if parts[0].endswith("臂")
+            else {"上升", "下降", "向目标移动", "移动"}
+        )
         if canonical(n["name"]) not in allowed:
-            raise ValidationFailure("节点功能必须与唯一的臂/手/整体主体相符")
+            raise ValidationFailure(
+                f"节点功能必须与唯一的臂/手/整体主体相符：task_nodes[{i}] "
+                f"id={n['id']} name={n['name']} canonical={canonical(n['name'])} "
+                f"actor={parts[0]}；该主体可用功能={sorted(allowed)}。"
+                "保持观察到的主体；按证据选择接触/按压等合适功能，"
+                "不得为通过校验把手改成臂或补造未观察的动作。"
+            )
         if "整体" in parts and canonical(n["name"]) not in {"上升", "下降", "向目标移动", "移动"}:
             raise ValidationFailure("整体只表示垂直上升/下降及水平移动，不用于臂手操作")
         if set(parts) and set(parts) <= {"左手", "右手"} and canonical(n["name"]) in {"搬运", "接近", "撤回", "移动"}:
             raise ValidationFailure("空间移动由手臂承担，手负责张开、抓握、释放；不能把搬运全归给手")
-        require_keys(n["tuple"], ["X", "O", "C_pre", "C_const", "E", "C_post", "R"],
-                     f"task_nodes[{i}].tuple")
+        require_keys(n["tuple"], ["X", "O", "C_pre", "C_const", "E", "C_post", "R"], f"task_nodes[{i}].tuple")
 
 
 def _normalize(payload: dict) -> dict:
@@ -70,8 +80,7 @@ def _normalize(payload: dict) -> dict:
         if isinstance(r, str):
             t["R"] = [{"name": r, "origin": "observed", "steps": []}]
         elif isinstance(r, list):
-            t["R"] = [x if isinstance(x, dict) else {"name": str(x), "origin": "observed", "steps": []}
-                      for x in r]
+            t["R"] = [x if isinstance(x, dict) else {"name": str(x), "origin": "observed", "steps": []} for x in r]
         else:
             t["R"] = []
         e = t.get("E")
@@ -84,8 +93,9 @@ def _normalize(payload: dict) -> dict:
             t["X"] = {"subject": x, "parts": []}
         elif isinstance(x, dict):
             # 头不参与操作：节点执行主体里不保留该部位
-            x["parts"] = [p for p in expand_parts(x.get("parts") or [])
-                          if normalize_part(str(p)) not in IGNORED_PARTS]
+            x["parts"] = [
+                p for p in expand_parts(x.get("parts") or []) if normalize_part(str(p)) not in IGNORED_PARTS
+            ]
         o = t.get("O")
         t["O"] = [o] if isinstance(o, str) else (o or [])
         n["tuple"] = t
@@ -102,6 +112,7 @@ def _normalize(payload: dict) -> dict:
         nodes.append(n)
     payload["task_nodes"] = nodes
     from ..semantic import normalize_tasks
+
     return normalize_tasks(payload)
 
 
@@ -119,6 +130,7 @@ def run(client: VLMClient, ctx: dict) -> dict:
         ATOMIC_TABLE=atomic_table(atomic["atomic_actions"]),
         PART_FUNCTIONS=parts_functions(),
     )
+
     def validate(payload: object) -> None:
         _validate(payload)
         valid_refs = {a["id"] for a in atomic["atomic_actions"]}
@@ -128,7 +140,11 @@ def run(client: VLMClient, ctx: dict) -> dict:
                 raise ValidationFailure("操作 id 必须是唯一字符串")
             ids.add(node["id"])
             refs = node.get("atomic_refs")
-            if not isinstance(refs, list) or any(r not in valid_refs for r in refs) or (not refs and not (node.get("inferred") or node.get("origin") == "observed_state_goal")):
+            if (
+                not isinstance(refs, list)
+                or any(r not in valid_refs for r in refs)
+                or (not refs and not (node.get("inferred") or node.get("origin") == "observed_state_goal"))
+            ):
                 raise ValidationFailure(f"{node['id']} 必须引用实际存在的动作 id")
 
     payload = client.ask(stage="s02c_task", system=system, user_text=user, validator=validate)

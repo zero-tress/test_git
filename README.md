@@ -15,7 +15,7 @@
 - [验收报告](docs/reports/按两张图完成任务验收报告.md)：能力、证据缺口和 38 项账本。
 - [本次整理记录](docs/reports/项目整理_20261112.md)：清理范围、归档位置与验证结果。
 
-已有交付的结构检查为 16/16 通过；本轮回归为 474 项通过。结构通过不代表语义结论全部得到实证。局部效果、复杂时序、因果条件仍有待复核项；参数、检测器与执行器接口为 `unbound`，尚未验证机器人执行。
+已有交付的结构检查为 16/16 通过；本轮回归为 481 项通过。结构通过不代表语义结论全部得到实证。局部效果、复杂时序、因果条件仍有待复核项；参数、检测器与执行器接口为 `unbound`，尚未验证机器人执行。
 
 ## 目录约定
 
@@ -157,3 +157,20 @@ conda run -n study python -B tools/verify_two_track_delivery.py --out output/run
 ~~~
 
 本轮474项回归通过。历史13段开发与3段留出另存，旧output/current保持原交付。
+
+
+## 16段视频8032全量重分析（2026-11-15）
+
+[最新结果](output/current/index.html) · [重分析报告](docs/reports/16段视频_8032重新分析_20261115.md) · [方法分歧](output/current/reference_comparison.json)
+
+16段重新经过现有8032的完整分析，输出70个动作切片及双流程知识。任务结果为12成功、2失败（04/12）、2未执行（03/11）；09目标成功且过程掉落。16段结构检查与481项回归通过。
+01/05/06/12/15的方法判断与既有标注存在分歧，保留为待复核项。局部技能、任务成败和过程异常分别存储，七元组保持不变。
+本轮原件位于output/runs/reanalysis_16_8032_20261115/；原视频和历史结果均保留。
+
+~~~bash
+# 本轮批处理；需已取得仅访问现有本机8032的授权
+conda run -n study python -B tools/reanalyze_sixteen_8032.py --out output/runs/新的16段实验 --ids 01 02 03 04 --workers 4 --allow-8032
+# 中断后显式--resume，仅复用该新实验内已完成的阶段
+# 模型阶段完成后离线重建；旧成败参考只用于汇总后的比较
+conda run -n study python -B tools/build_reanalysis_sixteen.py --run output/runs/新的16段实验
+~~~

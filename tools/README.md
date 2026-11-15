@@ -39,3 +39,9 @@
 - review_contrastive_skills.py：核验指定案例的局部技能与给定整体目标，保留原始失败及无效因果意见。
 - verify_two_track_delivery.py：核对两条学习流程的来源、范围、七元组、切片解码与页面引用。
 - learn.py新增--goal、--target-category、--local-reviews；两条流程写入输出目录的learning_tracks/。
+
+
+## 16段全量重分析
+
+- reanalyze_sixteen_8032.py：中性文件名、完整视频模型分析、独立任务审计和局部技能复核；支持分批与本轮断点续跑，限定现有8032。
+- build_reanalysis_sixteen.py：从本轮新观察重建单视频切片、开发/留出/全量双流程视图，并在学习完成后对照旧标注。

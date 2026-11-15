@@ -20,7 +20,7 @@ SYSTEM = """你是操作视频正反例证据审阅员。只判断实际画面�
 技能过程包括相关准备直到目标效果的里程碑；不要把之后的搬运塞入抓取过程。其他对象的动作只有直接证据说明准备关系时才可加入。
 前置条件entry必须在该过程开始前或开始瞬间可见；core_entry只属于抓握动作开始前的中间条件，不能升级为整个抓取过程入口条件。
 遮挡、缺帧、范围不够、目标区域定义不清均填U。反事实猜想不是负例。时间全部用源视频全局秒数；视频是从0秒开始的完整分析版。
-输出严格JSON：
+scope_verdict只判断范围及语义归属，不是成功标签。覆盖给定目标的一次真实执行时，即使执行失败也可为supported，并将goal_satisfied填F；不要用rejected替代失败。rejected用于目标或对象归属错误，ambiguous用于证据不足。\n输出严格JSON：
 {"unit_reviews":[{"instance_id":"输入ID","scope_verdict":"supported/ambiguous/requires_extension/rejected",
 "preparation_atomic_refs":[],"attempted":"T/F/U","goal_satisfied":"T/F/U",
 "outcome_evidence_frames":[],"outcome_reason":"实际观察依据/缺口",
@@ -77,6 +77,9 @@ def main(argv=None):
     ap.add_argument("--inputs", nargs="+", type=Path, help="Only these saved cases; no historical holdout references")
     ap.add_argument("--allow-8032", action="store_true")
     ap.add_argument(
+        "--split", choices=["development", "holdout"], help="Explicit dataset split for isolated saved cases"
+    )
+    ap.add_argument(
         "--goal",
         choices=["acquire_object", "relocate_object", "place_object", "clear_access", "relocate_and_release"],
     )
@@ -112,7 +115,7 @@ def main(argv=None):
     # Persist every input before model calls; no reference outcomes are sent.
     for index, p in enumerate(sources, 1):
         b = json.loads(p.read_text())
-        split = "holdout" if "holdout_observations" in p.parts else "development"
+        split = args.split or ("holdout" if "holdout_observations" in p.parts else "development")
         uid = b["source_video_sha256"]
         source_video = Path(b["meta"]["path"])
         if sha256(source_video) != uid:
