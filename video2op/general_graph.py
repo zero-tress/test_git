@@ -43,14 +43,14 @@ def build(skill: dict, instances: dict) -> dict:
             counts, local, pending = Counter(), {}, {}
             pid = "P_" + digest(iid)
             for f in features:
-                signature = canonical(f["feature"])
+                signature = canonical(f.get("alignment_key") or f["feature"])
                 counts[signature] += 1
-                identity = digest([f["feature"], counts[signature]])
+                identity = digest([f.get("alignment_key") or f["feature"], counts[signature]])
                 node = nodes.get(identity) or pending.setdefault(identity, {
                     "id": "G_" + identity, "operation": f["operation"], "actor_role": f["actor_role"],
                     "target_role": f["target_role"], "occurrence": counts[signature],
                     "feature": deepcopy(f["feature"]), "source_instances": [], "path_guards": [],
-                    "status": "pattern_candidate", "alignment_basis": "literal_role_and_state_candidate"})
+                    "status": "pattern_candidate", "alignment_basis": "controlled_semantic_operation_and_role_candidate"})
                 local[f["source_node_id"]] = node["id"]
             original_edges = item["operation_subgraph"]["relations"]
             def mapped_edges(original_edges, local):
@@ -79,6 +79,9 @@ def build(skill: dict, instances: dict) -> dict:
                 if iid not in node["source_instances"]:
                     node["source_instances"].append(iid)
                 node["path_guards"].append(pid)
+            for f in features:
+                node = by_id[local[f["source_node_id"]]]
+                node.setdefault("feature_variants", {}).setdefault(iid, {})[f["source_node_id"]] = deepcopy(f["feature"])
             path = {"path_id": pid, "realization_id": realization["realization_id"],
                     "nodes": list(local.values()), "source_node_map": local,
                     "instance_ids": [iid], "video_uid": item["video_uid"],
@@ -102,7 +105,7 @@ def build(skill: dict, instances: dict) -> dict:
              "expected_effects": deepcopy(skill["expected_effects"]), "nodes": list(nodes.values()),
              "relations": list(edges.values()), "alternatives": paths, "shared_structure_candidates": shared,
              "unresolved": unresolved, "path_policy": "Only complete recorded paths with their bindings are admissible.",
-             "policy": "Shared literal states are candidates, not proven semantic synonymy or universal causal constraints.",
+             "policy": "Controlled operation intent aligns nodes; all observed state variants remain source-specific, and causal necessity remains unverified.",
              "execution_status": "semantic_candidate_requires_applicability_and_binding"}
     graph["reconstruction_validation"] = validate_reconstruction(graph, instances)
     return graph
@@ -131,7 +134,7 @@ def validate_reconstruction(graph, instances):
             errors.append({"instance_id": iid, "reason": "node_loss_or_collapse"})
         for f in features:
             n = nodes.get(mapping.get(f["source_node_id"]))
-            if not n or n["feature"] != f["feature"] or iid not in n["source_instances"]:
+            if not n or n.get("feature_variants", {}).get(iid, {}).get(f["source_node_id"], n["feature"]) != f["feature"] or iid not in n["source_instances"]:
                 errors.append({"instance_id": iid, "reason": "node_feature_or_source_mismatch"})
         if path["nodes"] != [mapping.get(f["source_node_id"]) for f in features]:
             errors.append({"instance_id": iid, "reason": "path_node_order_changed"})

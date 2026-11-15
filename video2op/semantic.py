@@ -266,6 +266,10 @@ def export(bundle: dict, out: Path, *, export_clips: bool = True, clip_padding: 
     export_metadata(bundle, out)
     from .case_outputs import export_case_clips
     export_case_clips(bundle, out, enabled=export_clips, padding=clip_padding, cache_dir=cache_dir)
+    from .skill_episodes import export_clips as export_episode_clips
+    export_episode_clips(bundle, out, enabled=export_clips)
+    from .case_outputs import attach_classified_clips
+    attach_classified_clips(out)
     from .semantic_interface import export as export_interface
     export_interface(bundle, out)
 

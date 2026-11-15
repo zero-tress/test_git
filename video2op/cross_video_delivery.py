@@ -130,7 +130,7 @@ def graph_svg(graph):
         x1, y1 = pos[e["from"]]
         x2, y2 = pos[e["to"]]
         guard = html.escape(" ".join(e["path_guards"]), quote=True)
-        rows.append(f'<g data-paths="{guard}"><path d="M{x1+112} {y1+22} L{x2} {y2+22}" stroke="#64748b" fill="none" marker-end="url(#arrow)"/><text x="{(x1+x2+112)/2}" y="{(y1+y2)/2+16}" font-size="10">{html.escape(e["relation"])}</text></g>')
+        rows.append(f'<g data-paths="{guard}"><path d="M{x1+112} {y1+22} L{x2} {y2+22}" stroke="#64748b" fill="none" marker-end="url(#arrow)"/><text x="{(x1+x2+112)/2}" y="{(y1+y2)/2+16}" font-size="10">{html.escape("时序" if e.get("basis")=="observed_order" else e["relation"])}</text></g>')
     for n in nodes:
         x, y = pos[n["id"]]
         guard = html.escape(" ".join(n["path_guards"]), quote=True)

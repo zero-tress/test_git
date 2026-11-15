@@ -65,8 +65,18 @@ def export_metadata(bundle, out):
             "catalog_ref": catalog_ref, "skill_templates_ref": templates_ref,
             "template_revision": library["revision"], "instances": rows}
     save(out/"skill_instances.json", view)
+    from .skill_episodes import build as build_episodes
+    episode_data = build_episodes(bundle, str((out/"result.json").resolve()))
+    save(out/"skill_episodes.json", {"schema_version": episode_data["schema_version"], "episodes": episode_data["episodes"], "policy": episode_data["policy"]})
+    save(out/"task_causal_audit.json", episode_data["task_causal_audit"])
+    from .learning_tracks import split
+    tracks=split(bundle,str((out/"result.json").resolve()))
+    save(out/"task_learning_units.json",{"schema_version":"purpose_tasks.v1","instances":tracks["purpose_case"]["instances"]})
+    save(out/"clip_classification.json",{"schema_version":"clip_classification.v1","instances":tracks["classification"]})
     bundle["output_layout"] = {"version": "single_video.v2", "skill_instances": "skill_instances.json",
-                               "clip_manifest": "clip/sequence.json", "catalog_ref": catalog_ref,
+                               "clip_manifest": "clip/sequence.json", "skill_episodes": "skill_episodes.json",
+                               "task_causal_audit": "task_causal_audit.json", "task_learning_units": "task_learning_units.json",
+                               "clip_classification": "clip_classification.json", "catalog_ref": catalog_ref,
                                "skill_templates_ref": templates_ref}
     save(out/"result.json", bundle)
     return view
@@ -230,3 +240,21 @@ def clip_panel(out):
         if row["status"] == "exported":
             rows.append('<video controls preload="none" style="width:480px;max-width:100%" src="clip/'+html.escape(row["filename"],quote=True)+'"></video>')
     return "\\n".join(rows)+"</section>"
+
+
+def attach_classified_clips(out):
+    """Link each semantic classification to real single-video clips and contexts."""
+    out=Path(out)
+    file=out/"clip_classification.json"
+    data=json.loads(file.read_text())
+    sequence=json.loads((out/"clip/sequence.json").read_text())
+    episodes=json.loads((out/"clip/episodes/episode_sequence.json").read_text())
+    for row in data["instances"]:
+        core=set(row["atomic_refs"])
+        row["core_clips"]=[{"clip_id":c["clip_id"],"path":"clip/"+c["filename"],"status":c["status"],
+                            "source_start_sec":c["source_start_sec"],"source_end_sec":c["source_end_sec"]}
+                           for c in sequence["clips"] if set(c["atomic_refs"]) & core]
+        row["context_videos"]=[{"kind":v["kind"],"path":"clip/episodes/"+v["path"],"status":v["status"]}
+                               for e in episodes["episodes"] if e["instance_id"]==row["instance_id"] for v in e["videos"]]
+    save(file,data)
+    return data

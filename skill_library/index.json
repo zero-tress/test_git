@@ -5,5 +5,6 @@
   "learned_catalog": "learned_skill_catalog.json",
   "learned_version": "e78d5ff656fdc97960e1",
   "source_split": "development",
-  "learning_source": "/home/wj/codex-workspace/videostudy_operation/output/runs/single_video_layout_20261115/knowledge_development"
+  "learning_source": "/home/wj/codex-workspace/videostudy_operation/output/runs/single_video_layout_20261115/knowledge_development",
+  "learning_tracks": "learning_tracks/index.json"
 }

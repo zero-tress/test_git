@@ -68,7 +68,9 @@ def extract(bundle: dict, source: str) -> dict:
         local_ids = {n["id"] for n in local_nodes}
         projected = [{"node_id": n["id"], "name": n["name"],
                       "selected_atomic_refs": [r for r in n.get("atomic_refs", []) if r in refs],
-                      "partial_node": bool(set(n.get("atomic_refs") or []) - set(refs))}
+                      "partial_node": bool(set(n.get("atomic_refs") or []) - set(refs)),
+                      "semantic_preconditions": deepcopy(n.get("tuple", {}).get("C_pre", [])),
+                      "semantic_postconditions": deepcopy(n.get("tuple", {}).get("C_post", []))}
                      for n in local_nodes]
         category = labels.get(target, {}).get("category", "unknown")
         # Target entities are local to a video. Sharing category never shares identity.
@@ -90,6 +92,7 @@ def extract(bundle: dict, source: str) -> dict:
                     "causal_status": s.get("causal_status", "hypothesis"),
                     "candidate_conditions": [deepcopy(r) for r in bundle.get("learning_alignment", {}).get("records", [])
                                              if r.get("node_id") in local_ids and r["kind"] in {"C_pre", "C_post", "C_const"}]}
+        instance["entity_context"] = deepcopy((bundle.get("semantic_scope") or {}).get("objects") or [])
         instance["skill_ref"] = "skill_" + goal
         instance["instance_scope"] = s.get("instance_scope", "subtask")
         instance["evaluation_criteria"] = {key: list(dict.fromkeys(

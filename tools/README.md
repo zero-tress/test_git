@@ -31,3 +31,11 @@
 - attach_cross_video_reviews.py：附加模型意见、来源帧和冲突，不自动升级人工/因果状态。
 - verify_cross_video_delivery.py：验证原数据、切片、路径重建、R引用、HTML/SVG/JavaScript及回归。
 - 技能切片入口：python -B -m video2op.skill_clips；使用--help查看必需参数。
+
+
+## 双流程学习工具
+
+- analyze_pen_goal_samples.py：通过正常全流程分析拿笔样例，显式授权后仅访问现有8032。
+- review_contrastive_skills.py：核验指定案例的局部技能与给定整体目标，保留原始失败及无效因果意见。
+- verify_two_track_delivery.py：核对两条学习流程的来源、范围、七元组、切片解码与页面引用。
+- learn.py新增--goal、--target-category、--local-reviews；两条流程写入输出目录的learning_tracks/。

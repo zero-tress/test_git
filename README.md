@@ -15,7 +15,7 @@
 - [验收报告](docs/reports/按两张图完成任务验收报告.md)：能力、证据缺口和 38 项账本。
 - [本次整理记录](docs/reports/项目整理_20261112.md)：清理范围、归档位置与验证结果。
 
-已有交付的结构检查为 16/16 通过；本轮回归为 434 项通过。结构通过不代表语义结论全部得到实证。局部效果、复杂时序、因果条件仍有待复核项；参数、检测器与执行器接口为 `unbound`，尚未验证机器人执行。
+已有交付的结构检查为 16/16 通过；本轮回归为 474 项通过。结构通过不代表语义结论全部得到实证。局部效果、复杂时序、因果条件仍有待复核项；参数、检测器与执行器接口为 `unbound`，尚未验证机器人执行。
 
 ## 目录约定
 
@@ -134,3 +134,26 @@ conda run -n study python -B tools/verify_case_layout.py --out output/current --
 ~~~
 
 本轮没有改动机器人执行绑定、知识工作台数据库表或8032服务。模型的预期条件和视频观察仍分别记录，统一模板不代表检测器已经绑定或因果关系已经证实。
+
+
+## 同目标任务图与同类技能切片（2026-11-15）
+
+[本轮入口](output/learning_tracks_current/index.html) · [实施报告](docs/reports/双流程学习_实施报告_20261115.md) · [当前方案](docs/plans/prd-contrastive-skill-learning.md) · [两条学习视图的统一索引](skill_library/learning_tracks/index.json)
+
+同目标任务图以“拿起笔”为主样例，比较抓取1、抓取2、抓取3的完整路径，形成3个候选实现R。
+同类技能切片依据局部意图和效果分类，分别记录成功、失败、未执行、未知，整体任务结果不会覆盖局部技能。
+七元组X、O、C_pre、C_const、E、C_post、R继续保留。任务图因果校验、对象/同义状态对齐与分支条件均可追溯到源观察。
+
+本轮导出21个局部技能视频视图；7个抓取实例中3个为模型成功候选、4个未知，没有真实抓取失败样本。
+移瓶/移杯是否构成必要清障、分支适用条件及普遍因果仍未证实。抓取3的尾部解码警告单独保存。
+
+~~~bash
+# 对已保存案例进行两条流程的学习；不需要再次调用模型
+conda run -n study python -B learn.py --inputs <多个result.json> \
+  --goal acquire_object --target-category pen --local-reviews <results.json> --out output/runs/新的学习目录
+
+# 验证来源、七元组、实际MP4、路径、链接与脚本
+conda run -n study python -B tools/verify_two_track_delivery.py --out output/runs/新的学习目录
+~~~
+
+本轮474项回归通过。历史13段开发与3段留出另存，旧output/current保持原交付。

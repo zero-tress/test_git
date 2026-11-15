@@ -1,0 +1,30 @@
+{
+  "schema_version": "learning_track_catalog_registry.v1",
+  "version": "4194ec5036_83bb42dbbd",
+  "tuple_fields": [
+    "X",
+    "O",
+    "C_pre",
+    "C_const",
+    "E",
+    "C_post",
+    "R"
+  ],
+  "scope": "user_pen_examples_3",
+  "source_video_uids": [
+    "5d1d84f4b0622013e61b18e9ad35ececb64dab10581db2d573c958c18519c543",
+    "853a1b778eceaccee908019017381c395ed6687ab9a31e78edac0dcff421f8da",
+    "8dcd0864866f9dc69c927ff4ceafad2794c720a06f3fc25cbc6a313c15dff09b"
+  ],
+  "declared_templates_ref": "../skill_templates.json",
+  "views": {
+    "same_goal_graphs": {
+      "catalog": "/home/wj/codex-workspace/videostudy_operation/output/runs/two_track_learning_20261115/delivery/learning_tracks/same_goal_graphs/skill_catalog.json",
+      "meaning": "Same semantic goal, complete source paths and candidate realizations R"
+    },
+    "classified_skill_clips": {
+      "catalog": "/home/wj/codex-workspace/videostudy_operation/output/runs/two_track_learning_20261115/delivery/learning_tracks/classified_skill_clips/skill_catalog.json",
+      "meaning": "Local skill trials grouped for outcome/condition contrasts"
+    }
+  }
+}

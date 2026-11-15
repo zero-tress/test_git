@@ -447,4 +447,8 @@ def run_all(force: bool = False, description: str | None = None, export_clips: b
         (destination / "review.html").write_text(render(knowledge), encoding="utf-8")
         from .cross_video_delivery import export as export_cross_video
         export_cross_video(knowledge, destination)
+        from .learning_tracks import split
+        from .two_track_delivery import export as export_tracks
+        tracks=[split(b,str(config.OUTPUT_DIR/(b["meta"]["name"]+"_semantic_v3")/"result.json")) for b in out]
+        export_tracks(tracks,destination/"learning_tracks",export_clips=export_clips)
     return out

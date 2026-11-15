@@ -15,8 +15,12 @@ def causal_consistency(bundle):
                     invalid.append({"node": node["id"], "reason": "unknown_effect_action", "atomic_ref": ref})
                 elif ev.get("status") == "observed" and actions[ref].get("inferred"):
                     invalid.append({"node": node["id"], "reason": "inferred_action_cannot_prove_effect", "atomic_ref": ref})
-    return {"id": "causal_consistency", "name": "效果来源与推断隔离",
-            "status": "fail" if invalid else "warn" if issues else "pass", "detail": invalid + issues}
+    from .task_causality import audit
+    edge_audit = audit(bundle)
+    issues += [{"from": r["from"], "to": r["to"], "reason": r["status"]}
+               for r in edge_audit["edges"] if r["status"] != "observed_support_candidate"]
+    return {"id": "causal_consistency", "name": "效果来源与任务图因果桥梁",
+            "status": "fail" if invalid else "warn" if issues else "pass", "detail": invalid + issues, "edge_audit": edge_audit}
 
 def pre_post_consistency(bundle):
     graph = bundle["semantic_graph"]
