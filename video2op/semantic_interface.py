@@ -1,7 +1,9 @@
 """Unbound interfaces for the current semantic schema; no controller or BT is selected."""
 import json
 from pathlib import Path
+
 import yaml
+
 
 def export(bundle, out):
     graph = bundle["semantic_graph"]
@@ -31,10 +33,15 @@ def export(bundle, out):
 
 def validate_files(out):
     import jsonschema
+
     from .semantic import SCHEMA
     from .temporal_learning import validate_graph
     out = Path(out)
-    graph = yaml.safe_load((out / "semantic_graph.yaml").read_text())
+    result_path = out / "result.json"
+    if result_path.exists():
+        graph = json.loads(result_path.read_text())["semantic_graph"]
+    else:
+        graph = yaml.safe_load((out / "semantic_graph.yaml").read_text())  # historical read compatibility
     policy = yaml.safe_load((out / "execution_policy.yaml").read_text())
     program = json.loads((out / "program.json").read_text())
     errors = [e.message for e in jsonschema.Draft7Validator(yaml.safe_load(SCHEMA.read_text())).iter_errors(graph)]

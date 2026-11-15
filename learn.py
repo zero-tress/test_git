@@ -26,6 +26,7 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="按局部目的/目标效果跨视频归纳，保留对象与实现方式")
     ap.add_argument("--inputs", nargs="+", required=True, help="result.json或其所在案例目录")
     ap.add_argument("--out", type=Path, required=True, help="新的输出目录，不覆盖原案例")
+    ap.add_argument("--no-clips", action="store_true", help="保存时间索引但不导出各案例MP4")
     ap.add_argument("--clip-manifest", type=Path, help="关联已导出的技能切片manifest.json")
     ap.add_argument("--refresh-scope", action="store_true", help="访问已配置模型重新识别子任务范围")
     ap.add_argument("--reviewed-observations", type=Path, help="带审阅者和真实证据的条件对照样本JSON")
@@ -86,7 +87,7 @@ def main(argv=None) -> int:
         (destination / "effect_evidence_audit.json").write_text(json.dumps(effect_audit, ensure_ascii=False, indent=2))
         b["validation"] = semantic.validate(b)
         (destination / "result.json").write_text(json.dumps(b, ensure_ascii=False, indent=2), encoding="utf-8")
-        semantic.export(b, destination)
+        semantic.export(b, destination, export_clips=not args.no_clips, cache_dir=out/"_clip_cache")
         semantic.render(b, destination)
         cases.append(extract(b, str(source)))
         for instance in cases[-1]["instances"]:

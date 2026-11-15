@@ -22,27 +22,12 @@ from video2op.pipeline import run_all, run_case
 
 
 def export_clips(bundles, padding):
-    import json
-
-    from video2op import config
-    from video2op.knowledge import aggregate, extract
-    from video2op.skill_clips import export, save
-    cases = [extract(b, str(config.OUTPUT_DIR / (b["meta"]["name"] + "_semantic_v3") / "result.json"))
-             for b in bundles]
-    knowledge = aggregate(cases)
-    existing = json.loads((config.ROOT / "eval/manifest.json").read_text())
-    splits = {r["sha256"]: r for r in existing["media"]}
-    rows = []
-    for n, b in enumerate(bundles, 1):
-        uid = b["source_video_sha256"]
-        row = splits.get(uid, {})
-        rows.append({"id": row.get("id", f"{n:02d}"), "sha256": uid,
-                     "split": row.get("split", "unassigned"), "source": b["meta"]["path"]})
-    save(config.OUTPUT_DIR / "clip_inputs/knowledge.json", knowledge)
-    result = export(knowledge, config.OUTPUT_DIR / "skill_clips", {"media": rows}, padding)
-    print("技能视频切片：", json.dumps(result["summary"], ensure_ascii=False))
-    if any(any(i["reason"] == "clip_export_failed" for i in r["issues"]) for r in result["instances"]):
-        raise RuntimeError("部分切片导出失败，详见skill_clips/manifest.json")
+    """Compatibility helper; clips now live inside each single-video case."""
+    from video2op import config, semantic
+    for bundle in bundles:
+        out = config.OUTPUT_DIR / (bundle["meta"]["name"] + "_semantic_v3")
+        semantic.export(bundle, out, clip_padding=padding)
+        semantic.render(bundle, out)
 
 
 def main() -> int:
@@ -51,7 +36,8 @@ def main() -> int:
     ap.add_argument("--force", action="store_true", help="忽略模型缓存重新分析")
     ap.add_argument("--output-root", type=Path, help="另存本次运行产物的目录")
     ap.add_argument("--description", type=Path, help="UTF-8文字背景文件；与视频观察证据分开")
-    ap.add_argument("--export-clips", action="store_true", help="分析后导出技能/动作视频片段和来源索引")
+    ap.add_argument("--export-clips", action="store_true", help="兼容旧参数；单视频clip目录默认生成")
+    ap.add_argument("--no-clips", action="store_true", help="只生成clip时间索引，不导出MP4")
     ap.add_argument("--clip-padding", type=float, default=.25, help="片段前后保留上下文秒数")
     args = ap.parse_args()
     import math
@@ -66,17 +52,13 @@ def main() -> int:
 
     try:
         if args.target == "all":
-            results = run_all(force=args.force, **({"description": description} if description is not None else {}))
-            if args.export_clips:
-                export_clips(results, args.clip_padding)
+            results = run_all(force=args.force, export_clips=not args.no_clips, clip_padding=args.clip_padding, **({"description": description} if description is not None else {}))
             failed = [r for r in results if r.get("errors") or not r.get("validation", {}).get("passed")]
-            return 1 if failed else 0
-        bundle = run_case(Path(args.target), force=args.force, **({"description": description} if description is not None else {}))
-        if args.export_clips:
-            export_clips([bundle], args.clip_padding)
+            return 1 if failed or any(r.get("clip_export", {}).get("status") == "needs_review" for r in results) else 0
+        bundle = run_case(Path(args.target), force=args.force, export_clips=not args.no_clips, clip_padding=args.clip_padding, **({"description": description} if description is not None else {}))
         if not bundle.get("validation", {}).get("passed"):
             print("提示：校验未全部通过，详见产物的 validation 与 needs_review 字段")
-        return 1 if bundle.get("errors") or not bundle.get("validation", {}).get("passed") else 0
+        return 1 if bundle.get("errors") or not bundle.get("validation", {}).get("passed") or bundle.get("clip_export", {}).get("status") == "needs_review" else 0
     except LLMError as e:
         print(f"\n模型调用失败：{e}")
         for err in e.errors[-3:]:

@@ -68,9 +68,10 @@ def test_complete_offline_pipeline_exports_overall_motion_and_timing(tmp_path, m
         monkeypatch.setattr(stage, "run", lambda *a, value=payload: value)
     bundle = pipeline.run_case(video, verbose=False)
     out = config.OUTPUT_DIR / "sample_semantic_v3"
-    for name in ("result.json", "operations.svg", "report.html", "workbench.html",
-                 "semantic_graph.yaml", "action_catalog.json", "performance.json"):
+    for name in ("result.json", "operations.svg", "workbench.html",
+                 "skill_instances.json", "clip/sequence.json", "performance.json"):
         assert (out / name).is_file(), name
+    assert not any((out / name).exists() for name in ("report.html", "semantic_graph.yaml", "action_catalog.json"))
     assert __import__("json").loads((out / "program.json").read_text())["status"] == "unbound"
     assert "status: unbound" in (out / "execution_policy.yaml").read_text()
     assert (old / "result.json").read_text() == "original"

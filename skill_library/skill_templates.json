@@ -1,0 +1,3199 @@
+{
+  "schema_version": "skill_template_library.v1",
+  "tuple_fields": [
+    "X",
+    "O",
+    "C_pre",
+    "C_const",
+    "E",
+    "C_post",
+    "R"
+  ],
+  "reference": {
+    "path": "references/two_table_skill_knowledge.json",
+    "canonical_sha256": "40fb120fa38acb5c29f664c5ac16615bcda8b7a1a77d90b27388825eda13d65e",
+    "schema": "two_table_video_skill_knowledge.v1",
+    "ontology_revision": "sha256:d2baec79a4c8aaabf174504c49583fec25934e338262715dfe802413ac922a44"
+  },
+  "templates": {
+    "skill/AcquireObjectSkill": {
+      "template_id": "skill/AcquireObjectSkill",
+      "skill_ref": "AcquireObjectSkill",
+      "label": "取物并持有",
+      "level": "semantic_skill",
+      "meaning": "取得指定对象并持有同一对象；用户指定的来源和取出要求须保留，具体取物方式由后续结合场景确定。",
+      "parent_refs": [
+        "ManipulationSkill"
+      ],
+      "method_selection_required": true,
+      "seven_tuple": {
+        "X": {
+          "role": "acting_agent",
+          "binding_status": "unbound",
+          "ontology_actor_refs": [
+            "ActingRobot"
+          ],
+          "policy": "Human demonstrators bind locally; they are not current robot facts."
+        },
+        "O": {
+          "role_slots": [
+            {
+              "slot_ref": "GraspTargetSkillSlot",
+              "role_ref": "GraspedObjectRole",
+              "label": "被抓取对象",
+              "channel_ref": "PrimaryPatientChannel",
+              "language_roles": [
+                "patient"
+              ],
+              "binding_mode": "input",
+              "collection_consumption": [],
+              "min_count": 1,
+              "max_count": 1,
+              "declared_by": "AcquireObjectSkill"
+            }
+          ],
+          "role_constraints": [
+            {
+              "condition_ref": "condition::068d99e94cf48142a13c",
+              "kind": "role_constraint",
+              "phase": "entry",
+              "expression": {
+                "kind": "affordance",
+                "subject": {
+                  "kind": "slot",
+                  "ref": "GraspTargetSkillSlot"
+                },
+                "affordance_ref": "GraspableAffordance"
+              },
+              "origin": {
+                "kind": "ontology",
+                "source_refs": [
+                  "GraspTargetSkillSlot",
+                  "GraspableAffordance"
+                ]
+              },
+              "applies_when_bound_slots": [],
+              "truth": "U",
+              "verification_status": "not_observed"
+            },
+            {
+              "condition_ref": "condition::5ff6962e3062b17657cd",
+              "kind": "role_constraint",
+              "phase": "entry",
+              "expression": {
+                "kind": "type",
+                "subject": {
+                  "kind": "slot",
+                  "ref": "GraspTargetSkillSlot"
+                },
+                "class_ref": "Object"
+              },
+              "origin": {
+                "kind": "ontology",
+                "source_refs": [
+                  "GraspTargetSkillSlot",
+                  "Object"
+                ]
+              },
+              "applies_when_bound_slots": [],
+              "truth": "U",
+              "verification_status": "not_observed"
+            }
+          ]
+        },
+        "C_pre": [],
+        "C_const": [],
+        "E": {
+          "completion_checks": [],
+          "detector_binding": "unbound"
+        },
+        "C_post": [
+          {
+            "condition_ref": "condition::63eeab6e0fc8286f00c2",
+            "kind": "expected_effect",
+            "phase": "after_success",
+            "expression": {
+              "kind": "effect",
+              "subject": {
+                "kind": "slot",
+                "ref": "GraspTargetSkillSlot"
+              },
+              "effect_ref": "AcquireHoldingEffect"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "AcquireHoldingEffect"
+              ]
+            },
+            "applies_when_bound_slots": [],
+            "truth": "U",
+            "verification_status": "not_observed"
+          }
+        ],
+        "R": [
+          {
+            "id": "semantic_method/GraspObjectSkill",
+            "skill_template_ref": "skill/GraspObjectSkill",
+            "origin": "reference_method_preference",
+            "binding_status": "unbound",
+            "observation_status": "not_observed",
+            "selection_status": "provisional"
+          },
+          {
+            "id": "semantic_method/RetrieveObjectFromContainerSkill",
+            "skill_template_ref": "skill/RetrieveObjectFromContainerSkill",
+            "origin": "reference_method_switch",
+            "guard": {
+              "rule_ref": "GraspContainerDiscoverySwitch",
+              "source_method_ref": "GraspObjectSkill",
+              "target_method_ref": "RetrieveObjectFromContainerSkill",
+              "condition_source_ref": "RetrieveInsideCondition",
+              "condition_ref": "condition::783e526df11894fd6add",
+              "expression": {
+                "kind": "relation",
+                "subject": {
+                  "kind": "slot",
+                  "ref": "GraspTargetSkillSlot"
+                },
+                "relation_ref": "insideContainer",
+                "operator": "eq",
+                "object": {
+                  "kind": "slot",
+                  "ref": "RetrieveContainerSkillSlot"
+                }
+              },
+              "subject_slot_ref": "GraspTargetSkillSlot",
+              "discovered_slot_ref": "RetrieveContainerSkillSlot",
+              "discovered_type_refs": [
+                "Container"
+              ],
+              "on_true": "defer_then_bind_discovered_role",
+              "on_unknown": "stop_before_method",
+              "on_false": "continue_subject_to_original_guards"
+            },
+            "binding_status": "unbound",
+            "observation_status": "not_observed",
+            "selection_status": "deferred_until_guard_and_roles_confirmed"
+          }
+        ]
+      },
+      "result_ports": [
+        {
+          "result_ref": "GraspedResult",
+          "role_ref": "GraspedObjectRole",
+          "label": "被持有的同一对象",
+          "source_slot_ref": "GraspTargetSkillSlot",
+          "identity": "same_entity",
+          "state_family_refs": [],
+          "entailed_state_refs": [],
+          "quantity_refs": [],
+          "consumer": "cerebellum.result_requirements",
+          "declared_by": "AcquireObjectSkill"
+        }
+      ],
+      "source_contract": {
+        "schema": "skill_semantic_contract.v2.3",
+        "ontology_revision": "sha256:d2baec79a4c8aaabf174504c49583fec25934e338262715dfe802413ac922a44"
+      },
+      "origin": "declared_reference_not_video_induction",
+      "unresolved": [
+        "No explicit process invariant supplied; C_const remains empty."
+      ]
+    },
+    "skill/GraspObjectSkill": {
+      "template_id": "skill/GraspObjectSkill",
+      "skill_ref": "GraspObjectSkill",
+      "label": "抓取对象",
+      "level": "semantic_skill",
+      "meaning": "按角色、条件和结果定义的技能",
+      "parent_refs": [
+        "AcquireObjectSkill"
+      ],
+      "method_selection_required": false,
+      "seven_tuple": {
+        "X": {
+          "role": "acting_agent",
+          "binding_status": "unbound",
+          "ontology_actor_refs": [
+            "ActingRobot"
+          ],
+          "policy": "Human demonstrators bind locally; they are not current robot facts."
+        },
+        "O": {
+          "role_slots": [
+            {
+              "slot_ref": "GraspSourceSkillSlot",
+              "role_ref": "GraspSourceRole",
+              "label": "抓取来源平面",
+              "channel_ref": "SourceChannel",
+              "language_roles": [
+                "source"
+              ],
+              "binding_mode": "input",
+              "collection_consumption": [],
+              "min_count": 0,
+              "max_count": 1,
+              "declared_by": "GraspObjectSkill"
+            },
+            {
+              "slot_ref": "GraspTargetSkillSlot",
+              "role_ref": "GraspedObjectRole",
+              "label": "被抓取对象",
+              "channel_ref": "PrimaryPatientChannel",
+              "language_roles": [
+                "patient"
+              ],
+              "binding_mode": "input",
+              "collection_consumption": [],
+              "min_count": 1,
+              "max_count": 1,
+              "declared_by": "AcquireObjectSkill"
+            }
+          ],
+          "role_constraints": [
+            {
+              "condition_ref": "condition::5300608e44608875b275",
+              "kind": "role_constraint",
+              "phase": "entry",
+              "expression": {
+                "kind": "type",
+                "subject": {
+                  "kind": "slot",
+                  "ref": "GraspSourceSkillSlot"
+                },
+                "class_ref": "Surface"
+              },
+              "origin": {
+                "kind": "ontology",
+                "source_refs": [
+                  "GraspSourceSkillSlot",
+                  "Surface"
+                ]
+              },
+              "applies_when_bound_slots": [],
+              "truth": "U",
+              "verification_status": "not_observed"
+            },
+            {
+              "condition_ref": "condition::068d99e94cf48142a13c",
+              "kind": "role_constraint",
+              "phase": "entry",
+              "expression": {
+                "kind": "affordance",
+                "subject": {
+                  "kind": "slot",
+                  "ref": "GraspTargetSkillSlot"
+                },
+                "affordance_ref": "GraspableAffordance"
+              },
+              "origin": {
+                "kind": "ontology",
+                "source_refs": [
+                  "GraspTargetSkillSlot",
+                  "GraspableAffordance"
+                ]
+              },
+              "applies_when_bound_slots": [],
+              "truth": "U",
+              "verification_status": "not_observed"
+            },
+            {
+              "condition_ref": "condition::5ff6962e3062b17657cd",
+              "kind": "role_constraint",
+              "phase": "entry",
+              "expression": {
+                "kind": "type",
+                "subject": {
+                  "kind": "slot",
+                  "ref": "GraspTargetSkillSlot"
+                },
+                "class_ref": "Object"
+              },
+              "origin": {
+                "kind": "ontology",
+                "source_refs": [
+                  "GraspTargetSkillSlot",
+                  "Object"
+                ]
+              },
+              "applies_when_bound_slots": [],
+              "truth": "U",
+              "verification_status": "not_observed"
+            }
+          ]
+        },
+        "C_pre": [
+          {
+            "condition_ref": "condition::1a856786667d393838b9",
+            "kind": "precondition",
+            "phase": "entry",
+            "expression": {
+              "kind": "relation_absent",
+              "subject": {
+                "kind": "actor",
+                "ref": "ActingRobot"
+              },
+              "relation_ref": "holding"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "EmptyGripperCondition"
+              ]
+            },
+            "applies_when_bound_slots": [],
+            "truth": "U",
+            "verification_status": "not_observed"
+          },
+          {
+            "condition_ref": "condition::cf324c51e90f065cc164",
+            "kind": "precondition",
+            "phase": "entry",
+            "expression": {
+              "kind": "relation",
+              "subject": {
+                "kind": "actor",
+                "ref": "ActingRobot"
+              },
+              "relation_ref": "near",
+              "operator": "eq",
+              "object": {
+                "kind": "slot",
+                "ref": "GraspTargetSkillSlot"
+              }
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "GraspAccessCondition"
+              ]
+            },
+            "applies_when_bound_slots": [],
+            "truth": "U",
+            "verification_status": "not_observed"
+          },
+          {
+            "condition_ref": "condition::d40fa3bb53376314a7e9",
+            "kind": "precondition",
+            "phase": "entry",
+            "expression": {
+              "kind": "relation",
+              "subject": {
+                "kind": "slot",
+                "ref": "GraspTargetSkillSlot"
+              },
+              "relation_ref": "locatedOn",
+              "operator": "eq",
+              "object": {
+                "kind": "slot",
+                "ref": "GraspSourceSkillSlot"
+              }
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "GraspSourceCondition"
+              ]
+            },
+            "applies_when_bound_slots": [
+              "GraspSourceSkillSlot"
+            ],
+            "truth": "U",
+            "verification_status": "not_observed"
+          }
+        ],
+        "C_const": [],
+        "E": {
+          "completion_checks": [
+            {
+              "condition_id": "robot_holds_grasp_target",
+              "kind": "relation",
+              "subject": "RobotSelf",
+              "relation": "holding",
+              "object_parameter": "target",
+              "operator": "equals"
+            }
+          ],
+          "detector_binding": "unbound"
+        },
+        "C_post": [
+          {
+            "condition_ref": "condition::63eeab6e0fc8286f00c2",
+            "kind": "expected_effect",
+            "phase": "after_success",
+            "expression": {
+              "kind": "effect",
+              "subject": {
+                "kind": "slot",
+                "ref": "GraspTargetSkillSlot"
+              },
+              "effect_ref": "AcquireHoldingEffect"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "AcquireHoldingEffect"
+              ]
+            },
+            "applies_when_bound_slots": [],
+            "truth": "U",
+            "verification_status": "not_observed"
+          },
+          {
+            "condition_ref": "condition::f3470cbbe19fdba1230d",
+            "kind": "expected_effect",
+            "phase": "after_success",
+            "expression": {
+              "kind": "effect",
+              "subject": {
+                "kind": "slot",
+                "ref": "GraspTargetSkillSlot"
+              },
+              "effect_ref": "GraspRelationEffect"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "GraspRelationEffect"
+              ]
+            },
+            "applies_when_bound_slots": [],
+            "truth": "U",
+            "verification_status": "not_observed"
+          }
+        ],
+        "R": [
+          {
+            "id": "reference/grasp_object",
+            "name": "grasp_object",
+            "origin": "implementation_reference",
+            "reference_path": "implementation_reference.templates.grasp_object",
+            "expansion": [
+              {
+                "skill": "estimate_object_pose",
+                "bindings": {
+                  "target": "$slot.GraspTargetSkillSlot"
+                }
+              },
+              {
+                "action": "generate_grasp_pose"
+              },
+              {
+                "action": "plan_motion"
+              },
+              {
+                "action": "execute_motion"
+              },
+              {
+                "action": "set_gripper"
+              }
+            ],
+            "required_capabilities": [
+              "ManipulationCapability",
+              "PerceptionCapability",
+              "PoseEstimationCapability"
+            ],
+            "binding_status": "unbound",
+            "observation_status": "not_observed"
+          }
+        ]
+      },
+      "result_ports": [
+        {
+          "result_ref": "GraspedResult",
+          "role_ref": "GraspedObjectRole",
+          "label": "被持有的同一对象",
+          "source_slot_ref": "GraspTargetSkillSlot",
+          "identity": "same_entity",
+          "state_family_refs": [],
+          "entailed_state_refs": [],
+          "quantity_refs": [],
+          "consumer": "cerebellum.result_requirements",
+          "declared_by": "AcquireObjectSkill"
+        }
+      ],
+      "source_contract": {
+        "schema": "skill_semantic_contract.v2.3",
+        "ontology_revision": "sha256:d2baec79a4c8aaabf174504c49583fec25934e338262715dfe802413ac922a44"
+      },
+      "origin": "declared_reference_not_video_induction",
+      "unresolved": [
+        "No explicit process invariant supplied; C_const remains empty."
+      ]
+    },
+    "skill/PlaceObjectSkill": {
+      "template_id": "skill/PlaceObjectSkill",
+      "skill_ref": "PlaceObjectSkill",
+      "label": "放置对象",
+      "level": "semantic_skill",
+      "meaning": "将对象放到指定位置或容器中。",
+      "parent_refs": [
+        "ManipulationSkill"
+      ],
+      "method_selection_required": true,
+      "seven_tuple": {
+        "X": {
+          "role": "acting_agent",
+          "binding_status": "unbound",
+          "ontology_actor_refs": [
+            "ActingRobot"
+          ],
+          "policy": "Human demonstrators bind locally; they are not current robot facts."
+        },
+        "O": {
+          "role_slots": [
+            {
+              "slot_ref": "PlaceDestinationSkillSlot",
+              "role_ref": "PlacementDestinationRole",
+              "label": "放置目的位置",
+              "channel_ref": "DestinationChannel",
+              "language_roles": [
+                "destination"
+              ],
+              "binding_mode": "input",
+              "collection_consumption": [],
+              "min_count": 1,
+              "max_count": 1,
+              "declared_by": "PlaceObjectSkill"
+            },
+            {
+              "slot_ref": "PlaceObjectTargetSkillSlot",
+              "role_ref": "PlacedObjectRole",
+              "label": "被放置对象",
+              "channel_ref": "PrimaryPatientChannel",
+              "language_roles": [
+                "patient"
+              ],
+              "binding_mode": "input",
+              "collection_consumption": [
+                "each_member"
+              ],
+              "min_count": 1,
+              "max_count": 1,
+              "declared_by": "PlaceObjectSkill"
+            }
+          ],
+          "role_constraints": [
+            {
+              "condition_ref": "condition::136db5fffbf3360f261d",
+              "kind": "role_constraint",
+              "phase": "entry",
+              "expression": {
+                "kind": "type",
+                "subject": {
+                  "kind": "slot",
+                  "ref": "PlaceDestinationSkillSlot"
+                },
+                "class_ref": "Object"
+              },
+              "origin": {
+                "kind": "ontology",
+                "source_refs": [
+                  "Object",
+                  "PlaceDestinationSkillSlot"
+                ]
+              },
+              "applies_when_bound_slots": [],
+              "truth": "U",
+              "verification_status": "not_observed"
+            },
+            {
+              "condition_ref": "condition::6e7fc5f4104a1f15ca9a",
+              "kind": "role_constraint",
+              "phase": "entry",
+              "expression": {
+                "kind": "type",
+                "subject": {
+                  "kind": "slot",
+                  "ref": "PlaceObjectTargetSkillSlot"
+                },
+                "class_ref": "Object"
+              },
+              "origin": {
+                "kind": "ontology",
+                "source_refs": [
+                  "Object",
+                  "PlaceObjectTargetSkillSlot"
+                ]
+              },
+              "applies_when_bound_slots": [],
+              "truth": "U",
+              "verification_status": "not_observed"
+            }
+          ]
+        },
+        "C_pre": [
+          {
+            "condition_ref": "condition::883edd88b3bf7a638018",
+            "kind": "precondition",
+            "phase": "entry",
+            "expression": {
+              "kind": "relation",
+              "subject": {
+                "kind": "actor",
+                "ref": "ActingRobot"
+              },
+              "relation_ref": "holding",
+              "operator": "eq",
+              "object": {
+                "kind": "slot",
+                "ref": "PlaceObjectTargetSkillSlot"
+              }
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "PlaceHeldObjectCondition"
+              ]
+            },
+            "applies_when_bound_slots": [],
+            "truth": "U",
+            "verification_status": "not_observed"
+          },
+          {
+            "condition_ref": "condition::a9e8bc51525c31aae298",
+            "kind": "precondition",
+            "phase": "entry",
+            "expression": {
+              "kind": "relation",
+              "subject": {
+                "kind": "actor",
+                "ref": "ActingRobot"
+              },
+              "relation_ref": "near",
+              "operator": "eq",
+              "object": {
+                "kind": "slot",
+                "ref": "PlaceDestinationSkillSlot"
+              }
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "PlaceAccessCondition"
+              ]
+            },
+            "applies_when_bound_slots": [],
+            "truth": "U",
+            "verification_status": "not_observed"
+          }
+        ],
+        "C_const": [],
+        "E": {
+          "completion_checks": [],
+          "detector_binding": "unbound"
+        },
+        "C_post": [
+          {
+            "condition_ref": "condition::36801d14550d6e6bc600",
+            "kind": "expected_effect",
+            "phase": "after_success",
+            "expression": {
+              "kind": "effect",
+              "subject": {
+                "kind": "slot",
+                "ref": "PlaceObjectTargetSkillSlot"
+              },
+              "effect_ref": "PlacementReleaseEffect"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "PlacementReleaseEffect"
+              ]
+            },
+            "applies_when_bound_slots": [],
+            "truth": "U",
+            "verification_status": "not_observed"
+          }
+        ],
+        "R": []
+      },
+      "result_ports": [
+        {
+          "result_ref": "PlacedResult",
+          "role_ref": "PlacedResultRole",
+          "label": "位置变化后的同一对象",
+          "source_slot_ref": "PlaceObjectTargetSkillSlot",
+          "identity": "same_entity",
+          "state_family_refs": [],
+          "entailed_state_refs": [],
+          "quantity_refs": [],
+          "consumer": "cerebellum.result_requirements",
+          "declared_by": "PlaceObjectSkill"
+        }
+      ],
+      "source_contract": {
+        "schema": "skill_semantic_contract.v2.3",
+        "ontology_revision": "sha256:d2baec79a4c8aaabf174504c49583fec25934e338262715dfe802413ac922a44"
+      },
+      "origin": "declared_reference_not_video_induction",
+      "unresolved": [
+        "No explicit process invariant supplied; C_const remains empty."
+      ]
+    },
+    "skill/PlaceOnSurfaceSkill": {
+      "template_id": "skill/PlaceOnSurfaceSkill",
+      "skill_ref": "PlaceOnSurfaceSkill",
+      "label": "放到平面上",
+      "level": "semantic_skill",
+      "meaning": "按角色、条件和结果定义的技能",
+      "parent_refs": [
+        "PlaceObjectSkill"
+      ],
+      "method_selection_required": false,
+      "seven_tuple": {
+        "X": {
+          "role": "acting_agent",
+          "binding_status": "unbound",
+          "ontology_actor_refs": [
+            "ActingRobot"
+          ],
+          "policy": "Human demonstrators bind locally; they are not current robot facts."
+        },
+        "O": {
+          "role_slots": [
+            {
+              "slot_ref": "PlaceDestinationSkillSlot",
+              "role_ref": "PlacementDestinationRole",
+              "label": "放置目的位置",
+              "channel_ref": "DestinationChannel",
+              "language_roles": [
+                "destination"
+              ],
+              "binding_mode": "input",
+              "collection_consumption": [],
+              "min_count": 1,
+              "max_count": 1,
+              "declared_by": "PlaceObjectSkill"
+            },
+            {
+              "slot_ref": "PlaceObjectTargetSkillSlot",
+              "role_ref": "PlacedObjectRole",
+              "label": "被放置对象",
+              "channel_ref": "PrimaryPatientChannel",
+              "language_roles": [
+                "patient"
+              ],
+              "binding_mode": "input",
+              "collection_consumption": [
+                "each_member"
+              ],
+              "min_count": 1,
+              "max_count": 1,
+              "declared_by": "PlaceObjectSkill"
+            }
+          ],
+          "role_constraints": [
+            {
+              "condition_ref": "condition::340d6d2c0abb2dc1f2a6",
+              "kind": "role_constraint",
+              "phase": "entry",
+              "expression": {
+                "kind": "type",
+                "subject": {
+                  "kind": "slot",
+                  "ref": "PlaceDestinationSkillSlot"
+                },
+                "class_ref": "Surface"
+              },
+              "origin": {
+                "kind": "ontology",
+                "source_refs": [
+                  "PlaceDestinationSkillSlot",
+                  "Surface"
+                ]
+              },
+              "applies_when_bound_slots": [],
+              "truth": "U",
+              "verification_status": "not_observed"
+            },
+            {
+              "condition_ref": "condition::6e7fc5f4104a1f15ca9a",
+              "kind": "role_constraint",
+              "phase": "entry",
+              "expression": {
+                "kind": "type",
+                "subject": {
+                  "kind": "slot",
+                  "ref": "PlaceObjectTargetSkillSlot"
+                },
+                "class_ref": "Object"
+              },
+              "origin": {
+                "kind": "ontology",
+                "source_refs": [
+                  "Object",
+                  "PlaceObjectTargetSkillSlot"
+                ]
+              },
+              "applies_when_bound_slots": [],
+              "truth": "U",
+              "verification_status": "not_observed"
+            }
+          ]
+        },
+        "C_pre": [
+          {
+            "condition_ref": "condition::883edd88b3bf7a638018",
+            "kind": "precondition",
+            "phase": "entry",
+            "expression": {
+              "kind": "relation",
+              "subject": {
+                "kind": "actor",
+                "ref": "ActingRobot"
+              },
+              "relation_ref": "holding",
+              "operator": "eq",
+              "object": {
+                "kind": "slot",
+                "ref": "PlaceObjectTargetSkillSlot"
+              }
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "PlaceHeldObjectCondition"
+              ]
+            },
+            "applies_when_bound_slots": [],
+            "truth": "U",
+            "verification_status": "not_observed"
+          },
+          {
+            "condition_ref": "condition::a9e8bc51525c31aae298",
+            "kind": "precondition",
+            "phase": "entry",
+            "expression": {
+              "kind": "relation",
+              "subject": {
+                "kind": "actor",
+                "ref": "ActingRobot"
+              },
+              "relation_ref": "near",
+              "operator": "eq",
+              "object": {
+                "kind": "slot",
+                "ref": "PlaceDestinationSkillSlot"
+              }
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "PlaceAccessCondition"
+              ]
+            },
+            "applies_when_bound_slots": [],
+            "truth": "U",
+            "verification_status": "not_observed"
+          },
+          {
+            "condition_ref": "condition::4d54ef6ccaa55eca3ef2",
+            "kind": "precondition",
+            "phase": "entry",
+            "expression": {
+              "kind": "state",
+              "subject": {
+                "kind": "slot",
+                "ref": "PlaceDestinationSkillSlot"
+              },
+              "state_ref": "FreeSpaceState",
+              "assertion": "present"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "PlacementSurfaceCondition"
+              ]
+            },
+            "applies_when_bound_slots": [],
+            "truth": "U",
+            "verification_status": "not_observed"
+          }
+        ],
+        "C_const": [],
+        "E": {
+          "completion_checks": [
+            {
+              "condition_id": "placed_target_on_destination",
+              "kind": "relation",
+              "subject_parameter": "target",
+              "relation": "locatedOn",
+              "object_parameter": "location",
+              "operator": "equals"
+            },
+            {
+              "condition_id": "gripper_released_after_place",
+              "kind": "relation",
+              "subject": "RobotSelf",
+              "relation": "holding",
+              "object": null,
+              "operator": "equals"
+            }
+          ],
+          "detector_binding": "unbound"
+        },
+        "C_post": [
+          {
+            "condition_ref": "condition::36801d14550d6e6bc600",
+            "kind": "expected_effect",
+            "phase": "after_success",
+            "expression": {
+              "kind": "effect",
+              "subject": {
+                "kind": "slot",
+                "ref": "PlaceObjectTargetSkillSlot"
+              },
+              "effect_ref": "PlacementReleaseEffect"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "PlacementReleaseEffect"
+              ]
+            },
+            "applies_when_bound_slots": [],
+            "truth": "U",
+            "verification_status": "not_observed"
+          },
+          {
+            "condition_ref": "condition::530c199cefc412490adb",
+            "kind": "expected_effect",
+            "phase": "after_success",
+            "expression": {
+              "kind": "effect",
+              "subject": {
+                "kind": "slot",
+                "ref": "PlaceObjectTargetSkillSlot"
+              },
+              "effect_ref": "PlacementOnEffect"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "PlacementOnEffect"
+              ]
+            },
+            "applies_when_bound_slots": [],
+            "truth": "U",
+            "verification_status": "not_observed"
+          }
+        ],
+        "R": [
+          {
+            "id": "reference/place_object",
+            "name": "place_object",
+            "origin": "implementation_reference",
+            "reference_path": "implementation_reference.templates.place_object",
+            "expansion": [
+              {
+                "action": "generate_place_pose"
+              },
+              {
+                "action": "plan_motion"
+              },
+              {
+                "action": "execute_motion"
+              },
+              {
+                "action": "set_gripper"
+              },
+              {
+                "action": "update_relation"
+              }
+            ],
+            "required_capabilities": [
+              "ManipulationCapability"
+            ],
+            "binding_status": "unbound",
+            "observation_status": "not_observed"
+          }
+        ]
+      },
+      "result_ports": [
+        {
+          "result_ref": "PlacedResult",
+          "role_ref": "PlacedResultRole",
+          "label": "位置变化后的同一对象",
+          "source_slot_ref": "PlaceObjectTargetSkillSlot",
+          "identity": "same_entity",
+          "state_family_refs": [],
+          "entailed_state_refs": [],
+          "quantity_refs": [],
+          "consumer": "cerebellum.result_requirements",
+          "declared_by": "PlaceObjectSkill"
+        }
+      ],
+      "source_contract": {
+        "schema": "skill_semantic_contract.v2.3",
+        "ontology_revision": "sha256:d2baec79a4c8aaabf174504c49583fec25934e338262715dfe802413ac922a44"
+      },
+      "origin": "declared_reference_not_video_induction",
+      "unresolved": [
+        "No explicit process invariant supplied; C_const remains empty."
+      ]
+    },
+    "skill/NavigateToSkill": {
+      "template_id": "skill/NavigateToSkill",
+      "skill_ref": "NavigateToSkill",
+      "label": "导航到目标附近",
+      "level": "semantic_skill",
+      "meaning": "以指定对象或区域为目标导航到其附近。",
+      "parent_refs": [
+        "NavigationSkill"
+      ],
+      "method_selection_required": false,
+      "seven_tuple": {
+        "X": {
+          "role": "acting_agent",
+          "binding_status": "unbound",
+          "ontology_actor_refs": [
+            "ActingRobot"
+          ],
+          "policy": "Human demonstrators bind locally; they are not current robot facts."
+        },
+        "O": {
+          "role_slots": [
+            {
+              "slot_ref": "NavigateTargetSkillSlot",
+              "role_ref": "NavigationTargetRole",
+              "label": "导航目标",
+              "channel_ref": "DestinationChannel",
+              "language_roles": [
+                "destination"
+              ],
+              "binding_mode": "input",
+              "collection_consumption": [],
+              "min_count": 1,
+              "max_count": 1,
+              "declared_by": "NavigateToSkill"
+            }
+          ],
+          "role_constraints": [
+            {
+              "condition_ref": "condition::dd58747c80b27a6cd13a",
+              "kind": "role_constraint",
+              "phase": "entry",
+              "expression": {
+                "kind": "type",
+                "subject": {
+                  "kind": "slot",
+                  "ref": "NavigateTargetSkillSlot"
+                },
+                "class_ref": "WorldEntity"
+              },
+              "origin": {
+                "kind": "ontology",
+                "source_refs": [
+                  "NavigateTargetSkillSlot",
+                  "WorldEntity"
+                ]
+              },
+              "applies_when_bound_slots": [],
+              "truth": "U",
+              "verification_status": "not_observed"
+            }
+          ]
+        },
+        "C_pre": [],
+        "C_const": [],
+        "E": {
+          "completion_checks": [
+            {
+              "condition_id": "robot_near_navigation_target",
+              "kind": "relation",
+              "subject": "RobotSelf",
+              "relation": "near",
+              "object_parameter": "target",
+              "operator": "equals"
+            }
+          ],
+          "detector_binding": "unbound"
+        },
+        "C_post": [
+          {
+            "condition_ref": "condition::15b279ffd57f9dc726f2",
+            "kind": "expected_effect",
+            "phase": "after_success",
+            "expression": {
+              "kind": "effect",
+              "subject": {
+                "kind": "slot",
+                "ref": "NavigateTargetSkillSlot"
+              },
+              "effect_ref": "NavigationNearEffect"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "NavigationNearEffect"
+              ]
+            },
+            "applies_when_bound_slots": [],
+            "truth": "U",
+            "verification_status": "not_observed"
+          }
+        ],
+        "R": [
+          {
+            "id": "reference/navigate_to",
+            "name": "navigate_to",
+            "origin": "implementation_reference",
+            "reference_path": "implementation_reference.templates.navigate_to",
+            "expansion": [
+              {
+                "action": "localize_robot"
+              },
+              {
+                "action": "navigate_to"
+              },
+              {
+                "action": "inspect_state"
+              }
+            ],
+            "required_capabilities": [
+              "NavigationCapability"
+            ],
+            "binding_status": "unbound",
+            "observation_status": "not_observed"
+          }
+        ]
+      },
+      "result_ports": [],
+      "source_contract": {
+        "schema": "skill_semantic_contract.v2.3",
+        "ontology_revision": "sha256:d2baec79a4c8aaabf174504c49583fec25934e338262715dfe802413ac922a44"
+      },
+      "origin": "declared_reference_not_video_induction",
+      "unresolved": [
+        "No explicit process invariant supplied; C_const remains empty."
+      ]
+    },
+    "skill/EstimateObjectPoseSkill": {
+      "template_id": "skill/EstimateObjectPoseSkill",
+      "skill_ref": "EstimateObjectPoseSkill",
+      "label": "估计对象位姿",
+      "level": "semantic_skill",
+      "meaning": "估计指定对象的空间位姿。",
+      "parent_refs": [
+        "PerceptionSkill"
+      ],
+      "method_selection_required": false,
+      "seven_tuple": {
+        "X": {
+          "role": "acting_agent",
+          "binding_status": "unbound",
+          "ontology_actor_refs": [
+            "ActingRobot"
+          ],
+          "policy": "Human demonstrators bind locally; they are not current robot facts."
+        },
+        "O": {
+          "role_slots": [
+            {
+              "slot_ref": "EstimatePoseTargetSkillSlot",
+              "role_ref": "ObservedObjectRole",
+              "label": "被估计位姿对象",
+              "channel_ref": "PrimaryPatientChannel",
+              "language_roles": [
+                "patient"
+              ],
+              "binding_mode": "input",
+              "collection_consumption": [],
+              "min_count": 1,
+              "max_count": 1,
+              "declared_by": "EstimateObjectPoseSkill"
+            }
+          ],
+          "role_constraints": [
+            {
+              "condition_ref": "condition::16b37e5aa5c4fc1cd145",
+              "kind": "role_constraint",
+              "phase": "entry",
+              "expression": {
+                "kind": "type",
+                "subject": {
+                  "kind": "slot",
+                  "ref": "EstimatePoseTargetSkillSlot"
+                },
+                "class_ref": "Object"
+              },
+              "origin": {
+                "kind": "ontology",
+                "source_refs": [
+                  "EstimatePoseTargetSkillSlot",
+                  "Object"
+                ]
+              },
+              "applies_when_bound_slots": [],
+              "truth": "U",
+              "verification_status": "not_observed"
+            }
+          ]
+        },
+        "C_pre": [],
+        "C_const": [],
+        "E": {
+          "completion_checks": [
+            {
+              "condition_id": "target_pose_known",
+              "kind": "spatial",
+              "object_parameter": "target",
+              "required_component": "pose"
+            }
+          ],
+          "detector_binding": "unbound"
+        },
+        "C_post": [],
+        "R": [
+          {
+            "id": "reference/estimate_object_pose",
+            "name": "estimate_object_pose",
+            "origin": "implementation_reference",
+            "reference_path": "implementation_reference.templates.estimate_object_pose",
+            "expansion": [
+              {
+                "action": "estimate_pose"
+              }
+            ],
+            "required_capabilities": [
+              "PerceptionCapability",
+              "PoseEstimationCapability"
+            ],
+            "binding_status": "unbound",
+            "observation_status": "not_observed"
+          }
+        ]
+      },
+      "result_ports": [],
+      "source_contract": {
+        "schema": "skill_semantic_contract.v2.3",
+        "ontology_revision": "sha256:d2baec79a4c8aaabf174504c49583fec25934e338262715dfe802413ac922a44"
+      },
+      "origin": "declared_reference_not_video_induction",
+      "unresolved": [
+        "No explicit process invariant supplied; C_const remains empty."
+      ]
+    },
+    "skill/InspectObjectStateSkill": {
+      "template_id": "skill/InspectObjectStateSkill",
+      "skill_ref": "InspectObjectStateSkill",
+      "label": "探查对象状态",
+      "level": "semantic_skill",
+      "meaning": "探查指定对象的状态。",
+      "parent_refs": [
+        "PerceptionSkill"
+      ],
+      "method_selection_required": false,
+      "seven_tuple": {
+        "X": {
+          "role": "acting_agent",
+          "binding_status": "unbound",
+          "ontology_actor_refs": [
+            "ActingRobot"
+          ],
+          "policy": "Human demonstrators bind locally; they are not current robot facts."
+        },
+        "O": {
+          "role_slots": [
+            {
+              "slot_ref": "InspectStateTargetSkillSlot",
+              "role_ref": "ObservedObjectRole",
+              "label": "被探查对象",
+              "channel_ref": "PrimaryPatientChannel",
+              "language_roles": [
+                "patient"
+              ],
+              "binding_mode": "input",
+              "collection_consumption": [],
+              "min_count": 1,
+              "max_count": 1,
+              "declared_by": "InspectObjectStateSkill"
+            }
+          ],
+          "role_constraints": [
+            {
+              "condition_ref": "condition::51107a97cfcff58d86f5",
+              "kind": "role_constraint",
+              "phase": "entry",
+              "expression": {
+                "kind": "type",
+                "subject": {
+                  "kind": "slot",
+                  "ref": "InspectStateTargetSkillSlot"
+                },
+                "class_ref": "Object"
+              },
+              "origin": {
+                "kind": "ontology",
+                "source_refs": [
+                  "InspectStateTargetSkillSlot",
+                  "Object"
+                ]
+              },
+              "applies_when_bound_slots": [],
+              "truth": "U",
+              "verification_status": "not_observed"
+            }
+          ]
+        },
+        "C_pre": [
+          {
+            "condition_ref": "condition::1253ad0e0cf1120221dc",
+            "kind": "precondition",
+            "phase": "entry",
+            "expression": {
+              "kind": "relation",
+              "subject": {
+                "kind": "actor",
+                "ref": "ActingRobot"
+              },
+              "relation_ref": "near",
+              "operator": "eq",
+              "object": {
+                "kind": "slot",
+                "ref": "InspectStateTargetSkillSlot"
+              }
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "InspectStateAccessCondition"
+              ]
+            },
+            "applies_when_bound_slots": [],
+            "truth": "U",
+            "verification_status": "not_observed"
+          }
+        ],
+        "C_const": [],
+        "E": {
+          "completion_checks": [
+            {
+              "condition_id": "requested_state_observed",
+              "kind": "state",
+              "object_parameter": "target",
+              "state_key_parameter": "state_key",
+              "operator": "known"
+            }
+          ],
+          "detector_binding": "unbound"
+        },
+        "C_post": [],
+        "R": [
+          {
+            "id": "reference/inspect_object_state",
+            "name": "inspect_object_state",
+            "origin": "implementation_reference",
+            "reference_path": "implementation_reference.templates.inspect_object_state",
+            "expansion": [
+              {
+                "action": "inspect_state"
+              },
+              {
+                "action": "update_belief"
+              }
+            ],
+            "required_capabilities": [
+              "PerceptionCapability"
+            ],
+            "binding_status": "unbound",
+            "observation_status": "not_observed"
+          }
+        ]
+      },
+      "result_ports": [],
+      "source_contract": {
+        "schema": "skill_semantic_contract.v2.3",
+        "ontology_revision": "sha256:d2baec79a4c8aaabf174504c49583fec25934e338262715dfe802413ac922a44"
+      },
+      "origin": "declared_reference_not_video_induction",
+      "unresolved": [
+        "No explicit process invariant supplied; C_const remains empty."
+      ]
+    },
+    "skill/SearchEntitySkill": {
+      "template_id": "skill/SearchEntitySkill",
+      "skill_ref": "SearchEntitySkill",
+      "label": "搜索符合条件的对象",
+      "level": "semantic_skill",
+      "meaning": "搜索符合条件的对象。",
+      "parent_refs": [
+        "PerceptionSkill"
+      ],
+      "method_selection_required": false,
+      "seven_tuple": {
+        "X": {
+          "role": "acting_agent",
+          "binding_status": "unbound",
+          "ontology_actor_refs": [
+            "ActingRobot"
+          ],
+          "policy": "Human demonstrators bind locally; they are not current robot facts."
+        },
+        "O": {
+          "role_slots": [
+            {
+              "slot_ref": "SearchEntityOutputSkillSlot",
+              "role_ref": "DiscoveredObjectRole",
+              "label": "搜索发现对象",
+              "channel_ref": "PrimaryPatientChannel",
+              "language_roles": [
+                "patient"
+              ],
+              "binding_mode": "query_output",
+              "collection_consumption": [],
+              "min_count": 1,
+              "max_count": 1,
+              "declared_by": "SearchEntitySkill"
+            }
+          ],
+          "role_constraints": [
+            {
+              "condition_ref": "condition::03a35cef2d6d8b630686",
+              "kind": "role_constraint",
+              "phase": "entry",
+              "expression": {
+                "kind": "type",
+                "subject": {
+                  "kind": "slot",
+                  "ref": "SearchEntityOutputSkillSlot"
+                },
+                "class_ref": "Object"
+              },
+              "origin": {
+                "kind": "ontology",
+                "source_refs": [
+                  "Object",
+                  "SearchEntityOutputSkillSlot"
+                ]
+              },
+              "applies_when_bound_slots": [],
+              "truth": "U",
+              "verification_status": "not_observed"
+            }
+          ]
+        },
+        "C_pre": [],
+        "C_const": [],
+        "E": {
+          "completion_checks": [
+            {
+              "condition_id": "search_has_observation_outcome",
+              "kind": "execution_result",
+              "result_key": "search_outcome",
+              "operator": "known"
+            }
+          ],
+          "detector_binding": "unbound"
+        },
+        "C_post": [],
+        "R": [
+          {
+            "id": "reference/active_search_object",
+            "name": "active_search_object",
+            "origin": "implementation_reference",
+            "reference_path": "implementation_reference.templates.active_search_object",
+            "expansion": [
+              {
+                "action": "scan_area"
+              },
+              {
+                "action": "detect_object"
+              }
+            ],
+            "required_capabilities": [
+              "PerceptionCapability"
+            ],
+            "binding_status": "unbound",
+            "observation_status": "not_observed"
+          }
+        ]
+      },
+      "result_ports": [],
+      "source_contract": {
+        "schema": "skill_semantic_contract.v2.3",
+        "ontology_revision": "sha256:d2baec79a4c8aaabf174504c49583fec25934e338262715dfe802413ac922a44"
+      },
+      "origin": "declared_reference_not_video_induction",
+      "unresolved": [
+        "No explicit process invariant supplied; C_const remains empty."
+      ]
+    },
+    "skill/RetrieveObjectFromContainerSkill": {
+      "template_id": "skill/RetrieveObjectFromContainerSkill",
+      "skill_ref": "RetrieveObjectFromContainerSkill",
+      "label": "从容器取出对象",
+      "level": "semantic_skill",
+      "meaning": "按角色、条件和结果定义的技能",
+      "parent_refs": [
+        "AcquireObjectSkill"
+      ],
+      "method_selection_required": false,
+      "seven_tuple": {
+        "X": {
+          "role": "acting_agent",
+          "binding_status": "unbound",
+          "ontology_actor_refs": [
+            "ActingRobot"
+          ],
+          "policy": "Human demonstrators bind locally; they are not current robot facts."
+        },
+        "O": {
+          "role_slots": [
+            {
+              "slot_ref": "GraspTargetSkillSlot",
+              "role_ref": "GraspedObjectRole",
+              "label": "被抓取对象",
+              "channel_ref": "PrimaryPatientChannel",
+              "language_roles": [
+                "patient"
+              ],
+              "binding_mode": "input",
+              "collection_consumption": [],
+              "min_count": 1,
+              "max_count": 1,
+              "declared_by": "AcquireObjectSkill"
+            },
+            {
+              "slot_ref": "RetrieveContainerSkillSlot",
+              "role_ref": "RetrievalContainerRole",
+              "label": "取出来源容器",
+              "channel_ref": "SourceChannel",
+              "language_roles": [
+                "source"
+              ],
+              "binding_mode": "input",
+              "collection_consumption": [],
+              "min_count": 1,
+              "max_count": 1,
+              "declared_by": "RetrieveObjectFromContainerSkill"
+            }
+          ],
+          "role_constraints": [
+            {
+              "condition_ref": "condition::068d99e94cf48142a13c",
+              "kind": "role_constraint",
+              "phase": "entry",
+              "expression": {
+                "kind": "affordance",
+                "subject": {
+                  "kind": "slot",
+                  "ref": "GraspTargetSkillSlot"
+                },
+                "affordance_ref": "GraspableAffordance"
+              },
+              "origin": {
+                "kind": "ontology",
+                "source_refs": [
+                  "GraspTargetSkillSlot",
+                  "GraspableAffordance"
+                ]
+              },
+              "applies_when_bound_slots": [],
+              "truth": "U",
+              "verification_status": "not_observed"
+            },
+            {
+              "condition_ref": "condition::5ff6962e3062b17657cd",
+              "kind": "role_constraint",
+              "phase": "entry",
+              "expression": {
+                "kind": "type",
+                "subject": {
+                  "kind": "slot",
+                  "ref": "GraspTargetSkillSlot"
+                },
+                "class_ref": "Object"
+              },
+              "origin": {
+                "kind": "ontology",
+                "source_refs": [
+                  "GraspTargetSkillSlot",
+                  "Object"
+                ]
+              },
+              "applies_when_bound_slots": [],
+              "truth": "U",
+              "verification_status": "not_observed"
+            },
+            {
+              "condition_ref": "condition::59f14c60bc4d02f655b3",
+              "kind": "role_constraint",
+              "phase": "entry",
+              "expression": {
+                "kind": "type",
+                "subject": {
+                  "kind": "slot",
+                  "ref": "RetrieveContainerSkillSlot"
+                },
+                "class_ref": "Container"
+              },
+              "origin": {
+                "kind": "ontology",
+                "source_refs": [
+                  "Container",
+                  "RetrieveContainerSkillSlot"
+                ]
+              },
+              "applies_when_bound_slots": [],
+              "truth": "U",
+              "verification_status": "not_observed"
+            },
+            {
+              "condition_ref": "condition::9d0968ebb143031cd071",
+              "kind": "role_constraint",
+              "phase": "entry",
+              "expression": {
+                "kind": "affordance",
+                "subject": {
+                  "kind": "slot",
+                  "ref": "RetrieveContainerSkillSlot"
+                },
+                "affordance_ref": "OpenableAffordance"
+              },
+              "origin": {
+                "kind": "ontology",
+                "source_refs": [
+                  "OpenableAffordance",
+                  "RetrieveContainerSkillSlot"
+                ]
+              },
+              "applies_when_bound_slots": [],
+              "truth": "U",
+              "verification_status": "not_observed"
+            }
+          ]
+        },
+        "C_pre": [
+          {
+            "condition_ref": "condition::1a856786667d393838b9",
+            "kind": "precondition",
+            "phase": "entry",
+            "expression": {
+              "kind": "relation_absent",
+              "subject": {
+                "kind": "actor",
+                "ref": "ActingRobot"
+              },
+              "relation_ref": "holding"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "EmptyGripperCondition"
+              ]
+            },
+            "applies_when_bound_slots": [],
+            "truth": "U",
+            "verification_status": "not_observed"
+          },
+          {
+            "condition_ref": "condition::7ae671b328a16789084f",
+            "kind": "precondition",
+            "phase": "entry",
+            "expression": {
+              "kind": "relation",
+              "subject": {
+                "kind": "actor",
+                "ref": "ActingRobot"
+              },
+              "relation_ref": "near",
+              "operator": "eq",
+              "object": {
+                "kind": "slot",
+                "ref": "RetrieveContainerSkillSlot"
+              }
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "RetrieveAccessCondition"
+              ]
+            },
+            "applies_when_bound_slots": [],
+            "truth": "U",
+            "verification_status": "not_observed"
+          },
+          {
+            "condition_ref": "condition::783e526df11894fd6add",
+            "kind": "precondition",
+            "phase": "entry",
+            "expression": {
+              "kind": "relation",
+              "subject": {
+                "kind": "slot",
+                "ref": "GraspTargetSkillSlot"
+              },
+              "relation_ref": "insideContainer",
+              "operator": "eq",
+              "object": {
+                "kind": "slot",
+                "ref": "RetrieveContainerSkillSlot"
+              }
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "RetrieveInsideCondition"
+              ]
+            },
+            "applies_when_bound_slots": [],
+            "truth": "U",
+            "verification_status": "not_observed"
+          }
+        ],
+        "C_const": [],
+        "E": {
+          "completion_checks": [
+            {
+              "condition_id": "robot_holds_retrieved_target",
+              "kind": "relation",
+              "subject": "RobotSelf",
+              "relation": "holding",
+              "object_parameter": "target",
+              "operator": "equals"
+            },
+            {
+              "condition_id": "container_closed_after_retrieve",
+              "kind": "state",
+              "object_parameter": "container",
+              "state_key": "open",
+              "value": false,
+              "operator": "equals"
+            }
+          ],
+          "detector_binding": "unbound"
+        },
+        "C_post": [
+          {
+            "condition_ref": "condition::14c85c30e4220ffd5045",
+            "kind": "expected_effect",
+            "phase": "after_success",
+            "expression": {
+              "kind": "effect",
+              "subject": {
+                "kind": "slot",
+                "ref": "GraspTargetSkillSlot"
+              },
+              "effect_ref": "RetrieveRelationEffect"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "RetrieveRelationEffect"
+              ]
+            },
+            "applies_when_bound_slots": [],
+            "truth": "U",
+            "verification_status": "not_observed"
+          },
+          {
+            "condition_ref": "condition::63eeab6e0fc8286f00c2",
+            "kind": "expected_effect",
+            "phase": "after_success",
+            "expression": {
+              "kind": "effect",
+              "subject": {
+                "kind": "slot",
+                "ref": "GraspTargetSkillSlot"
+              },
+              "effect_ref": "AcquireHoldingEffect"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "AcquireHoldingEffect"
+              ]
+            },
+            "applies_when_bound_slots": [],
+            "truth": "U",
+            "verification_status": "not_observed"
+          }
+        ],
+        "R": [
+          {
+            "id": "reference/retrieve_object_from_container",
+            "name": "retrieve_object_from_container",
+            "origin": "implementation_reference",
+            "reference_path": "implementation_reference.templates.retrieve_object_from_container",
+            "expansion": [
+              {
+                "skill": "open_by_handle",
+                "bindings": {
+                  "target": "$slot.RetrieveContainerSkillSlot"
+                }
+              },
+              {
+                "skill": "grasp_object",
+                "bindings": {
+                  "target": "$slot.GraspTargetSkillSlot"
+                }
+              },
+              {
+                "skill": "close_by_handle",
+                "bindings": {
+                  "target": "$slot.RetrieveContainerSkillSlot"
+                }
+              }
+            ],
+            "required_capabilities": [
+              "ManipulationCapability"
+            ],
+            "binding_status": "unbound",
+            "observation_status": "not_observed"
+          }
+        ]
+      },
+      "result_ports": [
+        {
+          "result_ref": "GraspedResult",
+          "role_ref": "GraspedObjectRole",
+          "label": "被持有的同一对象",
+          "source_slot_ref": "GraspTargetSkillSlot",
+          "identity": "same_entity",
+          "state_family_refs": [],
+          "entailed_state_refs": [],
+          "quantity_refs": [],
+          "consumer": "cerebellum.result_requirements",
+          "declared_by": "AcquireObjectSkill"
+        }
+      ],
+      "source_contract": {
+        "schema": "skill_semantic_contract.v2.3",
+        "ontology_revision": "sha256:d2baec79a4c8aaabf174504c49583fec25934e338262715dfe802413ac922a44"
+      },
+      "origin": "declared_reference_not_video_induction",
+      "unresolved": [
+        "No explicit process invariant supplied; C_const remains empty."
+      ]
+    },
+    "skill/SearchObjectInContainerSkill": {
+      "template_id": "skill/SearchObjectInContainerSkill",
+      "skill_ref": "SearchObjectInContainerSkill",
+      "label": "在容器中搜索对象",
+      "level": "semantic_skill",
+      "meaning": "在指定容器中搜索对象。",
+      "parent_refs": [
+        "PerceptionSkill"
+      ],
+      "method_selection_required": false,
+      "seven_tuple": {
+        "X": {
+          "role": "acting_agent",
+          "binding_status": "unbound",
+          "ontology_actor_refs": [
+            "ActingRobot"
+          ],
+          "policy": "Human demonstrators bind locally; they are not current robot facts."
+        },
+        "O": {
+          "role_slots": [
+            {
+              "slot_ref": "SearchContainerOutputSkillSlot",
+              "role_ref": "DiscoveredObjectRole",
+              "label": "容器内发现对象",
+              "channel_ref": "PrimaryPatientChannel",
+              "language_roles": [
+                "patient"
+              ],
+              "binding_mode": "query_output",
+              "collection_consumption": [],
+              "min_count": 1,
+              "max_count": 1,
+              "declared_by": "SearchObjectInContainerSkill"
+            },
+            {
+              "slot_ref": "SearchContainerSkillSlot",
+              "role_ref": "SearchContainerRole",
+              "label": "被搜索容器",
+              "channel_ref": "SourceChannel",
+              "language_roles": [
+                "source"
+              ],
+              "binding_mode": "input",
+              "collection_consumption": [],
+              "min_count": 1,
+              "max_count": 1,
+              "declared_by": "SearchObjectInContainerSkill"
+            }
+          ],
+          "role_constraints": [
+            {
+              "condition_ref": "condition::e3b42dcd9164390532fe",
+              "kind": "role_constraint",
+              "phase": "entry",
+              "expression": {
+                "kind": "type",
+                "subject": {
+                  "kind": "slot",
+                  "ref": "SearchContainerOutputSkillSlot"
+                },
+                "class_ref": "Object"
+              },
+              "origin": {
+                "kind": "ontology",
+                "source_refs": [
+                  "Object",
+                  "SearchContainerOutputSkillSlot"
+                ]
+              },
+              "applies_when_bound_slots": [],
+              "truth": "U",
+              "verification_status": "not_observed"
+            },
+            {
+              "condition_ref": "condition::90ee56ca42452b3fe8dd",
+              "kind": "role_constraint",
+              "phase": "entry",
+              "expression": {
+                "kind": "type",
+                "subject": {
+                  "kind": "slot",
+                  "ref": "SearchContainerSkillSlot"
+                },
+                "class_ref": "Container"
+              },
+              "origin": {
+                "kind": "ontology",
+                "source_refs": [
+                  "Container",
+                  "SearchContainerSkillSlot"
+                ]
+              },
+              "applies_when_bound_slots": [],
+              "truth": "U",
+              "verification_status": "not_observed"
+            },
+            {
+              "condition_ref": "condition::f334fb062d65e1f8c52f",
+              "kind": "role_constraint",
+              "phase": "entry",
+              "expression": {
+                "kind": "affordance",
+                "subject": {
+                  "kind": "slot",
+                  "ref": "SearchContainerSkillSlot"
+                },
+                "affordance_ref": "OpenableAffordance"
+              },
+              "origin": {
+                "kind": "ontology",
+                "source_refs": [
+                  "OpenableAffordance",
+                  "SearchContainerSkillSlot"
+                ]
+              },
+              "applies_when_bound_slots": [],
+              "truth": "U",
+              "verification_status": "not_observed"
+            }
+          ]
+        },
+        "C_pre": [
+          {
+            "condition_ref": "condition::cd59b565b38893af614b",
+            "kind": "precondition",
+            "phase": "entry",
+            "expression": {
+              "kind": "relation",
+              "subject": {
+                "kind": "actor",
+                "ref": "ActingRobot"
+              },
+              "relation_ref": "near",
+              "operator": "eq",
+              "object": {
+                "kind": "slot",
+                "ref": "SearchContainerSkillSlot"
+              }
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "SearchContainerAccessCondition"
+              ]
+            },
+            "applies_when_bound_slots": [],
+            "truth": "U",
+            "verification_status": "not_observed"
+          }
+        ],
+        "C_const": [],
+        "E": {
+          "completion_checks": [
+            {
+              "condition_id": "container_search_has_outcome",
+              "kind": "execution_result",
+              "result_key": "search_outcome",
+              "operator": "known"
+            },
+            {
+              "condition_id": "container_closed_after_search",
+              "kind": "state",
+              "object_parameter": "container",
+              "state_key": "open",
+              "value": false,
+              "operator": "equals"
+            }
+          ],
+          "detector_binding": "unbound"
+        },
+        "C_post": [],
+        "R": [
+          {
+            "id": "reference/search_object_in_container",
+            "name": "search_object_in_container",
+            "origin": "implementation_reference",
+            "reference_path": "implementation_reference.templates.search_object_in_container",
+            "expansion": [
+              {
+                "skill": "resolve_affordance",
+                "bindings": {
+                  "target": "$slot.SearchContainerSkillSlot"
+                }
+              },
+              {
+                "skill": "open_by_handle",
+                "bindings": {
+                  "target": "$slot.SearchContainerSkillSlot"
+                }
+              },
+              {
+                "action": "scan_area"
+              },
+              {
+                "action": "detect_object"
+              },
+              {
+                "skill": "close_by_handle",
+                "bindings": {
+                  "target": "$slot.SearchContainerSkillSlot"
+                }
+              }
+            ],
+            "required_capabilities": [
+              "PerceptionCapability"
+            ],
+            "binding_status": "unbound",
+            "observation_status": "not_observed"
+          }
+        ]
+      },
+      "result_ports": [],
+      "source_contract": {
+        "schema": "skill_semantic_contract.v2.3",
+        "ontology_revision": "sha256:d2baec79a4c8aaabf174504c49583fec25934e338262715dfe802413ac922a44"
+      },
+      "origin": "declared_reference_not_video_induction",
+      "unresolved": [
+        "No explicit process invariant supplied; C_const remains empty."
+      ]
+    },
+    "goal/relocate_and_release": {
+      "template_id": "goal/relocate_and_release",
+      "label": "搬移到目标区并结束接触",
+      "level": "project_goal",
+      "goal_key": "relocate_and_release",
+      "ontology_candidate_ref": null,
+      "mapping_status": "declared_correspondence",
+      "seven_tuple": {
+        "X": {
+          "role": "acting_agent",
+          "binding_status": "unbound"
+        },
+        "O": {
+          "roles": [
+            "destination",
+            "target"
+          ]
+        },
+        "C_pre": [],
+        "C_const": [],
+        "E": {
+          "completion_rule": "all_declared_postconditions",
+          "detector_binding": "unbound"
+        },
+        "C_post": [
+          {
+            "predicate": "at_destination",
+            "roles": [
+              "target",
+              "destination"
+            ],
+            "value": true
+          },
+          {
+            "predicate": "stationary",
+            "roles": [
+              "target"
+            ],
+            "value": true
+          },
+          {
+            "predicate": "holding",
+            "roles": [
+              "actor",
+              "target"
+            ],
+            "value": false
+          }
+        ],
+        "R": []
+      },
+      "origin": "project_declared_goal_contract",
+      "unresolved": [
+        "Public conditions and realizations require video evidence."
+      ]
+    },
+    "goal/grasp_object": {
+      "template_id": "goal/grasp_object",
+      "label": "抓取对象",
+      "level": "project_goal",
+      "goal_key": "grasp_object",
+      "ontology_candidate_ref": "GraspObjectSkill",
+      "mapping_status": "declared_correspondence",
+      "seven_tuple": {
+        "X": {
+          "role": "acting_agent",
+          "binding_status": "unbound"
+        },
+        "O": {
+          "roles": [
+            "target"
+          ]
+        },
+        "C_pre": [],
+        "C_const": [],
+        "E": {
+          "completion_rule": "all_declared_postconditions",
+          "detector_binding": "unbound"
+        },
+        "C_post": [
+          {
+            "predicate": "holding",
+            "roles": [
+              "actor",
+              "target"
+            ],
+            "value": true
+          }
+        ],
+        "R": []
+      },
+      "origin": "project_declared_goal_contract",
+      "unresolved": [
+        "Public conditions and realizations require video evidence."
+      ]
+    },
+    "goal/acquire_object": {
+      "template_id": "goal/acquire_object",
+      "label": "获取对象",
+      "level": "project_goal",
+      "goal_key": "acquire_object",
+      "ontology_candidate_ref": "AcquireObjectSkill",
+      "mapping_status": "requires_effect_alignment",
+      "seven_tuple": {
+        "X": {
+          "role": "acting_agent",
+          "binding_status": "unbound"
+        },
+        "O": {
+          "roles": [
+            "source",
+            "target"
+          ]
+        },
+        "C_pre": [],
+        "C_const": [],
+        "E": {
+          "completion_rule": "all_declared_postconditions",
+          "detector_binding": "unbound"
+        },
+        "C_post": [
+          {
+            "predicate": "holding",
+            "roles": [
+              "actor",
+              "target"
+            ],
+            "value": true
+          },
+          {
+            "predicate": "off_source_support",
+            "roles": [
+              "target",
+              "source"
+            ],
+            "value": true
+          }
+        ],
+        "R": []
+      },
+      "origin": "project_declared_goal_contract",
+      "unresolved": [
+        "Public conditions and realizations require video evidence.",
+        "Project acquisition includes leaving source support; reference AcquireObjectSkill is not silently substituted."
+      ]
+    },
+    "goal/relocate_object": {
+      "template_id": "goal/relocate_object",
+      "label": "搬移对象",
+      "level": "project_goal",
+      "goal_key": "relocate_object",
+      "ontology_candidate_ref": null,
+      "mapping_status": "declared_correspondence",
+      "seven_tuple": {
+        "X": {
+          "role": "acting_agent",
+          "binding_status": "unbound"
+        },
+        "O": {
+          "roles": [
+            "destination",
+            "target"
+          ]
+        },
+        "C_pre": [],
+        "C_const": [],
+        "E": {
+          "completion_rule": "all_declared_postconditions",
+          "detector_binding": "unbound"
+        },
+        "C_post": [
+          {
+            "predicate": "at_destination",
+            "roles": [
+              "target",
+              "destination"
+            ],
+            "value": true
+          }
+        ],
+        "R": []
+      },
+      "origin": "project_declared_goal_contract",
+      "unresolved": [
+        "Public conditions and realizations require video evidence."
+      ]
+    },
+    "goal/place_object": {
+      "template_id": "goal/place_object",
+      "label": "放置对象",
+      "level": "project_goal",
+      "goal_key": "place_object",
+      "ontology_candidate_ref": "PlaceOnSurfaceSkill",
+      "mapping_status": "declared_correspondence",
+      "seven_tuple": {
+        "X": {
+          "role": "acting_agent",
+          "binding_status": "unbound"
+        },
+        "O": {
+          "roles": [
+            "destination",
+            "target"
+          ]
+        },
+        "C_pre": [],
+        "C_const": [],
+        "E": {
+          "completion_rule": "all_declared_postconditions",
+          "detector_binding": "unbound"
+        },
+        "C_post": [
+          {
+            "predicate": "at_destination",
+            "roles": [
+              "target",
+              "destination"
+            ],
+            "value": true
+          },
+          {
+            "predicate": "supported",
+            "roles": [
+              "target"
+            ],
+            "value": true
+          },
+          {
+            "predicate": "holding",
+            "roles": [
+              "actor",
+              "target"
+            ],
+            "value": false
+          }
+        ],
+        "R": []
+      },
+      "origin": "project_declared_goal_contract",
+      "unresolved": [
+        "Public conditions and realizations require video evidence."
+      ]
+    },
+    "goal/clear_access": {
+      "template_id": "goal/clear_access",
+      "label": "清除接近障碍",
+      "level": "project_goal",
+      "goal_key": "clear_access",
+      "ontology_candidate_ref": null,
+      "mapping_status": "declared_correspondence",
+      "seven_tuple": {
+        "X": {
+          "role": "acting_agent",
+          "binding_status": "unbound"
+        },
+        "O": {
+          "roles": [
+            "target"
+          ]
+        },
+        "C_pre": [],
+        "C_const": [],
+        "E": {
+          "completion_rule": "all_declared_postconditions",
+          "detector_binding": "unbound"
+        },
+        "C_post": [
+          {
+            "predicate": "accessible",
+            "roles": [
+              "target"
+            ],
+            "value": true
+          }
+        ],
+        "R": []
+      },
+      "origin": "project_declared_goal_contract",
+      "unresolved": [
+        "Public conditions and realizations require video evidence."
+      ]
+    },
+    "goal/open_object": {
+      "template_id": "goal/open_object",
+      "label": "打开对象",
+      "level": "project_goal",
+      "goal_key": "open_object",
+      "ontology_candidate_ref": null,
+      "mapping_status": "declared_correspondence",
+      "seven_tuple": {
+        "X": {
+          "role": "acting_agent",
+          "binding_status": "unbound"
+        },
+        "O": {
+          "roles": [
+            "target"
+          ]
+        },
+        "C_pre": [],
+        "C_const": [],
+        "E": {
+          "completion_rule": "all_declared_postconditions",
+          "detector_binding": "unbound"
+        },
+        "C_post": [
+          {
+            "predicate": "open",
+            "roles": [
+              "target"
+            ],
+            "value": true
+          }
+        ],
+        "R": []
+      },
+      "origin": "project_declared_goal_contract",
+      "unresolved": [
+        "Public conditions and realizations require video evidence."
+      ]
+    },
+    "goal/close_object": {
+      "template_id": "goal/close_object",
+      "label": "关闭对象",
+      "level": "project_goal",
+      "goal_key": "close_object",
+      "ontology_candidate_ref": null,
+      "mapping_status": "declared_correspondence",
+      "seven_tuple": {
+        "X": {
+          "role": "acting_agent",
+          "binding_status": "unbound"
+        },
+        "O": {
+          "roles": [
+            "target"
+          ]
+        },
+        "C_pre": [],
+        "C_const": [],
+        "E": {
+          "completion_rule": "all_declared_postconditions",
+          "detector_binding": "unbound"
+        },
+        "C_post": [
+          {
+            "predicate": "open",
+            "roles": [
+              "target"
+            ],
+            "value": false
+          }
+        ],
+        "R": []
+      },
+      "origin": "project_declared_goal_contract",
+      "unresolved": [
+        "Public conditions and realizations require video evidence."
+      ]
+    },
+    "action/靠近": {
+      "template_id": "action/靠近",
+      "label": "靠近",
+      "level": "controlled_action",
+      "ontology_candidate_ref": null,
+      "meaning": "臂带手到目标可抓取位置",
+      "seven_tuple": {
+        "X": {
+          "role": "acting_agent",
+          "demonstration_subjects": [
+            "左臂",
+            "右臂"
+          ],
+          "binding_status": "unbound"
+        },
+        "O": {
+          "roles": [
+            "target"
+          ]
+        },
+        "C_pre": [],
+        "C_const": [],
+        "E": {
+          "completion_checks": [],
+          "detector_binding": "unbound"
+        },
+        "C_post": [],
+        "R": []
+      },
+      "origin": "declared_controlled_vocabulary",
+      "unresolved": [
+        "Observed node tuple is a local instance, not a replacement template."
+      ]
+    },
+    "action/打开": {
+      "template_id": "action/打开",
+      "label": "打开",
+      "level": "controlled_action",
+      "ontology_candidate_ref": null,
+      "meaning": "手打开到可抓取状态",
+      "seven_tuple": {
+        "X": {
+          "role": "acting_agent",
+          "demonstration_subjects": [
+            "左手",
+            "右手"
+          ],
+          "binding_status": "unbound"
+        },
+        "O": {
+          "roles": [
+            "target"
+          ]
+        },
+        "C_pre": [],
+        "C_const": [],
+        "E": {
+          "completion_checks": [],
+          "detector_binding": "unbound"
+        },
+        "C_post": [],
+        "R": []
+      },
+      "origin": "declared_controlled_vocabulary",
+      "unresolved": [
+        "Observed node tuple is a local instance, not a replacement template."
+      ]
+    },
+    "action/抓取": {
+      "template_id": "action/抓取",
+      "label": "抓取",
+      "level": "controlled_action",
+      "ontology_candidate_ref": "GraspObjectSkill",
+      "meaning": "手建立稳定握持",
+      "seven_tuple": {
+        "X": {
+          "role": "acting_agent",
+          "binding_status": "unbound",
+          "ontology_actor_refs": [
+            "ActingRobot"
+          ],
+          "policy": "Human demonstrators bind locally; they are not current robot facts."
+        },
+        "O": {
+          "role_slots": [
+            {
+              "slot_ref": "GraspSourceSkillSlot",
+              "role_ref": "GraspSourceRole",
+              "label": "抓取来源平面",
+              "channel_ref": "SourceChannel",
+              "language_roles": [
+                "source"
+              ],
+              "binding_mode": "input",
+              "collection_consumption": [],
+              "min_count": 0,
+              "max_count": 1,
+              "declared_by": "GraspObjectSkill"
+            },
+            {
+              "slot_ref": "GraspTargetSkillSlot",
+              "role_ref": "GraspedObjectRole",
+              "label": "被抓取对象",
+              "channel_ref": "PrimaryPatientChannel",
+              "language_roles": [
+                "patient"
+              ],
+              "binding_mode": "input",
+              "collection_consumption": [],
+              "min_count": 1,
+              "max_count": 1,
+              "declared_by": "AcquireObjectSkill"
+            }
+          ],
+          "role_constraints": [
+            {
+              "condition_ref": "condition::5300608e44608875b275",
+              "kind": "role_constraint",
+              "phase": "entry",
+              "expression": {
+                "kind": "type",
+                "subject": {
+                  "kind": "slot",
+                  "ref": "GraspSourceSkillSlot"
+                },
+                "class_ref": "Surface"
+              },
+              "origin": {
+                "kind": "ontology",
+                "source_refs": [
+                  "GraspSourceSkillSlot",
+                  "Surface"
+                ]
+              },
+              "applies_when_bound_slots": [],
+              "truth": "U",
+              "verification_status": "not_observed"
+            },
+            {
+              "condition_ref": "condition::068d99e94cf48142a13c",
+              "kind": "role_constraint",
+              "phase": "entry",
+              "expression": {
+                "kind": "affordance",
+                "subject": {
+                  "kind": "slot",
+                  "ref": "GraspTargetSkillSlot"
+                },
+                "affordance_ref": "GraspableAffordance"
+              },
+              "origin": {
+                "kind": "ontology",
+                "source_refs": [
+                  "GraspTargetSkillSlot",
+                  "GraspableAffordance"
+                ]
+              },
+              "applies_when_bound_slots": [],
+              "truth": "U",
+              "verification_status": "not_observed"
+            },
+            {
+              "condition_ref": "condition::5ff6962e3062b17657cd",
+              "kind": "role_constraint",
+              "phase": "entry",
+              "expression": {
+                "kind": "type",
+                "subject": {
+                  "kind": "slot",
+                  "ref": "GraspTargetSkillSlot"
+                },
+                "class_ref": "Object"
+              },
+              "origin": {
+                "kind": "ontology",
+                "source_refs": [
+                  "GraspTargetSkillSlot",
+                  "Object"
+                ]
+              },
+              "applies_when_bound_slots": [],
+              "truth": "U",
+              "verification_status": "not_observed"
+            }
+          ]
+        },
+        "C_pre": [
+          {
+            "condition_ref": "condition::1a856786667d393838b9",
+            "kind": "precondition",
+            "phase": "entry",
+            "expression": {
+              "kind": "relation_absent",
+              "subject": {
+                "kind": "actor",
+                "ref": "ActingRobot"
+              },
+              "relation_ref": "holding"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "EmptyGripperCondition"
+              ]
+            },
+            "applies_when_bound_slots": [],
+            "truth": "U",
+            "verification_status": "not_observed"
+          },
+          {
+            "condition_ref": "condition::cf324c51e90f065cc164",
+            "kind": "precondition",
+            "phase": "entry",
+            "expression": {
+              "kind": "relation",
+              "subject": {
+                "kind": "actor",
+                "ref": "ActingRobot"
+              },
+              "relation_ref": "near",
+              "operator": "eq",
+              "object": {
+                "kind": "slot",
+                "ref": "GraspTargetSkillSlot"
+              }
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "GraspAccessCondition"
+              ]
+            },
+            "applies_when_bound_slots": [],
+            "truth": "U",
+            "verification_status": "not_observed"
+          },
+          {
+            "condition_ref": "condition::d40fa3bb53376314a7e9",
+            "kind": "precondition",
+            "phase": "entry",
+            "expression": {
+              "kind": "relation",
+              "subject": {
+                "kind": "slot",
+                "ref": "GraspTargetSkillSlot"
+              },
+              "relation_ref": "locatedOn",
+              "operator": "eq",
+              "object": {
+                "kind": "slot",
+                "ref": "GraspSourceSkillSlot"
+              }
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "GraspSourceCondition"
+              ]
+            },
+            "applies_when_bound_slots": [
+              "GraspSourceSkillSlot"
+            ],
+            "truth": "U",
+            "verification_status": "not_observed"
+          }
+        ],
+        "C_const": [],
+        "E": {
+          "completion_checks": [
+            {
+              "condition_id": "robot_holds_grasp_target",
+              "kind": "relation",
+              "subject": "RobotSelf",
+              "relation": "holding",
+              "object_parameter": "target",
+              "operator": "equals"
+            }
+          ],
+          "detector_binding": "unbound"
+        },
+        "C_post": [
+          {
+            "condition_ref": "condition::63eeab6e0fc8286f00c2",
+            "kind": "expected_effect",
+            "phase": "after_success",
+            "expression": {
+              "kind": "effect",
+              "subject": {
+                "kind": "slot",
+                "ref": "GraspTargetSkillSlot"
+              },
+              "effect_ref": "AcquireHoldingEffect"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "AcquireHoldingEffect"
+              ]
+            },
+            "applies_when_bound_slots": [],
+            "truth": "U",
+            "verification_status": "not_observed"
+          },
+          {
+            "condition_ref": "condition::f3470cbbe19fdba1230d",
+            "kind": "expected_effect",
+            "phase": "after_success",
+            "expression": {
+              "kind": "effect",
+              "subject": {
+                "kind": "slot",
+                "ref": "GraspTargetSkillSlot"
+              },
+              "effect_ref": "GraspRelationEffect"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "GraspRelationEffect"
+              ]
+            },
+            "applies_when_bound_slots": [],
+            "truth": "U",
+            "verification_status": "not_observed"
+          }
+        ],
+        "R": [
+          {
+            "id": "reference/grasp_object",
+            "name": "grasp_object",
+            "origin": "implementation_reference",
+            "reference_path": "implementation_reference.templates.grasp_object",
+            "expansion": [
+              {
+                "skill": "estimate_object_pose",
+                "bindings": {
+                  "target": "$slot.GraspTargetSkillSlot"
+                }
+              },
+              {
+                "action": "generate_grasp_pose"
+              },
+              {
+                "action": "plan_motion"
+              },
+              {
+                "action": "execute_motion"
+              },
+              {
+                "action": "set_gripper"
+              }
+            ],
+            "required_capabilities": [
+              "ManipulationCapability",
+              "PerceptionCapability",
+              "PoseEstimationCapability"
+            ],
+            "binding_status": "unbound",
+            "observation_status": "not_observed"
+          }
+        ]
+      },
+      "origin": "declared_controlled_vocabulary",
+      "unresolved": [
+        "Observed node tuple is a local instance, not a replacement template."
+      ]
+    },
+    "action/移动": {
+      "template_id": "action/移动",
+      "label": "移动",
+      "level": "controlled_action",
+      "ontology_candidate_ref": null,
+      "meaning": "臂移动或带载移动；整体只表示平移",
+      "seven_tuple": {
+        "X": {
+          "role": "acting_agent",
+          "demonstration_subjects": [
+            "左臂",
+            "右臂",
+            "整体"
+          ],
+          "binding_status": "unbound"
+        },
+        "O": {
+          "roles": [
+            "target"
+          ]
+        },
+        "C_pre": [],
+        "C_const": [],
+        "E": {
+          "completion_checks": [],
+          "detector_binding": "unbound"
+        },
+        "C_post": [],
+        "R": []
+      },
+      "origin": "declared_controlled_vocabulary",
+      "unresolved": [
+        "Observed node tuple is a local instance, not a replacement template."
+      ]
+    },
+    "action/释放": {
+      "template_id": "action/释放",
+      "label": "释放",
+      "level": "controlled_action",
+      "ontology_candidate_ref": null,
+      "meaning": "手解除握持",
+      "seven_tuple": {
+        "X": {
+          "role": "acting_agent",
+          "demonstration_subjects": [
+            "左手",
+            "右手"
+          ],
+          "binding_status": "unbound"
+        },
+        "O": {
+          "roles": [
+            "target"
+          ]
+        },
+        "C_pre": [],
+        "C_const": [],
+        "E": {
+          "completion_checks": [],
+          "detector_binding": "unbound"
+        },
+        "C_post": [],
+        "R": []
+      },
+      "origin": "declared_controlled_vocabulary",
+      "unresolved": [
+        "Observed node tuple is a local instance, not a replacement template."
+      ]
+    },
+    "action/撤回": {
+      "template_id": "action/撤回",
+      "label": "撤回",
+      "level": "controlled_action",
+      "ontology_candidate_ref": null,
+      "meaning": "臂返回原位或安全位置",
+      "seven_tuple": {
+        "X": {
+          "role": "acting_agent",
+          "demonstration_subjects": [
+            "左臂",
+            "右臂"
+          ],
+          "binding_status": "unbound"
+        },
+        "O": {
+          "roles": [
+            "target"
+          ]
+        },
+        "C_pre": [],
+        "C_const": [],
+        "E": {
+          "completion_checks": [],
+          "detector_binding": "unbound"
+        },
+        "C_post": [],
+        "R": []
+      },
+      "origin": "declared_controlled_vocabulary",
+      "unresolved": [
+        "Observed node tuple is a local instance, not a replacement template."
+      ]
+    },
+    "action/推": {
+      "template_id": "action/推",
+      "label": "推",
+      "level": "controlled_action",
+      "ontology_candidate_ref": null,
+      "meaning": "通过推接触使目标移动；实现待绑定",
+      "seven_tuple": {
+        "X": {
+          "role": "acting_agent",
+          "demonstration_subjects": [
+            "左臂",
+            "右臂"
+          ],
+          "binding_status": "unbound"
+        },
+        "O": {
+          "roles": [
+            "target"
+          ]
+        },
+        "C_pre": [],
+        "C_const": [],
+        "E": {
+          "completion_checks": [],
+          "detector_binding": "unbound"
+        },
+        "C_post": [],
+        "R": []
+      },
+      "origin": "declared_controlled_vocabulary",
+      "unresolved": [
+        "Observed node tuple is a local instance, not a replacement template."
+      ]
+    },
+    "action/拉": {
+      "template_id": "action/拉",
+      "label": "拉",
+      "level": "controlled_action",
+      "ontology_candidate_ref": null,
+      "meaning": "通过牵引使目标移动；实现待绑定",
+      "seven_tuple": {
+        "X": {
+          "role": "acting_agent",
+          "demonstration_subjects": [
+            "左臂",
+            "右臂"
+          ],
+          "binding_status": "unbound"
+        },
+        "O": {
+          "roles": [
+            "target"
+          ]
+        },
+        "C_pre": [],
+        "C_const": [],
+        "E": {
+          "completion_checks": [],
+          "detector_binding": "unbound"
+        },
+        "C_post": [],
+        "R": []
+      },
+      "origin": "declared_controlled_vocabulary",
+      "unresolved": [
+        "Observed node tuple is a local instance, not a replacement template."
+      ]
+    },
+    "action/旋转": {
+      "template_id": "action/旋转",
+      "label": "旋转",
+      "level": "controlled_action",
+      "ontology_candidate_ref": null,
+      "meaning": "使目标发生旋转；实现待绑定",
+      "seven_tuple": {
+        "X": {
+          "role": "acting_agent",
+          "demonstration_subjects": [
+            "左臂",
+            "右臂"
+          ],
+          "binding_status": "unbound"
+        },
+        "O": {
+          "roles": [
+            "target"
+          ]
+        },
+        "C_pre": [],
+        "C_const": [],
+        "E": {
+          "completion_checks": [],
+          "detector_binding": "unbound"
+        },
+        "C_post": [],
+        "R": []
+      },
+      "origin": "declared_controlled_vocabulary",
+      "unresolved": [
+        "Observed node tuple is a local instance, not a replacement template."
+      ]
+    },
+    "action/按压": {
+      "template_id": "action/按压",
+      "label": "按压",
+      "level": "controlled_action",
+      "ontology_candidate_ref": null,
+      "meaning": "通过接触使目标达到按下状态；实现待绑定",
+      "seven_tuple": {
+        "X": {
+          "role": "acting_agent",
+          "demonstration_subjects": [
+            "左臂",
+            "右臂",
+            "左手",
+            "右手"
+          ],
+          "binding_status": "unbound"
+        },
+        "O": {
+          "roles": [
+            "target"
+          ]
+        },
+        "C_pre": [],
+        "C_const": [],
+        "E": {
+          "completion_checks": [],
+          "detector_binding": "unbound"
+        },
+        "C_post": [],
+        "R": []
+      },
+      "origin": "declared_controlled_vocabulary",
+      "unresolved": [
+        "Observed node tuple is a local instance, not a replacement template."
+      ]
+    },
+    "action/接触": {
+      "template_id": "action/接触",
+      "label": "接触",
+      "level": "controlled_action",
+      "ontology_candidate_ref": null,
+      "meaning": "手与目标建立接触；稳定握持需独立证据",
+      "seven_tuple": {
+        "X": {
+          "role": "acting_agent",
+          "demonstration_subjects": [
+            "左手",
+            "右手"
+          ],
+          "binding_status": "unbound"
+        },
+        "O": {
+          "roles": [
+            "target"
+          ]
+        },
+        "C_pre": [],
+        "C_const": [],
+        "E": {
+          "completion_checks": [],
+          "detector_binding": "unbound"
+        },
+        "C_post": [],
+        "R": []
+      },
+      "origin": "declared_controlled_vocabulary",
+      "unresolved": [
+        "Observed node tuple is a local instance, not a replacement template."
+      ]
+    },
+    "action/向目标移动": {
+      "template_id": "action/向目标移动",
+      "label": "向目标移动",
+      "level": "controlled_action",
+      "ontology_candidate_ref": null,
+      "meaning": "整体水平移动",
+      "seven_tuple": {
+        "X": {
+          "role": "acting_agent",
+          "demonstration_subjects": [
+            "整体"
+          ],
+          "binding_status": "unbound"
+        },
+        "O": {
+          "roles": [
+            "target"
+          ]
+        },
+        "C_pre": [],
+        "C_const": [],
+        "E": {
+          "completion_checks": [],
+          "detector_binding": "unbound"
+        },
+        "C_post": [],
+        "R": []
+      },
+      "origin": "declared_controlled_vocabulary",
+      "unresolved": [
+        "Observed node tuple is a local instance, not a replacement template."
+      ]
+    },
+    "action/上升": {
+      "template_id": "action/上升",
+      "label": "上升",
+      "level": "controlled_action",
+      "ontology_candidate_ref": null,
+      "meaning": "整体垂直上升",
+      "seven_tuple": {
+        "X": {
+          "role": "acting_agent",
+          "demonstration_subjects": [
+            "整体"
+          ],
+          "binding_status": "unbound"
+        },
+        "O": {
+          "roles": [
+            "target"
+          ]
+        },
+        "C_pre": [],
+        "C_const": [],
+        "E": {
+          "completion_checks": [],
+          "detector_binding": "unbound"
+        },
+        "C_post": [],
+        "R": []
+      },
+      "origin": "declared_controlled_vocabulary",
+      "unresolved": [
+        "Observed node tuple is a local instance, not a replacement template."
+      ]
+    },
+    "action/下降": {
+      "template_id": "action/下降",
+      "label": "下降",
+      "level": "controlled_action",
+      "ontology_candidate_ref": null,
+      "meaning": "整体垂直下降",
+      "seven_tuple": {
+        "X": {
+          "role": "acting_agent",
+          "demonstration_subjects": [
+            "整体"
+          ],
+          "binding_status": "unbound"
+        },
+        "O": {
+          "roles": [
+            "target"
+          ]
+        },
+        "C_pre": [],
+        "C_const": [],
+        "E": {
+          "completion_checks": [],
+          "detector_binding": "unbound"
+        },
+        "C_post": [],
+        "R": []
+      },
+      "origin": "declared_controlled_vocabulary",
+      "unresolved": [
+        "Observed node tuple is a local instance, not a replacement template."
+      ]
+    }
+  },
+  "policy": "Reference conditions, video observations and learned summaries remain separate.",
+  "revision": "31ec3621f441c250"
+}

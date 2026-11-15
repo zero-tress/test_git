@@ -213,7 +213,7 @@ def build(bundle: dict) -> dict:
             "layer": "semantic", "source": "teach", "start_node": "START", "end_node": "END",
             "objects": objects, "predicates": predicates, "nodes": nodes, "relations": relations,
             "evidence": evidence, "x-meta": {"action_vocabulary_version": "4.0",
-                "action_catalog": catalog(), "capability_gaps": gaps,
+                "action_catalog_ref": "skill_library/action_catalog.json", "capability_gaps": gaps,
                 "final_to_export": dict(idmap),
                 "learning_alignment": deepcopy(bundle.get("learning_alignment") or {}),
                 "intent_hypotheses": deepcopy((bundle.get("intents") or {}).get("intents") or []),
@@ -226,7 +226,7 @@ def build(bundle: dict) -> dict:
                 "evidence_note": "C_post 是预期效果；是否观测成功参见 result.json 的 reasoning 和 atomic，不能由谓词名推断成功"}}
 
 
-def catalog():
+def _default_catalog():
     roles = {
         "靠近": (["左臂", "右臂"], ["move_chain_client"], "臂带手到目标可抓取位置"),
         "打开": (["左手", "右手"], ["OperateGripper"], "手打开到可抓取状态"),
@@ -256,11 +256,16 @@ def catalog():
     return out
 
 
-def export(bundle: dict, out: Path) -> None:
-    graph = bundle["semantic_graph"]
-    out.mkdir(parents=True, exist_ok=True)
-    (out / "semantic_graph.yaml").write_text(yaml.safe_dump(graph, allow_unicode=True, sort_keys=False), encoding="utf-8")
-    (out / "action_catalog.json").write_text(json.dumps(catalog(), ensure_ascii=False, indent=2), encoding="utf-8")
+def catalog():
+    path = Path(__file__).resolve().parents[1] / "skill_library/action_catalog.json"
+    return json.loads(path.read_text(encoding="utf-8"))["actions"] if path.exists() else _default_catalog()
+
+
+def export(bundle: dict, out: Path, *, export_clips: bool = True, clip_padding: float = .25, cache_dir=None) -> None:
+    from .case_outputs import export_metadata
+    export_metadata(bundle, out)
+    from .case_outputs import export_case_clips
+    export_case_clips(bundle, out, enabled=export_clips, padding=clip_padding, cache_dir=cache_dir)
     from .semantic_interface import export as export_interface
     export_interface(bundle, out)
 
@@ -273,8 +278,10 @@ def render(bundle: dict, out: Path) -> None:
     original_render.render_operations(bundle, out)
     data = workbench.build(out, bundle=bundle)
     page = workbench.render(data)
-    for name in ("workbench.html", "report.html"):
-        (out / name).write_text(page, encoding="utf-8")
+    from .case_outputs import clip_panel
+    panel = clip_panel(out)
+    page = page.replace("</body>", panel+"</body>") if "</body>" in page else page+panel
+    (out / "workbench.html").write_text(page, encoding="utf-8")
 
 
 def validate(bundle: dict) -> dict:

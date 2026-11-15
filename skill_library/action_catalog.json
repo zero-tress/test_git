@@ -1,0 +1,413 @@
+{
+  "schema_version": "project_action_catalog.v1",
+  "library_revision": "31ec3621f441c250",
+  "actions": {
+    "靠近": {
+      "aliases": [
+        "接近",
+        "接近目标",
+        "向前伸出",
+        "伸出",
+        "前伸",
+        "伸向"
+      ],
+      "allowed_subjects": [
+        "左臂",
+        "右臂"
+      ],
+      "meaning": "臂带手到目标可抓取位置",
+      "atomic_capabilities": [
+        "move_chain_client"
+      ],
+      "semantic_status": "registered",
+      "binding_status": "pending",
+      "note": "语义图独立成立；能力列表供后续映射参考，不决定本层并行关系",
+      "template_ref": "action/靠近"
+    },
+    "打开": {
+      "aliases": [
+        "张开",
+        "预张开",
+        "张开手",
+        "张开手指",
+        "开启",
+        "拧开",
+        "打开瓶盖",
+        "打开门"
+      ],
+      "allowed_subjects": [
+        "左手",
+        "右手"
+      ],
+      "meaning": "手打开到可抓取状态",
+      "atomic_capabilities": [
+        "OperateGripper"
+      ],
+      "semantic_status": "registered",
+      "binding_status": "pending",
+      "note": "语义图独立成立；能力列表供后续映射参考，不决定本层并行关系",
+      "control_mode": "MODE_SET_WIDTH",
+      "template_ref": "action/打开"
+    },
+    "抓取": {
+      "aliases": [
+        "抓取目标",
+        "捡起",
+        "拾起",
+        "拿起",
+        "抓握",
+        "抓住",
+        "握住",
+        "夹住"
+      ],
+      "allowed_subjects": [
+        "左手",
+        "右手"
+      ],
+      "meaning": "手建立稳定握持",
+      "atomic_capabilities": [
+        "OperateGripper"
+      ],
+      "semantic_status": "registered",
+      "binding_status": "pending",
+      "note": "语义图独立成立；能力列表供后续映射参考，不决定本层并行关系",
+      "control_mode": "MODE_GRASP",
+      "template_ref": "action/抓取"
+    },
+    "移动": {
+      "aliases": [
+        "搬运",
+        "放置",
+        "放下",
+        "安放",
+        "搁下",
+        "转移",
+        "运送",
+        "搬动",
+        "移动物体",
+        "承载移动",
+        "提起",
+        "抬起",
+        "举起",
+        "托起"
+      ],
+      "allowed_subjects": [
+        "左臂",
+        "右臂",
+        "整体"
+      ],
+      "meaning": "臂移动或带载移动；整体只表示平移",
+      "atomic_capabilities": [
+        "move_chain_client"
+      ],
+      "semantic_status": "registered",
+      "binding_status": "pending",
+      "note": "语义图独立成立；能力列表供后续映射参考，不决定本层并行关系",
+      "template_ref": "action/移动"
+    },
+    "释放": {
+      "aliases": [
+        "松开",
+        "放开",
+        "解除抓持"
+      ],
+      "allowed_subjects": [
+        "左手",
+        "右手"
+      ],
+      "meaning": "手解除握持",
+      "atomic_capabilities": [
+        "OperateGripper"
+      ],
+      "semantic_status": "registered",
+      "binding_status": "pending",
+      "note": "语义图独立成立；能力列表供后续映射参考，不决定本层并行关系",
+      "control_mode": "MODE_RELEASE",
+      "template_ref": "action/释放"
+    },
+    "撤回": {
+      "aliases": [
+        "收回",
+        "退回",
+        "复位"
+      ],
+      "allowed_subjects": [
+        "左臂",
+        "右臂"
+      ],
+      "meaning": "臂返回原位或安全位置",
+      "atomic_capabilities": [
+        "move_chain_client"
+      ],
+      "semantic_status": "registered",
+      "binding_status": "pending",
+      "note": "语义图独立成立；能力列表供后续映射参考，不决定本层并行关系",
+      "template_ref": "action/撤回"
+    },
+    "推": {
+      "aliases": [
+        "推动",
+        "推开"
+      ],
+      "allowed_subjects": [
+        "左臂",
+        "右臂"
+      ],
+      "meaning": "通过推接触使目标移动；实现待绑定",
+      "atomic_capabilities": [],
+      "semantic_status": "registered",
+      "binding_status": "pending",
+      "note": "语义图独立成立；能力列表供后续映射参考，不决定本层并行关系",
+      "template_ref": "action/推"
+    },
+    "拉": {
+      "aliases": [
+        "拉动",
+        "拉开"
+      ],
+      "allowed_subjects": [
+        "左臂",
+        "右臂"
+      ],
+      "meaning": "通过牵引使目标移动；实现待绑定",
+      "atomic_capabilities": [],
+      "semantic_status": "registered",
+      "binding_status": "pending",
+      "note": "语义图独立成立；能力列表供后续映射参考，不决定本层并行关系",
+      "template_ref": "action/拉"
+    },
+    "旋转": {
+      "aliases": [
+        "拧",
+        "转动"
+      ],
+      "allowed_subjects": [
+        "左臂",
+        "右臂"
+      ],
+      "meaning": "使目标发生旋转；实现待绑定",
+      "atomic_capabilities": [],
+      "semantic_status": "registered",
+      "binding_status": "pending",
+      "note": "语义图独立成立；能力列表供后续映射参考，不决定本层并行关系",
+      "template_ref": "action/旋转"
+    },
+    "按压": {
+      "aliases": [
+        "按下",
+        "按"
+      ],
+      "allowed_subjects": [
+        "左臂",
+        "右臂",
+        "左手",
+        "右手"
+      ],
+      "meaning": "通过接触使目标达到按下状态；实现待绑定",
+      "atomic_capabilities": [],
+      "semantic_status": "registered",
+      "binding_status": "pending",
+      "note": "语义图独立成立；能力列表供后续映射参考，不决定本层并行关系",
+      "template_ref": "action/按压"
+    },
+    "接触": {
+      "aliases": [
+        "触碰",
+        "轻触"
+      ],
+      "allowed_subjects": [
+        "左手",
+        "右手"
+      ],
+      "meaning": "手与目标建立接触；稳定握持需独立证据",
+      "atomic_capabilities": [],
+      "semantic_status": "registered",
+      "binding_status": "pending",
+      "note": "语义图独立成立；能力列表供后续映射参考，不决定本层并行关系",
+      "template_ref": "action/接触"
+    },
+    "向目标移动": {
+      "aliases": [
+        "走向",
+        "走到",
+        "行走"
+      ],
+      "allowed_subjects": [
+        "整体"
+      ],
+      "meaning": "整体水平移动",
+      "atomic_capabilities": [],
+      "semantic_status": "registered",
+      "binding_status": "pending",
+      "note": "语义图独立成立；能力列表供后续映射参考，不决定本层并行关系",
+      "template_ref": "action/向目标移动"
+    },
+    "上升": {
+      "aliases": [
+        "起身",
+        "站起"
+      ],
+      "allowed_subjects": [
+        "整体"
+      ],
+      "meaning": "整体垂直上升",
+      "atomic_capabilities": [],
+      "semantic_status": "registered",
+      "binding_status": "pending",
+      "note": "语义图独立成立；能力列表供后续映射参考，不决定本层并行关系",
+      "template_ref": "action/上升"
+    },
+    "下降": {
+      "aliases": [
+        "下蹲",
+        "蹲下"
+      ],
+      "allowed_subjects": [
+        "整体"
+      ],
+      "meaning": "整体垂直下降",
+      "atomic_capabilities": [],
+      "semantic_status": "registered",
+      "binding_status": "pending",
+      "note": "语义图独立成立；能力列表供后续映射参考，不决定本层并行关系",
+      "template_ref": "action/下降"
+    }
+  },
+  "skill_index": [
+    {
+      "template_ref": "skill/AcquireObjectSkill",
+      "skill_ref": "AcquireObjectSkill",
+      "label": "取物并持有",
+      "meaning": "取得指定对象并持有同一对象；用户指定的来源和取出要求须保留，具体取物方式由后续结合场景确定。",
+      "parent_refs": [
+        "ManipulationSkill"
+      ],
+      "method_selection_required": true,
+      "implementation_ref_ids": []
+    },
+    {
+      "template_ref": "skill/GraspObjectSkill",
+      "skill_ref": "GraspObjectSkill",
+      "label": "抓取对象",
+      "meaning": "按角色、条件和结果定义的技能",
+      "parent_refs": [
+        "AcquireObjectSkill"
+      ],
+      "method_selection_required": false,
+      "implementation_ref_ids": [
+        "grasp_object"
+      ]
+    },
+    {
+      "template_ref": "skill/PlaceObjectSkill",
+      "skill_ref": "PlaceObjectSkill",
+      "label": "放置对象",
+      "meaning": "将对象放到指定位置或容器中。",
+      "parent_refs": [
+        "ManipulationSkill"
+      ],
+      "method_selection_required": true,
+      "implementation_ref_ids": []
+    },
+    {
+      "template_ref": "skill/PlaceOnSurfaceSkill",
+      "skill_ref": "PlaceOnSurfaceSkill",
+      "label": "放到平面上",
+      "meaning": "按角色、条件和结果定义的技能",
+      "parent_refs": [
+        "PlaceObjectSkill"
+      ],
+      "method_selection_required": false,
+      "implementation_ref_ids": [
+        "place_object"
+      ]
+    },
+    {
+      "template_ref": "skill/NavigateToSkill",
+      "skill_ref": "NavigateToSkill",
+      "label": "导航到目标附近",
+      "meaning": "以指定对象或区域为目标导航到其附近。",
+      "parent_refs": [
+        "NavigationSkill"
+      ],
+      "method_selection_required": false,
+      "implementation_ref_ids": [
+        "navigate_to"
+      ]
+    },
+    {
+      "template_ref": "skill/EstimateObjectPoseSkill",
+      "skill_ref": "EstimateObjectPoseSkill",
+      "label": "估计对象位姿",
+      "meaning": "估计指定对象的空间位姿。",
+      "parent_refs": [
+        "PerceptionSkill"
+      ],
+      "method_selection_required": false,
+      "implementation_ref_ids": [
+        "estimate_object_pose"
+      ]
+    },
+    {
+      "template_ref": "skill/InspectObjectStateSkill",
+      "skill_ref": "InspectObjectStateSkill",
+      "label": "探查对象状态",
+      "meaning": "探查指定对象的状态。",
+      "parent_refs": [
+        "PerceptionSkill"
+      ],
+      "method_selection_required": false,
+      "implementation_ref_ids": [
+        "inspect_object_state"
+      ]
+    },
+    {
+      "template_ref": "skill/SearchEntitySkill",
+      "skill_ref": "SearchEntitySkill",
+      "label": "搜索符合条件的对象",
+      "meaning": "搜索符合条件的对象。",
+      "parent_refs": [
+        "PerceptionSkill"
+      ],
+      "method_selection_required": false,
+      "implementation_ref_ids": [
+        "active_search_object"
+      ]
+    },
+    {
+      "template_ref": "skill/RetrieveObjectFromContainerSkill",
+      "skill_ref": "RetrieveObjectFromContainerSkill",
+      "label": "从容器取出对象",
+      "meaning": "按角色、条件和结果定义的技能",
+      "parent_refs": [
+        "AcquireObjectSkill"
+      ],
+      "method_selection_required": false,
+      "implementation_ref_ids": [
+        "retrieve_object_from_container"
+      ]
+    },
+    {
+      "template_ref": "skill/SearchObjectInContainerSkill",
+      "skill_ref": "SearchObjectInContainerSkill",
+      "label": "在容器中搜索对象",
+      "meaning": "在指定容器中搜索对象。",
+      "parent_refs": [
+        "PerceptionSkill"
+      ],
+      "method_selection_required": false,
+      "implementation_ref_ids": [
+        "search_object_in_container"
+      ]
+    }
+  ],
+  "tuple_fields": [
+    "X",
+    "O",
+    "C_pre",
+    "C_const",
+    "E",
+    "C_post",
+    "R"
+  ]
+}

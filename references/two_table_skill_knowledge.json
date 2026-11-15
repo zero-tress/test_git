@@ -1,0 +1,4354 @@
+{
+  "schema_version": "two_table_video_skill_knowledge.v1",
+  "title": "双桌取物：操作图分段与 Skill 衔接知识包",
+  "purpose": "为同事从人类操作视频生成操作图、划分已有 Skill 并标注衔接提供只读知识快照。",
+  "read_only_projection": true,
+  "authoring_status": "AUTO_EXPORTED_FROM_EXISTING_LIBRARY; NOT_A_NEW_ONTOLOGY_OR_RUNTIME_PROTOCOL",
+  "usage": {
+    "start_with": [
+      "skill_index",
+      "ontology.skill_contracts",
+      "ontology.terms",
+      "reference_example.skill_graph"
+    ],
+    "segmentation_guidance": [
+      "按已有 Skill 的输入角色、预期效果与完成条件识别语义片段；具体帧边界必须由实际视频确定。",
+      "implementation_reference.expansion 是库内实现参考，可帮助判断伸手、运动、闭合夹爪等动作如何归属；不是对人类动作轨迹的强制模板。",
+      "用已有 Skill 标识及角色槽；无法匹配的片段保留 unresolved，不临时编造一个声称已在库中的 Skill。",
+      "衔接分别表达先后关系、同一对象的结果流和效果到下一步条件的依赖，不能只写 next_skill。",
+      "先前是否在 A 桌属于初始指称及抓取来源要求；抓走后不能要求杯子仍在 A 桌。",
+      "视频观察、用户要求、模型推断和预期效果分别记录；预期持有或放置效果不等于已观察到成功。",
+      "PROVISIONAL 或 DEFERRED 的方法选择保留待核验条件，不能直接标记物理可执行。",
+      "人类视频中的持有关系属于示范证据；ActingRobot 指未来机器人执行上下文，不能把人手持杯直接写成机器人当前 holding 事实。",
+      "同一条件模板可用于不同 Skill 调用；条件标识相同不表示对象绑定、时机或观测真值相同。",
+      "示例中的 cup_red 等实体标识只用于双桌夹具；新视频需要自己的实体对应与证据，不能直接沿用示例绑定。"
+    ],
+    "required_video_output_fields": [
+      "segment_id",
+      "video_span",
+      "skill_ref",
+      "role_bindings",
+      "entry_condition_refs",
+      "expected_effect_condition_refs",
+      "observed_evidence",
+      "unresolved",
+      "handoffs"
+    ],
+    "output_field_status": "上列为本次视频验证建议；不是对现有运行协议的修改。"
+  },
+  "source": {
+    "project": "Cutbeef_owl",
+    "snapshot_date": "2026-10-27",
+    "ontology_namespace": "http://example.org/kitchen-ontology-v6#",
+    "ontology_revision": "sha256:d2baec79a4c8aaabf174504c49583fec25934e338262715dfe802413ac922a44",
+    "skill_contract_schema_version": "skill_semantic_contract.v2.3",
+    "ontology_source_paths": [
+      "data/ontology/v2/core.ttl",
+      "data/ontology/v2/objects_affordances.ttl",
+      "data/ontology/v2/role_contracts.ttl",
+      "data/ontology/v2/skill_context_rules.ttl",
+      "data/ontology/v2/skills.ttl",
+      "data/ontology/v2/object_qualities.ttl",
+      "data/ontology/v2/skill_semantic_interfaces.ttl"
+    ],
+    "source_file_sha256": {
+      "config/state_mapping.yaml": "d83fc10c75f0cb2cacf6b591fb8efb4158c050bed81717340e81cb632431823b",
+      "config/task_input.yaml": "40d69bfd884b172575df59fe4fb848b152ba27e3d25544245e215ad3ba4e360a",
+      "config/understanding_cases.yaml": "7b03af970cced6f77f5e2dbb092a18a54bd4af2a95374eb3bb39ed803a32c43c",
+      "data/ontology/v2/core.ttl": "8e99eddf77a7cc3c8b39f8832be90a13a7b593892b35a553137ecc372a82f23c",
+      "data/ontology/v2/object_qualities.ttl": "e59ad1bcdb2dac7eb8d84f279cdf3ba9e84905cc3913d440a59926d097bb6c7a",
+      "data/ontology/v2/objects_affordances.ttl": "204e120d21de029f63e182003ab85f8a77f5f807144ea2aa5c6f5f0c4a101fa9",
+      "data/ontology/v2/role_contracts.ttl": "1da02153b9e7c36d4abefa70baa803a0bc2ce647ab69bddd73e9355650b25478",
+      "data/ontology/v2/skill_context_rules.ttl": "6a323ac5e53808aa79ca9c02ef2b7005933f58abf89632d76f52affeb485216c",
+      "data/ontology/v2/skill_semantic_interfaces.ttl": "552c9c0a6b2b14463aeb88398adf9ab989432020106ae33a58a026737e9f5f30",
+      "data/ontology/v2/skills.ttl": "2d4adb49be925cd687be20d48aa5d940494bd3bb5da40de1381f0124dd44ee92",
+      "data/scene/coarse_scene_cup_transfer.json": "27918694f1023c4b57daa4aac9b15c2f8ffbeac3a99a3ef2c7e67d94cc529eb6",
+      "data/skills/skill_implementations.yaml": "ccd6b7aaba884fac2395dddcdb9fc2a497512a67d9e60265d61c8e2f2ccca6d4",
+      "src/contracts/skill_semantics.py": "953904f63d54c1367f074b0361f657d98c08b45eed8a11320258b953ff2ba4cb",
+      "src/integration/llm_contract_projection.py": "8b4534c8854e160b0fe96bf2fbed01cff32a98f7e4029507d37897660132a7bc",
+      "src/ontology/method_planning_rules.py": "3a404b4b05880e1aba0c5ba9a96899336cd74faa81101e5f55f58c9a53f157f6",
+      "src/ontology/ontology_adapter.py": "c13fb079c146e199f8bf809f024a67d90585c892222f1d14353a458b43113950",
+      "src/ontology/qualification_projection.py": "f7335bf112af3fd7aa76f8186bb645689ada7a0e19c9ef6ef518e68a4fb24f21",
+      "src/ontology/skill_invocation_resolver.py": "5b89f10ed8f703c3a9ac3a8cb3c36ea9886c88ea43a6be217dc071e39a15c1b1",
+      "src/ontology/skill_semantic_contract.py": "bf89b5282f7525341eb38f90cb564097c0c08c23cc7798e676580722da818fb3",
+      "src/ontology/static_owl_reasoner.py": "4ea3e750e1009169e816e456f9aa56483dccc8560be616cce650083722b25c08",
+      "tests/fixtures/understanding_ontology/cup_transfer.json": "20e0605bcc239698e25182122de345505761937d5158b6bbc21318cbdb9a19a1",
+      "tests/fixtures/understanding_ontology/cup_transfer_selection.json": "29c19514b6a9564d5be201e991d7c4ed4d63b2679ac9c7adc81f4fddb957d578"
+    },
+    "projection_functions": [
+      "SkillSemanticContractCatalog.package_for",
+      "SkillSemanticContractCatalog.term_bundle",
+      "project_method_rules",
+      "compact_llm_input"
+    ],
+    "scenario_example_sources": [
+      "tests/fixtures/understanding_ontology/cup_transfer.json",
+      "tests/fixtures/understanding_ontology/cup_transfer_selection.json",
+      "data/scene/coarse_scene_cup_transfer.json"
+    ],
+    "scenario_truth_kind": "OFFLINE_TEST_FIXTURE_NOT_LIVE_OBSERVATION",
+    "model_calls": 0,
+    "planning_runs": 0,
+    "robot_execution_runs": 0
+  },
+  "skill_index": [
+    {
+      "skill_ref": "AcquireObjectSkill",
+      "label": "取物并持有",
+      "meaning": "取得指定对象并持有同一对象；用户指定的来源和取出要求须保留，具体取物方式由后续结合场景确定。",
+      "parent_refs": [
+        "ManipulationSkill"
+      ],
+      "method_selection_required": true,
+      "implementation_ref_ids": []
+    },
+    {
+      "skill_ref": "GraspObjectSkill",
+      "label": "抓取对象",
+      "meaning": "按角色、条件和结果定义的技能",
+      "parent_refs": [
+        "AcquireObjectSkill"
+      ],
+      "method_selection_required": false,
+      "implementation_ref_ids": [
+        "grasp_object"
+      ]
+    },
+    {
+      "skill_ref": "PlaceObjectSkill",
+      "label": "放置对象",
+      "meaning": "将对象放到指定位置或容器中。",
+      "parent_refs": [
+        "ManipulationSkill"
+      ],
+      "method_selection_required": true,
+      "implementation_ref_ids": []
+    },
+    {
+      "skill_ref": "PlaceOnSurfaceSkill",
+      "label": "放到平面上",
+      "meaning": "按角色、条件和结果定义的技能",
+      "parent_refs": [
+        "PlaceObjectSkill"
+      ],
+      "method_selection_required": false,
+      "implementation_ref_ids": [
+        "place_object"
+      ]
+    },
+    {
+      "skill_ref": "NavigateToSkill",
+      "label": "导航到目标附近",
+      "meaning": "以指定对象或区域为目标导航到其附近。",
+      "parent_refs": [
+        "NavigationSkill"
+      ],
+      "method_selection_required": false,
+      "implementation_ref_ids": [
+        "navigate_to"
+      ]
+    },
+    {
+      "skill_ref": "EstimateObjectPoseSkill",
+      "label": "估计对象位姿",
+      "meaning": "估计指定对象的空间位姿。",
+      "parent_refs": [
+        "PerceptionSkill"
+      ],
+      "method_selection_required": false,
+      "implementation_ref_ids": [
+        "estimate_object_pose"
+      ]
+    },
+    {
+      "skill_ref": "InspectObjectStateSkill",
+      "label": "探查对象状态",
+      "meaning": "探查指定对象的状态。",
+      "parent_refs": [
+        "PerceptionSkill"
+      ],
+      "method_selection_required": false,
+      "implementation_ref_ids": [
+        "inspect_object_state"
+      ]
+    },
+    {
+      "skill_ref": "SearchEntitySkill",
+      "label": "搜索符合条件的对象",
+      "meaning": "搜索符合条件的对象。",
+      "parent_refs": [
+        "PerceptionSkill"
+      ],
+      "method_selection_required": false,
+      "implementation_ref_ids": [
+        "active_search_object"
+      ]
+    },
+    {
+      "skill_ref": "RetrieveObjectFromContainerSkill",
+      "label": "从容器取出对象",
+      "meaning": "按角色、条件和结果定义的技能",
+      "parent_refs": [
+        "AcquireObjectSkill"
+      ],
+      "method_selection_required": false,
+      "implementation_ref_ids": [
+        "retrieve_object_from_container"
+      ]
+    },
+    {
+      "skill_ref": "SearchObjectInContainerSkill",
+      "label": "在容器中搜索对象",
+      "meaning": "在指定容器中搜索对象。",
+      "parent_refs": [
+        "PerceptionSkill"
+      ],
+      "method_selection_required": false,
+      "implementation_ref_ids": [
+        "search_object_in_container"
+      ]
+    }
+  ],
+  "ontology": {
+    "skill_contracts": {
+      "AcquireObjectSkill": {
+        "schema_version": "skill_semantic_contract.v2.3",
+        "skill_ref": "AcquireObjectSkill",
+        "ontology_revision": "sha256:d2baec79a4c8aaabf174504c49583fec25934e338262715dfe802413ac922a44",
+        "invocation_context": null,
+        "parent_refs": [
+          "ManipulationSkill"
+        ],
+        "intent_entry": {
+          "enabled": true,
+          "name": "取物并持有",
+          "meaning": "取得指定对象并持有同一对象；用户指定的来源和取出要求须保留，具体取物方式由后续结合场景确定。"
+        },
+        "role_slots": [
+          {
+            "slot_ref": "GraspTargetSkillSlot",
+            "role_ref": "GraspedObjectRole",
+            "label": "被抓取对象",
+            "channel_ref": "PrimaryPatientChannel",
+            "language_roles": [
+              "patient"
+            ],
+            "binding_mode": "input",
+            "collection_consumption": [],
+            "min_count": 1,
+            "max_count": 1,
+            "declared_by": "AcquireObjectSkill"
+          }
+        ],
+        "result_ports": [
+          {
+            "result_ref": "GraspedResult",
+            "role_ref": "GraspedObjectRole",
+            "label": "被持有的同一对象",
+            "source_slot_ref": "GraspTargetSkillSlot",
+            "identity": "same_entity",
+            "state_family_refs": [],
+            "entailed_state_refs": [],
+            "quantity_refs": [],
+            "consumer": "cerebellum.result_requirements",
+            "declared_by": "AcquireObjectSkill"
+          }
+        ],
+        "conditions": [
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::068d99e94cf48142a13c",
+            "kind": "role_constraint",
+            "phase": "entry",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "affordance",
+              "subject": {
+                "kind": "slot",
+                "ref": "GraspTargetSkillSlot"
+              },
+              "affordance_ref": "GraspableAffordance"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "GraspTargetSkillSlot",
+                "GraspableAffordance"
+              ]
+            }
+          },
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::5ff6962e3062b17657cd",
+            "kind": "role_constraint",
+            "phase": "entry",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "type",
+              "subject": {
+                "kind": "slot",
+                "ref": "GraspTargetSkillSlot"
+              },
+              "class_ref": "Object"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "GraspTargetSkillSlot",
+                "Object"
+              ]
+            }
+          },
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::63eeab6e0fc8286f00c2",
+            "kind": "expected_effect",
+            "phase": "after_success",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "effect",
+              "subject": {
+                "kind": "slot",
+                "ref": "GraspTargetSkillSlot"
+              },
+              "effect_ref": "AcquireHoldingEffect"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "AcquireHoldingEffect"
+              ]
+            }
+          }
+        ],
+        "source_refs": [
+          "AcquireObjectSkill",
+          "ManipulationSkill",
+          "Skill"
+        ],
+        "observation_refs": [],
+        "method_selection_required": true,
+        "implementation_gaps": []
+      },
+      "GraspObjectSkill": {
+        "schema_version": "skill_semantic_contract.v2.3",
+        "skill_ref": "GraspObjectSkill",
+        "ontology_revision": "sha256:d2baec79a4c8aaabf174504c49583fec25934e338262715dfe802413ac922a44",
+        "invocation_context": null,
+        "parent_refs": [
+          "AcquireObjectSkill"
+        ],
+        "intent_entry": {
+          "enabled": false,
+          "name": "抓取对象",
+          "meaning": "按角色、条件和结果定义的技能"
+        },
+        "role_slots": [
+          {
+            "slot_ref": "GraspSourceSkillSlot",
+            "role_ref": "GraspSourceRole",
+            "label": "抓取来源平面",
+            "channel_ref": "SourceChannel",
+            "language_roles": [
+              "source"
+            ],
+            "binding_mode": "input",
+            "collection_consumption": [],
+            "min_count": 0,
+            "max_count": 1,
+            "declared_by": "GraspObjectSkill"
+          },
+          {
+            "slot_ref": "GraspTargetSkillSlot",
+            "role_ref": "GraspedObjectRole",
+            "label": "被抓取对象",
+            "channel_ref": "PrimaryPatientChannel",
+            "language_roles": [
+              "patient"
+            ],
+            "binding_mode": "input",
+            "collection_consumption": [],
+            "min_count": 1,
+            "max_count": 1,
+            "declared_by": "AcquireObjectSkill"
+          }
+        ],
+        "result_ports": [
+          {
+            "result_ref": "GraspedResult",
+            "role_ref": "GraspedObjectRole",
+            "label": "被持有的同一对象",
+            "source_slot_ref": "GraspTargetSkillSlot",
+            "identity": "same_entity",
+            "state_family_refs": [],
+            "entailed_state_refs": [],
+            "quantity_refs": [],
+            "consumer": "cerebellum.result_requirements",
+            "declared_by": "AcquireObjectSkill"
+          }
+        ],
+        "conditions": [
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::1a856786667d393838b9",
+            "kind": "precondition",
+            "phase": "entry",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "relation_absent",
+              "subject": {
+                "kind": "actor",
+                "ref": "ActingRobot"
+              },
+              "relation_ref": "holding"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "EmptyGripperCondition"
+              ]
+            }
+          },
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::cf324c51e90f065cc164",
+            "kind": "precondition",
+            "phase": "entry",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "relation",
+              "subject": {
+                "kind": "actor",
+                "ref": "ActingRobot"
+              },
+              "relation_ref": "near",
+              "operator": "eq",
+              "object": {
+                "kind": "slot",
+                "ref": "GraspTargetSkillSlot"
+              }
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "GraspAccessCondition"
+              ]
+            }
+          },
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::5300608e44608875b275",
+            "kind": "role_constraint",
+            "phase": "entry",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "type",
+              "subject": {
+                "kind": "slot",
+                "ref": "GraspSourceSkillSlot"
+              },
+              "class_ref": "Surface"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "GraspSourceSkillSlot",
+                "Surface"
+              ]
+            }
+          },
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::068d99e94cf48142a13c",
+            "kind": "role_constraint",
+            "phase": "entry",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "affordance",
+              "subject": {
+                "kind": "slot",
+                "ref": "GraspTargetSkillSlot"
+              },
+              "affordance_ref": "GraspableAffordance"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "GraspTargetSkillSlot",
+                "GraspableAffordance"
+              ]
+            }
+          },
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::5ff6962e3062b17657cd",
+            "kind": "role_constraint",
+            "phase": "entry",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "type",
+              "subject": {
+                "kind": "slot",
+                "ref": "GraspTargetSkillSlot"
+              },
+              "class_ref": "Object"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "GraspTargetSkillSlot",
+                "Object"
+              ]
+            }
+          },
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::d40fa3bb53376314a7e9",
+            "kind": "precondition",
+            "phase": "entry",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "relation",
+              "subject": {
+                "kind": "slot",
+                "ref": "GraspTargetSkillSlot"
+              },
+              "relation_ref": "locatedOn",
+              "operator": "eq",
+              "object": {
+                "kind": "slot",
+                "ref": "GraspSourceSkillSlot"
+              }
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "GraspSourceCondition"
+              ]
+            },
+            "applies_when_bound_slots": [
+              "GraspSourceSkillSlot"
+            ]
+          },
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::63eeab6e0fc8286f00c2",
+            "kind": "expected_effect",
+            "phase": "after_success",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "effect",
+              "subject": {
+                "kind": "slot",
+                "ref": "GraspTargetSkillSlot"
+              },
+              "effect_ref": "AcquireHoldingEffect"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "AcquireHoldingEffect"
+              ]
+            }
+          },
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::f3470cbbe19fdba1230d",
+            "kind": "expected_effect",
+            "phase": "after_success",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "effect",
+              "subject": {
+                "kind": "slot",
+                "ref": "GraspTargetSkillSlot"
+              },
+              "effect_ref": "GraspRelationEffect"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "GraspRelationEffect"
+              ]
+            }
+          }
+        ],
+        "source_refs": [
+          "AcquireObjectSkill",
+          "GraspObjectSkill",
+          "ManipulationSkill",
+          "Skill"
+        ],
+        "observation_refs": [],
+        "method_selection_required": false,
+        "implementation_gaps": []
+      },
+      "PlaceObjectSkill": {
+        "schema_version": "skill_semantic_contract.v2.3",
+        "skill_ref": "PlaceObjectSkill",
+        "ontology_revision": "sha256:d2baec79a4c8aaabf174504c49583fec25934e338262715dfe802413ac922a44",
+        "invocation_context": null,
+        "parent_refs": [
+          "ManipulationSkill"
+        ],
+        "intent_entry": {
+          "enabled": true,
+          "name": "放置对象",
+          "meaning": "将对象放到指定位置或容器中。"
+        },
+        "role_slots": [
+          {
+            "slot_ref": "PlaceDestinationSkillSlot",
+            "role_ref": "PlacementDestinationRole",
+            "label": "放置目的位置",
+            "channel_ref": "DestinationChannel",
+            "language_roles": [
+              "destination"
+            ],
+            "binding_mode": "input",
+            "collection_consumption": [],
+            "min_count": 1,
+            "max_count": 1,
+            "declared_by": "PlaceObjectSkill"
+          },
+          {
+            "slot_ref": "PlaceObjectTargetSkillSlot",
+            "role_ref": "PlacedObjectRole",
+            "label": "被放置对象",
+            "channel_ref": "PrimaryPatientChannel",
+            "language_roles": [
+              "patient"
+            ],
+            "binding_mode": "input",
+            "collection_consumption": [
+              "each_member"
+            ],
+            "min_count": 1,
+            "max_count": 1,
+            "declared_by": "PlaceObjectSkill"
+          }
+        ],
+        "result_ports": [
+          {
+            "result_ref": "PlacedResult",
+            "role_ref": "PlacedResultRole",
+            "label": "位置变化后的同一对象",
+            "source_slot_ref": "PlaceObjectTargetSkillSlot",
+            "identity": "same_entity",
+            "state_family_refs": [],
+            "entailed_state_refs": [],
+            "quantity_refs": [],
+            "consumer": "cerebellum.result_requirements",
+            "declared_by": "PlaceObjectSkill"
+          }
+        ],
+        "conditions": [
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::883edd88b3bf7a638018",
+            "kind": "precondition",
+            "phase": "entry",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "relation",
+              "subject": {
+                "kind": "actor",
+                "ref": "ActingRobot"
+              },
+              "relation_ref": "holding",
+              "operator": "eq",
+              "object": {
+                "kind": "slot",
+                "ref": "PlaceObjectTargetSkillSlot"
+              }
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "PlaceHeldObjectCondition"
+              ]
+            }
+          },
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::a9e8bc51525c31aae298",
+            "kind": "precondition",
+            "phase": "entry",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "relation",
+              "subject": {
+                "kind": "actor",
+                "ref": "ActingRobot"
+              },
+              "relation_ref": "near",
+              "operator": "eq",
+              "object": {
+                "kind": "slot",
+                "ref": "PlaceDestinationSkillSlot"
+              }
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "PlaceAccessCondition"
+              ]
+            }
+          },
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::136db5fffbf3360f261d",
+            "kind": "role_constraint",
+            "phase": "entry",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "type",
+              "subject": {
+                "kind": "slot",
+                "ref": "PlaceDestinationSkillSlot"
+              },
+              "class_ref": "Object"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "Object",
+                "PlaceDestinationSkillSlot"
+              ]
+            }
+          },
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::6e7fc5f4104a1f15ca9a",
+            "kind": "role_constraint",
+            "phase": "entry",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "type",
+              "subject": {
+                "kind": "slot",
+                "ref": "PlaceObjectTargetSkillSlot"
+              },
+              "class_ref": "Object"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "Object",
+                "PlaceObjectTargetSkillSlot"
+              ]
+            }
+          },
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::36801d14550d6e6bc600",
+            "kind": "expected_effect",
+            "phase": "after_success",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "effect",
+              "subject": {
+                "kind": "slot",
+                "ref": "PlaceObjectTargetSkillSlot"
+              },
+              "effect_ref": "PlacementReleaseEffect"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "PlacementReleaseEffect"
+              ]
+            }
+          }
+        ],
+        "source_refs": [
+          "ManipulationSkill",
+          "PlaceObjectSkill",
+          "Skill"
+        ],
+        "observation_refs": [],
+        "method_selection_required": true,
+        "implementation_gaps": []
+      },
+      "PlaceOnSurfaceSkill": {
+        "schema_version": "skill_semantic_contract.v2.3",
+        "skill_ref": "PlaceOnSurfaceSkill",
+        "ontology_revision": "sha256:d2baec79a4c8aaabf174504c49583fec25934e338262715dfe802413ac922a44",
+        "invocation_context": null,
+        "parent_refs": [
+          "PlaceObjectSkill"
+        ],
+        "intent_entry": {
+          "enabled": false,
+          "name": "放到平面上",
+          "meaning": "按角色、条件和结果定义的技能"
+        },
+        "role_slots": [
+          {
+            "slot_ref": "PlaceDestinationSkillSlot",
+            "role_ref": "PlacementDestinationRole",
+            "label": "放置目的位置",
+            "channel_ref": "DestinationChannel",
+            "language_roles": [
+              "destination"
+            ],
+            "binding_mode": "input",
+            "collection_consumption": [],
+            "min_count": 1,
+            "max_count": 1,
+            "declared_by": "PlaceObjectSkill"
+          },
+          {
+            "slot_ref": "PlaceObjectTargetSkillSlot",
+            "role_ref": "PlacedObjectRole",
+            "label": "被放置对象",
+            "channel_ref": "PrimaryPatientChannel",
+            "language_roles": [
+              "patient"
+            ],
+            "binding_mode": "input",
+            "collection_consumption": [
+              "each_member"
+            ],
+            "min_count": 1,
+            "max_count": 1,
+            "declared_by": "PlaceObjectSkill"
+          }
+        ],
+        "result_ports": [
+          {
+            "result_ref": "PlacedResult",
+            "role_ref": "PlacedResultRole",
+            "label": "位置变化后的同一对象",
+            "source_slot_ref": "PlaceObjectTargetSkillSlot",
+            "identity": "same_entity",
+            "state_family_refs": [],
+            "entailed_state_refs": [],
+            "quantity_refs": [],
+            "consumer": "cerebellum.result_requirements",
+            "declared_by": "PlaceObjectSkill"
+          }
+        ],
+        "conditions": [
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::883edd88b3bf7a638018",
+            "kind": "precondition",
+            "phase": "entry",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "relation",
+              "subject": {
+                "kind": "actor",
+                "ref": "ActingRobot"
+              },
+              "relation_ref": "holding",
+              "operator": "eq",
+              "object": {
+                "kind": "slot",
+                "ref": "PlaceObjectTargetSkillSlot"
+              }
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "PlaceHeldObjectCondition"
+              ]
+            }
+          },
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::a9e8bc51525c31aae298",
+            "kind": "precondition",
+            "phase": "entry",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "relation",
+              "subject": {
+                "kind": "actor",
+                "ref": "ActingRobot"
+              },
+              "relation_ref": "near",
+              "operator": "eq",
+              "object": {
+                "kind": "slot",
+                "ref": "PlaceDestinationSkillSlot"
+              }
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "PlaceAccessCondition"
+              ]
+            }
+          },
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::340d6d2c0abb2dc1f2a6",
+            "kind": "role_constraint",
+            "phase": "entry",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "type",
+              "subject": {
+                "kind": "slot",
+                "ref": "PlaceDestinationSkillSlot"
+              },
+              "class_ref": "Surface"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "PlaceDestinationSkillSlot",
+                "Surface"
+              ]
+            }
+          },
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::4d54ef6ccaa55eca3ef2",
+            "kind": "precondition",
+            "phase": "entry",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "state",
+              "subject": {
+                "kind": "slot",
+                "ref": "PlaceDestinationSkillSlot"
+              },
+              "state_ref": "FreeSpaceState",
+              "assertion": "present"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "PlacementSurfaceCondition"
+              ]
+            }
+          },
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::6e7fc5f4104a1f15ca9a",
+            "kind": "role_constraint",
+            "phase": "entry",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "type",
+              "subject": {
+                "kind": "slot",
+                "ref": "PlaceObjectTargetSkillSlot"
+              },
+              "class_ref": "Object"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "Object",
+                "PlaceObjectTargetSkillSlot"
+              ]
+            }
+          },
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::36801d14550d6e6bc600",
+            "kind": "expected_effect",
+            "phase": "after_success",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "effect",
+              "subject": {
+                "kind": "slot",
+                "ref": "PlaceObjectTargetSkillSlot"
+              },
+              "effect_ref": "PlacementReleaseEffect"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "PlacementReleaseEffect"
+              ]
+            }
+          },
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::530c199cefc412490adb",
+            "kind": "expected_effect",
+            "phase": "after_success",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "effect",
+              "subject": {
+                "kind": "slot",
+                "ref": "PlaceObjectTargetSkillSlot"
+              },
+              "effect_ref": "PlacementOnEffect"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "PlacementOnEffect"
+              ]
+            }
+          }
+        ],
+        "source_refs": [
+          "ManipulationSkill",
+          "PlaceObjectSkill",
+          "PlaceOnSurfaceSkill",
+          "Skill"
+        ],
+        "observation_refs": [],
+        "method_selection_required": false,
+        "implementation_gaps": []
+      },
+      "NavigateToSkill": {
+        "schema_version": "skill_semantic_contract.v2.3",
+        "skill_ref": "NavigateToSkill",
+        "ontology_revision": "sha256:d2baec79a4c8aaabf174504c49583fec25934e338262715dfe802413ac922a44",
+        "invocation_context": null,
+        "parent_refs": [
+          "NavigationSkill"
+        ],
+        "intent_entry": {
+          "enabled": true,
+          "name": "导航到目标附近",
+          "meaning": "以指定对象或区域为目标导航到其附近。"
+        },
+        "role_slots": [
+          {
+            "slot_ref": "NavigateTargetSkillSlot",
+            "role_ref": "NavigationTargetRole",
+            "label": "导航目标",
+            "channel_ref": "DestinationChannel",
+            "language_roles": [
+              "destination"
+            ],
+            "binding_mode": "input",
+            "collection_consumption": [],
+            "min_count": 1,
+            "max_count": 1,
+            "declared_by": "NavigateToSkill"
+          }
+        ],
+        "result_ports": [],
+        "conditions": [
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::dd58747c80b27a6cd13a",
+            "kind": "role_constraint",
+            "phase": "entry",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "type",
+              "subject": {
+                "kind": "slot",
+                "ref": "NavigateTargetSkillSlot"
+              },
+              "class_ref": "WorldEntity"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "NavigateTargetSkillSlot",
+                "WorldEntity"
+              ]
+            }
+          },
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::15b279ffd57f9dc726f2",
+            "kind": "expected_effect",
+            "phase": "after_success",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "effect",
+              "subject": {
+                "kind": "slot",
+                "ref": "NavigateTargetSkillSlot"
+              },
+              "effect_ref": "NavigationNearEffect"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "NavigationNearEffect"
+              ]
+            }
+          }
+        ],
+        "source_refs": [
+          "NavigateToSkill",
+          "NavigationSkill",
+          "Skill"
+        ],
+        "observation_refs": [],
+        "method_selection_required": false,
+        "implementation_gaps": []
+      },
+      "EstimateObjectPoseSkill": {
+        "schema_version": "skill_semantic_contract.v2.3",
+        "skill_ref": "EstimateObjectPoseSkill",
+        "ontology_revision": "sha256:d2baec79a4c8aaabf174504c49583fec25934e338262715dfe802413ac922a44",
+        "invocation_context": null,
+        "parent_refs": [
+          "PerceptionSkill"
+        ],
+        "intent_entry": {
+          "enabled": true,
+          "name": "估计对象位姿",
+          "meaning": "估计指定对象的空间位姿。"
+        },
+        "role_slots": [
+          {
+            "slot_ref": "EstimatePoseTargetSkillSlot",
+            "role_ref": "ObservedObjectRole",
+            "label": "被估计位姿对象",
+            "channel_ref": "PrimaryPatientChannel",
+            "language_roles": [
+              "patient"
+            ],
+            "binding_mode": "input",
+            "collection_consumption": [],
+            "min_count": 1,
+            "max_count": 1,
+            "declared_by": "EstimateObjectPoseSkill"
+          }
+        ],
+        "result_ports": [],
+        "conditions": [
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::16b37e5aa5c4fc1cd145",
+            "kind": "role_constraint",
+            "phase": "entry",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "type",
+              "subject": {
+                "kind": "slot",
+                "ref": "EstimatePoseTargetSkillSlot"
+              },
+              "class_ref": "Object"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "EstimatePoseTargetSkillSlot",
+                "Object"
+              ]
+            }
+          }
+        ],
+        "source_refs": [
+          "EstimateObjectPoseSkill",
+          "PerceptionSkill",
+          "Skill"
+        ],
+        "observation_refs": [
+          "ObjectPoseObservation"
+        ],
+        "method_selection_required": false,
+        "implementation_gaps": []
+      },
+      "InspectObjectStateSkill": {
+        "schema_version": "skill_semantic_contract.v2.3",
+        "skill_ref": "InspectObjectStateSkill",
+        "ontology_revision": "sha256:d2baec79a4c8aaabf174504c49583fec25934e338262715dfe802413ac922a44",
+        "invocation_context": null,
+        "parent_refs": [
+          "PerceptionSkill"
+        ],
+        "intent_entry": {
+          "enabled": true,
+          "name": "探查对象状态",
+          "meaning": "探查指定对象的状态。"
+        },
+        "role_slots": [
+          {
+            "slot_ref": "InspectStateTargetSkillSlot",
+            "role_ref": "ObservedObjectRole",
+            "label": "被探查对象",
+            "channel_ref": "PrimaryPatientChannel",
+            "language_roles": [
+              "patient"
+            ],
+            "binding_mode": "input",
+            "collection_consumption": [],
+            "min_count": 1,
+            "max_count": 1,
+            "declared_by": "InspectObjectStateSkill"
+          }
+        ],
+        "result_ports": [],
+        "conditions": [
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::1253ad0e0cf1120221dc",
+            "kind": "precondition",
+            "phase": "entry",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "relation",
+              "subject": {
+                "kind": "actor",
+                "ref": "ActingRobot"
+              },
+              "relation_ref": "near",
+              "operator": "eq",
+              "object": {
+                "kind": "slot",
+                "ref": "InspectStateTargetSkillSlot"
+              }
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "InspectStateAccessCondition"
+              ]
+            }
+          },
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::51107a97cfcff58d86f5",
+            "kind": "role_constraint",
+            "phase": "entry",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "type",
+              "subject": {
+                "kind": "slot",
+                "ref": "InspectStateTargetSkillSlot"
+              },
+              "class_ref": "Object"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "InspectStateTargetSkillSlot",
+                "Object"
+              ]
+            }
+          }
+        ],
+        "source_refs": [
+          "InspectObjectStateSkill",
+          "PerceptionSkill",
+          "Skill"
+        ],
+        "observation_refs": [
+          "ObjectStateObservation"
+        ],
+        "method_selection_required": false,
+        "implementation_gaps": []
+      },
+      "SearchEntitySkill": {
+        "schema_version": "skill_semantic_contract.v2.3",
+        "skill_ref": "SearchEntitySkill",
+        "ontology_revision": "sha256:d2baec79a4c8aaabf174504c49583fec25934e338262715dfe802413ac922a44",
+        "invocation_context": null,
+        "parent_refs": [
+          "PerceptionSkill"
+        ],
+        "intent_entry": {
+          "enabled": true,
+          "name": "搜索符合条件的对象",
+          "meaning": "搜索符合条件的对象。"
+        },
+        "role_slots": [
+          {
+            "slot_ref": "SearchEntityOutputSkillSlot",
+            "role_ref": "DiscoveredObjectRole",
+            "label": "搜索发现对象",
+            "channel_ref": "PrimaryPatientChannel",
+            "language_roles": [
+              "patient"
+            ],
+            "binding_mode": "query_output",
+            "collection_consumption": [],
+            "min_count": 1,
+            "max_count": 1,
+            "declared_by": "SearchEntitySkill"
+          }
+        ],
+        "result_ports": [],
+        "conditions": [
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::03a35cef2d6d8b630686",
+            "kind": "role_constraint",
+            "phase": "entry",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "type",
+              "subject": {
+                "kind": "slot",
+                "ref": "SearchEntityOutputSkillSlot"
+              },
+              "class_ref": "Object"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "Object",
+                "SearchEntityOutputSkillSlot"
+              ]
+            }
+          }
+        ],
+        "source_refs": [
+          "PerceptionSkill",
+          "SearchEntitySkill",
+          "Skill"
+        ],
+        "observation_refs": [
+          "EntitySearchObservation"
+        ],
+        "method_selection_required": false,
+        "implementation_gaps": []
+      },
+      "RetrieveObjectFromContainerSkill": {
+        "schema_version": "skill_semantic_contract.v2.3",
+        "skill_ref": "RetrieveObjectFromContainerSkill",
+        "ontology_revision": "sha256:d2baec79a4c8aaabf174504c49583fec25934e338262715dfe802413ac922a44",
+        "invocation_context": null,
+        "parent_refs": [
+          "AcquireObjectSkill"
+        ],
+        "intent_entry": {
+          "enabled": false,
+          "name": "从容器取出对象",
+          "meaning": "按角色、条件和结果定义的技能"
+        },
+        "role_slots": [
+          {
+            "slot_ref": "GraspTargetSkillSlot",
+            "role_ref": "GraspedObjectRole",
+            "label": "被抓取对象",
+            "channel_ref": "PrimaryPatientChannel",
+            "language_roles": [
+              "patient"
+            ],
+            "binding_mode": "input",
+            "collection_consumption": [],
+            "min_count": 1,
+            "max_count": 1,
+            "declared_by": "AcquireObjectSkill"
+          },
+          {
+            "slot_ref": "RetrieveContainerSkillSlot",
+            "role_ref": "RetrievalContainerRole",
+            "label": "取出来源容器",
+            "channel_ref": "SourceChannel",
+            "language_roles": [
+              "source"
+            ],
+            "binding_mode": "input",
+            "collection_consumption": [],
+            "min_count": 1,
+            "max_count": 1,
+            "declared_by": "RetrieveObjectFromContainerSkill"
+          }
+        ],
+        "result_ports": [
+          {
+            "result_ref": "GraspedResult",
+            "role_ref": "GraspedObjectRole",
+            "label": "被持有的同一对象",
+            "source_slot_ref": "GraspTargetSkillSlot",
+            "identity": "same_entity",
+            "state_family_refs": [],
+            "entailed_state_refs": [],
+            "quantity_refs": [],
+            "consumer": "cerebellum.result_requirements",
+            "declared_by": "AcquireObjectSkill"
+          }
+        ],
+        "conditions": [
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::1a856786667d393838b9",
+            "kind": "precondition",
+            "phase": "entry",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "relation_absent",
+              "subject": {
+                "kind": "actor",
+                "ref": "ActingRobot"
+              },
+              "relation_ref": "holding"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "EmptyGripperCondition"
+              ]
+            }
+          },
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::7ae671b328a16789084f",
+            "kind": "precondition",
+            "phase": "entry",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "relation",
+              "subject": {
+                "kind": "actor",
+                "ref": "ActingRobot"
+              },
+              "relation_ref": "near",
+              "operator": "eq",
+              "object": {
+                "kind": "slot",
+                "ref": "RetrieveContainerSkillSlot"
+              }
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "RetrieveAccessCondition"
+              ]
+            }
+          },
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::068d99e94cf48142a13c",
+            "kind": "role_constraint",
+            "phase": "entry",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "affordance",
+              "subject": {
+                "kind": "slot",
+                "ref": "GraspTargetSkillSlot"
+              },
+              "affordance_ref": "GraspableAffordance"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "GraspTargetSkillSlot",
+                "GraspableAffordance"
+              ]
+            }
+          },
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::5ff6962e3062b17657cd",
+            "kind": "role_constraint",
+            "phase": "entry",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "type",
+              "subject": {
+                "kind": "slot",
+                "ref": "GraspTargetSkillSlot"
+              },
+              "class_ref": "Object"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "GraspTargetSkillSlot",
+                "Object"
+              ]
+            }
+          },
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::783e526df11894fd6add",
+            "kind": "precondition",
+            "phase": "entry",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "relation",
+              "subject": {
+                "kind": "slot",
+                "ref": "GraspTargetSkillSlot"
+              },
+              "relation_ref": "insideContainer",
+              "operator": "eq",
+              "object": {
+                "kind": "slot",
+                "ref": "RetrieveContainerSkillSlot"
+              }
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "RetrieveInsideCondition"
+              ]
+            }
+          },
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::14c85c30e4220ffd5045",
+            "kind": "expected_effect",
+            "phase": "after_success",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "effect",
+              "subject": {
+                "kind": "slot",
+                "ref": "GraspTargetSkillSlot"
+              },
+              "effect_ref": "RetrieveRelationEffect"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "RetrieveRelationEffect"
+              ]
+            }
+          },
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::63eeab6e0fc8286f00c2",
+            "kind": "expected_effect",
+            "phase": "after_success",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "effect",
+              "subject": {
+                "kind": "slot",
+                "ref": "GraspTargetSkillSlot"
+              },
+              "effect_ref": "AcquireHoldingEffect"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "AcquireHoldingEffect"
+              ]
+            }
+          },
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::59f14c60bc4d02f655b3",
+            "kind": "role_constraint",
+            "phase": "entry",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "type",
+              "subject": {
+                "kind": "slot",
+                "ref": "RetrieveContainerSkillSlot"
+              },
+              "class_ref": "Container"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "Container",
+                "RetrieveContainerSkillSlot"
+              ]
+            }
+          },
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::9d0968ebb143031cd071",
+            "kind": "role_constraint",
+            "phase": "entry",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "affordance",
+              "subject": {
+                "kind": "slot",
+                "ref": "RetrieveContainerSkillSlot"
+              },
+              "affordance_ref": "OpenableAffordance"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "OpenableAffordance",
+                "RetrieveContainerSkillSlot"
+              ]
+            }
+          }
+        ],
+        "source_refs": [
+          "AcquireObjectSkill",
+          "ManipulationSkill",
+          "RetrieveObjectFromContainerSkill",
+          "Skill"
+        ],
+        "observation_refs": [],
+        "method_selection_required": false,
+        "implementation_gaps": []
+      },
+      "SearchObjectInContainerSkill": {
+        "schema_version": "skill_semantic_contract.v2.3",
+        "skill_ref": "SearchObjectInContainerSkill",
+        "ontology_revision": "sha256:d2baec79a4c8aaabf174504c49583fec25934e338262715dfe802413ac922a44",
+        "invocation_context": null,
+        "parent_refs": [
+          "PerceptionSkill"
+        ],
+        "intent_entry": {
+          "enabled": true,
+          "name": "在容器中搜索对象",
+          "meaning": "在指定容器中搜索对象。"
+        },
+        "role_slots": [
+          {
+            "slot_ref": "SearchContainerOutputSkillSlot",
+            "role_ref": "DiscoveredObjectRole",
+            "label": "容器内发现对象",
+            "channel_ref": "PrimaryPatientChannel",
+            "language_roles": [
+              "patient"
+            ],
+            "binding_mode": "query_output",
+            "collection_consumption": [],
+            "min_count": 1,
+            "max_count": 1,
+            "declared_by": "SearchObjectInContainerSkill"
+          },
+          {
+            "slot_ref": "SearchContainerSkillSlot",
+            "role_ref": "SearchContainerRole",
+            "label": "被搜索容器",
+            "channel_ref": "SourceChannel",
+            "language_roles": [
+              "source"
+            ],
+            "binding_mode": "input",
+            "collection_consumption": [],
+            "min_count": 1,
+            "max_count": 1,
+            "declared_by": "SearchObjectInContainerSkill"
+          }
+        ],
+        "result_ports": [],
+        "conditions": [
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::cd59b565b38893af614b",
+            "kind": "precondition",
+            "phase": "entry",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "relation",
+              "subject": {
+                "kind": "actor",
+                "ref": "ActingRobot"
+              },
+              "relation_ref": "near",
+              "operator": "eq",
+              "object": {
+                "kind": "slot",
+                "ref": "SearchContainerSkillSlot"
+              }
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "SearchContainerAccessCondition"
+              ]
+            }
+          },
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::e3b42dcd9164390532fe",
+            "kind": "role_constraint",
+            "phase": "entry",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "type",
+              "subject": {
+                "kind": "slot",
+                "ref": "SearchContainerOutputSkillSlot"
+              },
+              "class_ref": "Object"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "Object",
+                "SearchContainerOutputSkillSlot"
+              ]
+            }
+          },
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::90ee56ca42452b3fe8dd",
+            "kind": "role_constraint",
+            "phase": "entry",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "type",
+              "subject": {
+                "kind": "slot",
+                "ref": "SearchContainerSkillSlot"
+              },
+              "class_ref": "Container"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "Container",
+                "SearchContainerSkillSlot"
+              ]
+            }
+          },
+          {
+            "schema_version": "skill_condition.v2.3",
+            "condition_id": "condition::f334fb062d65e1f8c52f",
+            "kind": "role_constraint",
+            "phase": "entry",
+            "invocation_ref": null,
+            "expression": {
+              "kind": "affordance",
+              "subject": {
+                "kind": "slot",
+                "ref": "SearchContainerSkillSlot"
+              },
+              "affordance_ref": "OpenableAffordance"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "OpenableAffordance",
+                "SearchContainerSkillSlot"
+              ]
+            }
+          }
+        ],
+        "source_refs": [
+          "PerceptionSkill",
+          "SearchObjectInContainerSkill",
+          "Skill"
+        ],
+        "observation_refs": [
+          "ContainerSearchObservation"
+        ],
+        "method_selection_required": false,
+        "implementation_gaps": []
+      }
+    },
+    "terms": {
+      "AcquireHoldingEffect": {
+        "labels": [],
+        "effect_definition": {
+          "adds_state_refs": [],
+          "retracts_state_refs": [],
+          "relation_updates": [
+            {
+              "source_ref": "GraspHoldingUpdate",
+              "kind": "relation",
+              "subject": {
+                "kind": "actor",
+                "ref": "ActingRobot"
+              },
+              "relation_ref": "holding",
+              "operator": "add",
+              "object": {
+                "kind": "slot",
+                "ref": "GraspTargetSkillSlot"
+              }
+            }
+          ]
+        },
+        "facts": [
+          {
+            "predicate": "subClassOf",
+            "object_ref": "SkillEffect"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "AcquireObjectSkill": {
+        "labels": [
+          "取物并持有"
+        ],
+        "facts": [
+          {
+            "predicate": "subClassOf",
+            "object_ref": "ManipulationSkill"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "ActingRobot": {
+        "labels": [
+          "当前技能调用的机器人"
+        ],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "RobotSelf"
+          }
+        ]
+      },
+      "Affordance": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "Container": {
+        "labels": [
+          "容器"
+        ],
+        "facts": [
+          {
+            "predicate": "subClassOf",
+            "object_ref": "Object"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "ContainerSearchObservation": {
+        "labels": [],
+        "observation_definition": {
+          "subject_slot_refs": [
+            "SearchContainerOutputSkillSlot"
+          ],
+          "scope": "requested_qualification_inside_bound_container",
+          "result_type_refs": [
+            "FactAssertion"
+          ],
+          "truth_source": "observation_evidence_required"
+        },
+        "facts": [
+          {
+            "predicate": "range",
+            "object_ref": "FactAssertion"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "ObservationContract"
+          }
+        ]
+      },
+      "Cup": {
+        "labels": [
+          "杯子"
+        ],
+        "facts": [
+          {
+            "literal": "杯",
+            "datatype": null,
+            "predicate": "lexicalAlias"
+          },
+          {
+            "predicate": "subClassOf",
+            "object_ref": "Container"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "DestinationChannel": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "ParticipantChannel"
+          }
+        ]
+      },
+      "DiscoveredObjectRole": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "ParticipantRole"
+          }
+        ]
+      },
+      "EmptyGripperCondition": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "RelationCondition"
+          }
+        ]
+      },
+      "EntitySearchObservation": {
+        "labels": [],
+        "observation_definition": {
+          "subject_slot_refs": [
+            "SearchEntityOutputSkillSlot"
+          ],
+          "scope": "requested_qualification_in_search_scope",
+          "result_type_refs": [
+            "FactAssertion"
+          ],
+          "truth_source": "observation_evidence_required"
+        },
+        "facts": [
+          {
+            "predicate": "range",
+            "object_ref": "FactAssertion"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "ObservationContract"
+          }
+        ]
+      },
+      "EstimateObjectPoseSkill": {
+        "labels": [
+          "估计对象位姿"
+        ],
+        "facts": [
+          {
+            "predicate": "subClassOf",
+            "object_ref": "PerceptionSkill"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "EstimatePoseTargetSkillSlot": {
+        "labels": [
+          "被估计位姿对象"
+        ],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "SkillParticipantSlot"
+          }
+        ]
+      },
+      "FactAssertion": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "subClassOf",
+            "object_ref": "RuntimeRecord"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "FreeSpaceState": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "subClassOf",
+            "object_ref": "State"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "GraspAccessCondition": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "RelationCondition"
+          }
+        ]
+      },
+      "GraspContainerDiscoverySwitch": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "MethodSwitchRule"
+          }
+        ]
+      },
+      "GraspObjectSkill": {
+        "labels": [
+          "抓取对象"
+        ],
+        "facts": [
+          {
+            "predicate": "subClassOf",
+            "object_ref": "AcquireObjectSkill"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "GraspRelationEffect": {
+        "labels": [],
+        "effect_definition": {
+          "adds_state_refs": [],
+          "retracts_state_refs": [],
+          "relation_updates": [
+            {
+              "source_ref": "GraspSourceUpdate",
+              "kind": "relation",
+              "subject": {
+                "kind": "slot",
+                "ref": "GraspTargetSkillSlot"
+              },
+              "relation_ref": "locatedOn",
+              "operator": "remove",
+              "object": {
+                "kind": "slot",
+                "ref": "GraspSourceSkillSlot"
+              }
+            }
+          ]
+        },
+        "facts": [
+          {
+            "predicate": "subClassOf",
+            "object_ref": "SkillEffect"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "GraspSourceCondition": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "RelationCondition"
+          }
+        ]
+      },
+      "GraspSourceRole": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "ParticipantRole"
+          }
+        ]
+      },
+      "GraspSourceSkillSlot": {
+        "labels": [
+          "抓取来源平面"
+        ],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "SkillParticipantSlot"
+          }
+        ]
+      },
+      "GraspTargetSkillSlot": {
+        "labels": [
+          "被抓取对象"
+        ],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "SkillParticipantSlot"
+          }
+        ]
+      },
+      "GraspableAffordance": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "subClassOf",
+            "object_ref": "Affordance"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "GraspedObjectRole": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "ParticipantRole"
+          }
+        ]
+      },
+      "GraspedResult": {
+        "labels": [
+          "被持有的同一对象"
+        ],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "SkillResultSlot"
+          }
+        ]
+      },
+      "InspectObjectStateSkill": {
+        "labels": [
+          "探查对象状态"
+        ],
+        "facts": [
+          {
+            "predicate": "subClassOf",
+            "object_ref": "PerceptionSkill"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "InspectStateAccessCondition": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "RelationCondition"
+          }
+        ]
+      },
+      "InspectStateTargetSkillSlot": {
+        "labels": [
+          "被探查对象"
+        ],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "SkillParticipantSlot"
+          }
+        ]
+      },
+      "ManipulationSkill": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "subClassOf",
+            "object_ref": "Skill"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "MethodSwitchRule": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "NavigateTargetSkillSlot": {
+        "labels": [
+          "导航目标"
+        ],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "SkillParticipantSlot"
+          }
+        ]
+      },
+      "NavigateToSkill": {
+        "labels": [
+          "导航到目标附近"
+        ],
+        "facts": [
+          {
+            "predicate": "subClassOf",
+            "object_ref": "NavigationSkill"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "NavigationNearEffect": {
+        "labels": [],
+        "effect_definition": {
+          "adds_state_refs": [],
+          "retracts_state_refs": [],
+          "relation_updates": [
+            {
+              "source_ref": "NavigationNearUpdate",
+              "kind": "relation",
+              "subject": {
+                "kind": "actor",
+                "ref": "ActingRobot"
+              },
+              "relation_ref": "near",
+              "operator": "add",
+              "object": {
+                "kind": "slot",
+                "ref": "NavigateTargetSkillSlot"
+              }
+            }
+          ]
+        },
+        "facts": [
+          {
+            "predicate": "subClassOf",
+            "object_ref": "SkillEffect"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "NavigationSkill": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "subClassOf",
+            "object_ref": "Skill"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "NavigationTargetRole": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "ParticipantRole"
+          }
+        ]
+      },
+      "NoFreeSpaceState": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "subClassOf",
+            "object_ref": "State"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "Object": {
+        "labels": [
+          "物体"
+        ],
+        "facts": [
+          {
+            "predicate": "subClassOf",
+            "object_ref": "WorldEntity"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "ObjectPoseObservation": {
+        "labels": [],
+        "observation_definition": {
+          "subject_slot_refs": [
+            "EstimatePoseTargetSkillSlot"
+          ],
+          "scope": "pose_of_bound_object",
+          "result_type_refs": [
+            "FactAssertion"
+          ],
+          "truth_source": "observation_evidence_required"
+        },
+        "facts": [
+          {
+            "predicate": "range",
+            "object_ref": "FactAssertion"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "ObservationContract"
+          }
+        ]
+      },
+      "ObjectStateObservation": {
+        "labels": [],
+        "observation_definition": {
+          "subject_slot_refs": [
+            "InspectStateTargetSkillSlot"
+          ],
+          "scope": "requested_state_of_bound_object",
+          "result_type_refs": [
+            "FactAssertion"
+          ],
+          "truth_source": "observation_evidence_required"
+        },
+        "facts": [
+          {
+            "predicate": "range",
+            "object_ref": "FactAssertion"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "ObservationContract"
+          }
+        ]
+      },
+      "ObservationContract": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "ObservedObjectRole": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "ParticipantRole"
+          }
+        ]
+      },
+      "OpenableAffordance": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "subClassOf",
+            "object_ref": "Affordance"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "ParticipantChannel": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "ParticipantRole": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "ParticipantSlot": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "PerceptionSkill": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "subClassOf",
+            "object_ref": "Skill"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "PlaceAccessCondition": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "RelationCondition"
+          }
+        ]
+      },
+      "PlaceDestinationSkillSlot": {
+        "labels": [
+          "放置目的位置"
+        ],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "SkillParticipantSlot"
+          }
+        ]
+      },
+      "PlaceHeldObjectCondition": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "RelationCondition"
+          }
+        ]
+      },
+      "PlaceObjectSkill": {
+        "labels": [
+          "放置对象"
+        ],
+        "facts": [
+          {
+            "predicate": "subClassOf",
+            "object_ref": "ManipulationSkill"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "PlaceObjectTargetSkillSlot": {
+        "labels": [
+          "被放置对象"
+        ],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "SkillParticipantSlot"
+          }
+        ]
+      },
+      "PlaceOnSurfaceSkill": {
+        "labels": [
+          "放到平面上"
+        ],
+        "facts": [
+          {
+            "predicate": "subClassOf",
+            "object_ref": "PlaceObjectSkill"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "PlacedObjectRole": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "ParticipantRole"
+          }
+        ]
+      },
+      "PlacedResult": {
+        "labels": [
+          "位置变化后的同一对象"
+        ],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "SkillResultSlot"
+          }
+        ]
+      },
+      "PlacedResultRole": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "ParticipantRole"
+          }
+        ]
+      },
+      "PlacementDestinationRole": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "ParticipantRole"
+          }
+        ]
+      },
+      "PlacementOnEffect": {
+        "labels": [],
+        "effect_definition": {
+          "adds_state_refs": [],
+          "retracts_state_refs": [],
+          "relation_updates": [
+            {
+              "source_ref": "PlacementOnUpdate",
+              "kind": "relation",
+              "subject": {
+                "kind": "slot",
+                "ref": "PlaceObjectTargetSkillSlot"
+              },
+              "relation_ref": "locatedOn",
+              "operator": "add",
+              "object": {
+                "kind": "slot",
+                "ref": "PlaceDestinationSkillSlot"
+              }
+            }
+          ]
+        },
+        "facts": [
+          {
+            "predicate": "subClassOf",
+            "object_ref": "SkillEffect"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "PlacementReleaseEffect": {
+        "labels": [],
+        "effect_definition": {
+          "adds_state_refs": [],
+          "retracts_state_refs": [],
+          "relation_updates": [
+            {
+              "source_ref": "PlacementHoldingUpdate",
+              "kind": "relation",
+              "subject": {
+                "kind": "actor",
+                "ref": "ActingRobot"
+              },
+              "relation_ref": "holding",
+              "operator": "clear",
+              "object": null
+            }
+          ]
+        },
+        "facts": [
+          {
+            "predicate": "subClassOf",
+            "object_ref": "SkillEffect"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "PlacementSurfaceCondition": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "subClassOf",
+            "object_ref": "SkillCondition"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "PrimaryPatientChannel": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "ParticipantChannel"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "NamedIndividual"
+          }
+        ]
+      },
+      "RelationCondition": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "RetrievalContainerRole": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "ParticipantRole"
+          }
+        ]
+      },
+      "RetrieveAccessCondition": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "RelationCondition"
+          }
+        ]
+      },
+      "RetrieveContainerSkillSlot": {
+        "labels": [
+          "取出来源容器"
+        ],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "SkillParticipantSlot"
+          }
+        ]
+      },
+      "RetrieveInsideCondition": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "RelationCondition"
+          }
+        ]
+      },
+      "RetrieveObjectFromContainerSkill": {
+        "labels": [
+          "从容器取出对象"
+        ],
+        "facts": [
+          {
+            "predicate": "subClassOf",
+            "object_ref": "AcquireObjectSkill"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "RetrieveRelationEffect": {
+        "labels": [],
+        "effect_definition": {
+          "adds_state_refs": [],
+          "retracts_state_refs": [],
+          "relation_updates": [
+            {
+              "source_ref": "RetrieveInsideUpdate",
+              "kind": "relation",
+              "subject": {
+                "kind": "slot",
+                "ref": "GraspTargetSkillSlot"
+              },
+              "relation_ref": "insideContainer",
+              "operator": "remove",
+              "object": {
+                "kind": "slot",
+                "ref": "RetrieveContainerSkillSlot"
+              }
+            }
+          ]
+        },
+        "facts": [
+          {
+            "predicate": "subClassOf",
+            "object_ref": "SkillEffect"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "Robot": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "subClassOf",
+            "object_ref": "WorldEntity"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "RobotSelf": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "subClassOf",
+            "object_ref": "Robot"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "RuntimeRecord": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "SearchContainerAccessCondition": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "RelationCondition"
+          }
+        ]
+      },
+      "SearchContainerOutputSkillSlot": {
+        "labels": [
+          "容器内发现对象"
+        ],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "SkillParticipantSlot"
+          }
+        ]
+      },
+      "SearchContainerRole": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "ParticipantRole"
+          }
+        ]
+      },
+      "SearchContainerSkillSlot": {
+        "labels": [
+          "被搜索容器"
+        ],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "SkillParticipantSlot"
+          }
+        ]
+      },
+      "SearchEntityOutputSkillSlot": {
+        "labels": [
+          "搜索发现对象"
+        ],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "SkillParticipantSlot"
+          }
+        ]
+      },
+      "SearchEntitySkill": {
+        "labels": [
+          "搜索符合条件的对象"
+        ],
+        "facts": [
+          {
+            "predicate": "subClassOf",
+            "object_ref": "PerceptionSkill"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "SearchObjectInContainerSkill": {
+        "labels": [
+          "在容器中搜索对象"
+        ],
+        "facts": [
+          {
+            "predicate": "subClassOf",
+            "object_ref": "PerceptionSkill"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "Skill": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "SkillCondition": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "SkillEffect": {
+        "labels": [],
+        "effect_definition": {
+          "adds_state_refs": [],
+          "retracts_state_refs": []
+        },
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "SkillParticipantSlot": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "subClassOf",
+            "object_ref": "ParticipantSlot"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "SkillResultSlot": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "subClassOf",
+            "object_ref": "SkillParticipantSlot"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "SourceChannel": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "ParticipantChannel"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "NamedIndividual"
+          }
+        ]
+      },
+      "State": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "SupportSurface": {
+        "labels": [
+          "支撑面"
+        ],
+        "equivalent_definitions": [
+          {
+            "kind": "all_of",
+            "operands": [
+              {
+                "kind": "class",
+                "class_ref": "Surface"
+              },
+              {
+                "kind": "some",
+                "property_ref": "hasAffordance",
+                "class_ref": "SupportSurfaceAffordance"
+              }
+            ]
+          }
+        ],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "SupportSurfaceAffordance": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "subClassOf",
+            "object_ref": "Affordance"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "Surface": {
+        "labels": [
+          "表面"
+        ],
+        "facts": [
+          {
+            "predicate": "subClassOf",
+            "object_ref": "Object"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "SurfaceRegion": {
+        "labels": [
+          "桌面区域"
+        ],
+        "facts": [
+          {
+            "literal": "区域",
+            "datatype": null,
+            "predicate": "lexicalAlias"
+          },
+          {
+            "literal": "放置区域",
+            "datatype": null,
+            "predicate": "lexicalAlias"
+          },
+          {
+            "predicate": "subClassOf",
+            "object_ref": "SupportSurface"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "Table": {
+        "labels": [
+          "桌子"
+        ],
+        "facts": [
+          {
+            "literal": "桌",
+            "datatype": null,
+            "predicate": "lexicalAlias"
+          },
+          {
+            "literal": "桌面",
+            "datatype": null,
+            "predicate": "lexicalAlias"
+          },
+          {
+            "predicate": "subClassOf",
+            "object_ref": "WorkspaceSurface"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "WorkspaceSurface": {
+        "labels": [
+          "工作平面"
+        ],
+        "facts": [
+          {
+            "predicate": "subClassOf",
+            "object_ref": "SupportSurface"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "WorldEntity": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "type",
+            "object_ref": "Class"
+          }
+        ]
+      },
+      "hasAffordance": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "range",
+            "object_ref": "Affordance"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "ObjectProperty"
+          }
+        ]
+      },
+      "holding": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "range",
+            "object_ref": "Object"
+          },
+          {
+            "predicate": "domain",
+            "object_ref": "RobotSelf"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "ObjectProperty"
+          }
+        ]
+      },
+      "insideContainer": {
+        "labels": [
+          "位于容器内部"
+        ],
+        "facts": [
+          {
+            "literal": "inside",
+            "datatype": null,
+            "predicate": "lexicalAlias"
+          },
+          {
+            "predicate": "range",
+            "object_ref": "Container"
+          },
+          {
+            "predicate": "domain",
+            "object_ref": "Object"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "ObjectProperty"
+          }
+        ]
+      },
+      "locatedOn": {
+        "labels": [
+          "位于表面上"
+        ],
+        "facts": [
+          {
+            "literal": "on",
+            "datatype": null,
+            "predicate": "lexicalAlias"
+          },
+          {
+            "predicate": "domain",
+            "object_ref": "Object"
+          },
+          {
+            "predicate": "range",
+            "object_ref": "Surface"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "ObjectProperty"
+          }
+        ]
+      },
+      "near": {
+        "labels": [],
+        "facts": [
+          {
+            "predicate": "domain",
+            "object_ref": "RobotSelf"
+          },
+          {
+            "predicate": "range",
+            "object_ref": "WorldEntity"
+          },
+          {
+            "predicate": "subPropertyOf",
+            "object_ref": "spatiallyNear"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "ObjectProperty"
+          }
+        ]
+      },
+      "observedColor": {
+        "labels": [
+          "颜色"
+        ],
+        "facts": [
+          {
+            "predicate": "domain",
+            "object_ref": "Object"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "DatatypeProperty"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "FunctionalProperty"
+          }
+        ],
+        "scene_field_paths": [
+          "states.color"
+        ],
+        "allowed_literal_values": [
+          "红色",
+          "橙色",
+          "黄色",
+          "绿色",
+          "黑色",
+          "白色"
+        ]
+      },
+      "sceneName": {
+        "labels": [
+          "名称"
+        ],
+        "facts": [
+          {
+            "literal": "名字",
+            "datatype": null,
+            "predicate": "lexicalAlias"
+          },
+          {
+            "literal": "标识",
+            "datatype": null,
+            "predicate": "lexicalAlias"
+          },
+          {
+            "literal": "编号",
+            "datatype": null,
+            "predicate": "lexicalAlias"
+          },
+          {
+            "predicate": "domain",
+            "object_ref": "Object"
+          },
+          {
+            "predicate": "range",
+            "object_ref": "string"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "DatatypeProperty"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "FunctionalProperty"
+          }
+        ],
+        "scene_field_paths": [
+          "label"
+        ]
+      },
+      "spatiallyNear": {
+        "labels": [
+          "空间邻近"
+        ],
+        "facts": [
+          {
+            "literal": "near",
+            "datatype": null,
+            "predicate": "lexicalAlias"
+          },
+          {
+            "predicate": "domain",
+            "object_ref": "WorldEntity"
+          },
+          {
+            "predicate": "range",
+            "object_ref": "WorldEntity"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "ObjectProperty"
+          },
+          {
+            "predicate": "type",
+            "object_ref": "SymmetricProperty"
+          }
+        ]
+      }
+    },
+    "acquire_method_rules": {
+      "preference": {
+        "source_ref": "AcquireObjectSkill",
+        "method_ref": "GraspObjectSkill"
+      },
+      "switches": [
+        {
+          "rule_ref": "GraspContainerDiscoverySwitch",
+          "source_method_ref": "GraspObjectSkill",
+          "target_method_ref": "RetrieveObjectFromContainerSkill",
+          "condition_source_ref": "RetrieveInsideCondition",
+          "condition_ref": "condition::783e526df11894fd6add",
+          "expression": {
+            "kind": "relation",
+            "subject": {
+              "kind": "slot",
+              "ref": "GraspTargetSkillSlot"
+            },
+            "relation_ref": "insideContainer",
+            "operator": "eq",
+            "object": {
+              "kind": "slot",
+              "ref": "RetrieveContainerSkillSlot"
+            }
+          },
+          "subject_slot_ref": "GraspTargetSkillSlot",
+          "discovered_slot_ref": "RetrieveContainerSkillSlot",
+          "discovered_type_refs": [
+            "Container"
+          ],
+          "on_true": "defer_then_bind_discovered_role",
+          "on_unknown": "stop_before_method",
+          "on_false": "continue_subject_to_original_guards"
+        }
+      ]
+    }
+  },
+  "implementation_reference": {
+    "source_path": "data/skills/skill_implementations.yaml",
+    "read_only_projection": true,
+    "meaning": "现有 Registry 的参数、资源、实现内部展开及完成检查；与本体语义分开保留。",
+    "templates_without_ontology_class_are_internal_only": true,
+    "templates": {
+      "active_search_object": {
+        "ontology_class": "SearchEntitySkill",
+        "execution_template": "active_search_object",
+        "implementation_kind": "internal_execution_graph",
+        "required_capabilities": [
+          "PerceptionCapability"
+        ],
+        "parameters": {
+          "target": "SearchTargetSpec",
+          "target_type": "ObjectClass",
+          "search_area": "Location | SceneRegion",
+          "discovered_object": "Object"
+        },
+        "participant_slots": [
+          {
+            "ontology_slot": "SearchEntityOutputSkillSlot",
+            "parameter": "discovered_object",
+            "direction": "output",
+            "binding_policy": "runtime_discovery"
+          }
+        ],
+        "preconditions": [
+          {
+            "condition_id": "robot_at_search_area",
+            "kind": "spatial",
+            "object_parameter": "search_area",
+            "required_component": "access",
+            "interaction_mode": "perception_search"
+          }
+        ],
+        "completion_conditions": [
+          {
+            "condition_id": "search_has_observation_outcome",
+            "kind": "execution_result",
+            "result_key": "search_outcome",
+            "operator": "known"
+          }
+        ],
+        "expansion": [
+          {
+            "action": "scan_area"
+          },
+          {
+            "action": "detect_object"
+          }
+        ]
+      },
+      "close_by_handle": {
+        "planner_visible": false,
+        "execution_template": "close_by_handle",
+        "implementation_kind": "internal_execution_graph",
+        "parameters": {
+          "target": "OpenableObject",
+          "handle": "Handle"
+        },
+        "participant_slots": [
+          {
+            "slot_id": "closeable_target",
+            "parameter": "target"
+          },
+          {
+            "slot_id": "close_handle",
+            "parameter": "handle",
+            "requires_parent_binding": false
+          }
+        ],
+        "expansion": [
+          {
+            "action": "plan_motion"
+          },
+          {
+            "action": "execute_motion"
+          },
+          {
+            "action": "set_gripper"
+          }
+        ]
+      },
+      "estimate_object_pose": {
+        "ontology_class": "EstimateObjectPoseSkill",
+        "execution_template": "estimate_object_pose",
+        "implementation_kind": "internal_execution_graph",
+        "required_capabilities": [
+          "PerceptionCapability",
+          "PoseEstimationCapability"
+        ],
+        "parameters": {
+          "target": "Object | ObjectPart"
+        },
+        "participant_slots": [
+          {
+            "ontology_slot": "EstimatePoseTargetSkillSlot",
+            "parameter": "target"
+          }
+        ],
+        "preconditions": [
+          {
+            "condition_id": "pose_target_known",
+            "kind": "entity",
+            "object_parameter": "target",
+            "operator": "known"
+          },
+          {
+            "condition_id": "robot_at_pose_observation_target",
+            "kind": "spatial",
+            "object_parameter": "target",
+            "required_component": "access",
+            "interaction_mode": "manipulation"
+          }
+        ],
+        "effects": [
+          {
+            "kind": "spatial_knowledge",
+            "object_parameter": "target",
+            "component": "position"
+          },
+          {
+            "kind": "spatial_knowledge",
+            "object_parameter": "target",
+            "component": "orientation"
+          }
+        ],
+        "completion_conditions": [
+          {
+            "condition_id": "target_pose_known",
+            "kind": "spatial",
+            "object_parameter": "target",
+            "required_component": "pose"
+          }
+        ],
+        "expansion": [
+          {
+            "action": "estimate_pose"
+          }
+        ]
+      },
+      "grasp_object": {
+        "ontology_class": "GraspObjectSkill",
+        "execution_template": "grasp_object",
+        "implementation_kind": "internal_execution_graph",
+        "required_capabilities": [
+          "ManipulationCapability",
+          "PerceptionCapability",
+          "PoseEstimationCapability"
+        ],
+        "parameters": {
+          "target": "GraspableObject",
+          "source": "Surface",
+          "gripper": "EndEffector"
+        },
+        "participant_slots": [
+          {
+            "ontology_slot": "GraspTargetSkillSlot",
+            "parameter": "target"
+          },
+          {
+            "ontology_slot": "GraspSourceSkillSlot",
+            "parameter": "source",
+            "requires_parent_binding": false
+          }
+        ],
+        "resource_requirements": [
+          {
+            "slot": "arm",
+            "resource_type": "Arm"
+          },
+          {
+            "slot": "gripper",
+            "resource_type": "Gripper",
+            "requires_free": true
+          }
+        ],
+        "ontology_preconditions_refs": [
+          "EmptyGripperCondition",
+          "GraspSourceCondition"
+        ],
+        "preconditions": [
+          {
+            "condition_id": "robot_at_grasp_target",
+            "kind": "spatial",
+            "object_parameter": "target",
+            "required_component": "access",
+            "interaction_mode": "manipulation"
+          }
+        ],
+        "ontology_effect_refs": [
+          "AcquireHoldingEffect",
+          "GraspRelationEffect"
+        ],
+        "completion_conditions": [
+          {
+            "condition_id": "robot_holds_grasp_target",
+            "kind": "relation",
+            "subject": "RobotSelf",
+            "relation": "holding",
+            "object_parameter": "target",
+            "operator": "equals"
+          }
+        ],
+        "expansion": [
+          {
+            "skill": "estimate_object_pose",
+            "bindings": {
+              "target": "$slot.GraspTargetSkillSlot"
+            }
+          },
+          {
+            "action": "generate_grasp_pose"
+          },
+          {
+            "action": "plan_motion"
+          },
+          {
+            "action": "execute_motion"
+          },
+          {
+            "action": "set_gripper"
+          }
+        ]
+      },
+      "inspect_object_state": {
+        "ontology_class": "InspectObjectStateSkill",
+        "execution_template": "inspect_object_state",
+        "implementation_kind": "internal_execution_graph",
+        "required_capabilities": [
+          "PerceptionCapability"
+        ],
+        "parameters": {
+          "target": "Object",
+          "state_key": "StateKey"
+        },
+        "participant_slots": [
+          {
+            "ontology_slot": "InspectStateTargetSkillSlot",
+            "parameter": "target"
+          }
+        ],
+        "preconditions": [
+          {
+            "condition_id": "inspection_target_known",
+            "kind": "entity",
+            "object_parameter": "target",
+            "operator": "known"
+          },
+          {
+            "condition_id": "robot_at_inspection_target",
+            "kind": "spatial",
+            "object_parameter": "target",
+            "required_component": "access",
+            "interaction_mode": "state_inspection"
+          }
+        ],
+        "completion_conditions": [
+          {
+            "condition_id": "requested_state_observed",
+            "kind": "state",
+            "object_parameter": "target",
+            "state_key_parameter": "state_key",
+            "operator": "known"
+          }
+        ],
+        "expansion": [
+          {
+            "action": "inspect_state"
+          },
+          {
+            "action": "update_belief"
+          }
+        ]
+      },
+      "navigate_to": {
+        "ontology_class": "NavigateToSkill",
+        "execution_template": "navigate_to",
+        "implementation_kind": "internal_execution_graph",
+        "required_capabilities": [
+          "NavigationCapability"
+        ],
+        "parameters": {
+          "target": "Location | Object | SceneRegion",
+          "interaction_mode": "InteractionMode",
+          "tolerance": "Distance"
+        },
+        "participant_slots": [
+          {
+            "ontology_slot": "NavigateTargetSkillSlot",
+            "parameter": "target"
+          }
+        ],
+        "preconditions": [
+          {
+            "condition_id": "navigation_target_position_known",
+            "kind": "spatial",
+            "object_parameter": "target",
+            "required_component": "position"
+          }
+        ],
+        "ontology_effect_refs": [
+          "NavigationNearEffect"
+        ],
+        "completion_conditions": [
+          {
+            "condition_id": "robot_near_navigation_target",
+            "kind": "relation",
+            "subject": "RobotSelf",
+            "relation": "near",
+            "object_parameter": "target",
+            "operator": "equals"
+          }
+        ],
+        "expansion": [
+          {
+            "action": "localize_robot"
+          },
+          {
+            "action": "navigate_to"
+          },
+          {
+            "action": "inspect_state"
+          }
+        ]
+      },
+      "open_by_handle": {
+        "planner_visible": false,
+        "execution_template": "open_by_handle",
+        "implementation_kind": "internal_execution_graph",
+        "parameters": {
+          "target": "OpenableObject",
+          "handle": "Handle"
+        },
+        "participant_slots": [
+          {
+            "slot_id": "openable_target",
+            "parameter": "target"
+          },
+          {
+            "slot_id": "open_handle",
+            "parameter": "handle",
+            "requires_parent_binding": false
+          }
+        ],
+        "expansion": [
+          {
+            "action": "plan_motion"
+          },
+          {
+            "action": "execute_motion"
+          },
+          {
+            "action": "set_gripper"
+          }
+        ]
+      },
+      "place_object": {
+        "ontology_class": "PlaceObjectSkill",
+        "ontology_contract_class": "PlaceOnSurfaceSkill",
+        "execution_template": "place_object",
+        "implementation_kind": "internal_execution_graph",
+        "required_capabilities": [
+          "ManipulationCapability"
+        ],
+        "parameters": {
+          "target": "Object",
+          "location": "Surface",
+          "place_pose": "Pose"
+        },
+        "participant_slots": [
+          {
+            "ontology_slot": "PlaceObjectTargetSkillSlot",
+            "parameter": "target"
+          },
+          {
+            "ontology_slot": "PlaceDestinationSkillSlot",
+            "parameter": "location"
+          }
+        ],
+        "resource_requirements": [
+          {
+            "slot": "arm",
+            "resource_type": "Arm"
+          },
+          {
+            "slot": "gripper",
+            "resource_type": "Gripper",
+            "occupied_by_parameter": "target"
+          }
+        ],
+        "ontology_preconditions_refs": [
+          "PlaceHeldObjectCondition"
+        ],
+        "preconditions": [
+          {
+            "condition_id": "destination_has_free_space",
+            "kind": "state",
+            "object_parameter": "location",
+            "state_key": "has_free_space",
+            "value": true,
+            "operator": "equals"
+          },
+          {
+            "condition_id": "robot_at_place_destination",
+            "kind": "spatial",
+            "object_parameter": "location",
+            "required_component": "access",
+            "interaction_mode": "placement"
+          }
+        ],
+        "ontology_effect_refs": [
+          "PlacementReleaseEffect",
+          "PlacementOnEffect"
+        ],
+        "completion_conditions": [
+          {
+            "condition_id": "placed_target_on_destination",
+            "kind": "relation",
+            "subject_parameter": "target",
+            "relation": "locatedOn",
+            "object_parameter": "location",
+            "operator": "equals"
+          },
+          {
+            "condition_id": "gripper_released_after_place",
+            "kind": "relation",
+            "subject": "RobotSelf",
+            "relation": "holding",
+            "object": null,
+            "operator": "equals"
+          }
+        ],
+        "expansion": [
+          {
+            "action": "generate_place_pose"
+          },
+          {
+            "action": "plan_motion"
+          },
+          {
+            "action": "execute_motion"
+          },
+          {
+            "action": "set_gripper"
+          },
+          {
+            "action": "update_relation"
+          }
+        ]
+      },
+      "resolve_affordance": {
+        "planner_visible": false,
+        "execution_template": "resolve_affordance",
+        "implementation_kind": "service_adapter",
+        "parameters": {
+          "target": "Object | ObjectPart",
+          "object_type": "ObjectClass"
+        },
+        "participant_slots": [
+          {
+            "slot_id": "affordance_target",
+            "parameter": "target"
+          }
+        ]
+      },
+      "retrieve_object_from_container": {
+        "ontology_class": "RetrieveObjectFromContainerSkill",
+        "execution_template": "retrieve_object_from_container",
+        "implementation_kind": "internal_execution_graph",
+        "required_capabilities": [
+          "ManipulationCapability"
+        ],
+        "parameters": {
+          "target": "GraspableObject",
+          "container": "Container"
+        },
+        "participant_slots": [
+          {
+            "ontology_slot": "GraspTargetSkillSlot",
+            "parameter": "target"
+          },
+          {
+            "ontology_slot": "RetrieveContainerSkillSlot",
+            "parameter": "container"
+          }
+        ],
+        "resource_requirements": [
+          {
+            "slot": "arm",
+            "resource_type": "Arm"
+          },
+          {
+            "slot": "gripper",
+            "resource_type": "Gripper",
+            "requires_free": true
+          }
+        ],
+        "ontology_preconditions_refs": [
+          "EmptyGripperCondition",
+          "RetrieveInsideCondition"
+        ],
+        "preconditions": [
+          {
+            "condition_id": "robot_at_retrieve_container",
+            "kind": "spatial",
+            "object_parameter": "container",
+            "required_component": "access",
+            "interaction_mode": "container_retrieval"
+          }
+        ],
+        "ontology_effect_refs": [
+          "AcquireHoldingEffect",
+          "RetrieveRelationEffect"
+        ],
+        "completion_conditions": [
+          {
+            "condition_id": "robot_holds_retrieved_target",
+            "kind": "relation",
+            "subject": "RobotSelf",
+            "relation": "holding",
+            "object_parameter": "target",
+            "operator": "equals"
+          },
+          {
+            "condition_id": "container_closed_after_retrieve",
+            "kind": "state",
+            "object_parameter": "container",
+            "state_key": "open",
+            "value": false,
+            "operator": "equals"
+          }
+        ],
+        "expansion": [
+          {
+            "skill": "open_by_handle",
+            "bindings": {
+              "target": "$slot.RetrieveContainerSkillSlot"
+            }
+          },
+          {
+            "skill": "grasp_object",
+            "bindings": {
+              "target": "$slot.GraspTargetSkillSlot"
+            }
+          },
+          {
+            "skill": "close_by_handle",
+            "bindings": {
+              "target": "$slot.RetrieveContainerSkillSlot"
+            }
+          }
+        ]
+      },
+      "search_object_in_container": {
+        "ontology_class": "SearchObjectInContainerSkill",
+        "execution_template": "search_object_in_container",
+        "implementation_kind": "internal_execution_graph",
+        "required_capabilities": [
+          "PerceptionCapability"
+        ],
+        "parameters": {
+          "container": "OpenableObject | Container",
+          "target_type": "ObjectClass",
+          "discovered_object": "Object"
+        },
+        "participant_slots": [
+          {
+            "ontology_slot": "SearchContainerSkillSlot",
+            "parameter": "container"
+          },
+          {
+            "ontology_slot": "SearchContainerOutputSkillSlot",
+            "parameter": "discovered_object",
+            "direction": "output",
+            "binding_policy": "runtime_discovery"
+          }
+        ],
+        "preconditions": [
+          {
+            "condition_id": "search_container_known",
+            "kind": "entity",
+            "object_parameter": "container",
+            "operator": "known"
+          },
+          {
+            "condition_id": "robot_at_container_search_target",
+            "kind": "spatial",
+            "object_parameter": "container",
+            "required_component": "access",
+            "interaction_mode": "container_search"
+          }
+        ],
+        "completion_conditions": [
+          {
+            "condition_id": "container_search_has_outcome",
+            "kind": "execution_result",
+            "result_key": "search_outcome",
+            "operator": "known"
+          },
+          {
+            "condition_id": "container_closed_after_search",
+            "kind": "state",
+            "object_parameter": "container",
+            "state_key": "open",
+            "value": false,
+            "operator": "equals"
+          }
+        ],
+        "expansion": [
+          {
+            "skill": "resolve_affordance",
+            "bindings": {
+              "target": "$slot.SearchContainerSkillSlot"
+            }
+          },
+          {
+            "skill": "open_by_handle",
+            "bindings": {
+              "target": "$slot.SearchContainerSkillSlot"
+            }
+          },
+          {
+            "action": "scan_area"
+          },
+          {
+            "action": "detect_object"
+          },
+          {
+            "skill": "close_by_handle",
+            "bindings": {
+              "target": "$slot.SearchContainerSkillSlot"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "reference_example": {
+    "status": "OFFLINE_REFERENCE_NOT_GENERATED_FROM_A_VIDEO",
+    "task_text": "从A桌子上拿红色的杯子到B桌子的白色区域。",
+    "scene_fixture": {
+      "source_path": "data/scene/coarse_scene_cup_transfer.json",
+      "graph_id": "coarse_scene_cup_transfer_v1",
+      "truth_kind": "FIXTURE_NOT_LIVE",
+      "entities": [
+        {
+          "id": "table_a",
+          "type": "Table",
+          "label": "A桌子",
+          "states": {
+            "has_free_space": true,
+            "flat": true
+          }
+        },
+        {
+          "id": "table_b",
+          "type": "Table",
+          "label": "B桌子",
+          "states": {
+            "has_free_space": true,
+            "flat": true
+          }
+        },
+        {
+          "id": "cup_red",
+          "type": "Cup",
+          "label": "红色杯子",
+          "states": {
+            "color": "红色"
+          },
+          "relations": [
+            {
+              "relation_ref": "locatedOn",
+              "object_entity_ref": "table_a"
+            }
+          ]
+        },
+        {
+          "id": "cup_orange",
+          "type": "Cup",
+          "label": "橙色杯子",
+          "states": {
+            "color": "橙色"
+          },
+          "relations": [
+            {
+              "relation_ref": "locatedOn",
+              "object_entity_ref": "table_a"
+            }
+          ]
+        },
+        {
+          "id": "cup_yellow",
+          "type": "Cup",
+          "label": "黄色杯子",
+          "states": {
+            "color": "黄色"
+          },
+          "relations": [
+            {
+              "relation_ref": "locatedOn",
+              "object_entity_ref": "table_a"
+            }
+          ]
+        },
+        {
+          "id": "cup_green",
+          "type": "Cup",
+          "label": "绿色杯子",
+          "states": {
+            "color": "绿色"
+          },
+          "relations": [
+            {
+              "relation_ref": "locatedOn",
+              "object_entity_ref": "table_a"
+            }
+          ]
+        },
+        {
+          "id": "region_black",
+          "type": "SurfaceRegion",
+          "label": "黑色区域",
+          "states": {
+            "color": "黑色",
+            "has_free_space": true,
+            "flat": true
+          },
+          "relations": [
+            {
+              "relation_ref": "locatedOn",
+              "object_entity_ref": "table_b"
+            }
+          ]
+        },
+        {
+          "id": "region_white",
+          "type": "SurfaceRegion",
+          "label": "白色区域",
+          "states": {
+            "color": "白色",
+            "has_free_space": true,
+            "flat": true
+          },
+          "relations": [
+            {
+              "relation_ref": "locatedOn",
+              "object_entity_ref": "table_b"
+            }
+          ]
+        }
+      ],
+      "projection_note": "为本次语义验证仅携带对象、属性和关系；几何与导航点仍由原场景及空间模块提供。"
+    },
+    "task_instance": {
+      "participant_variables": [
+        {
+          "participant_id": "cup",
+          "mention": "红色的杯子",
+          "role": "patient",
+          "type_hint": "杯子",
+          "required": true,
+          "usage": "task_argument",
+          "reference_status": "described",
+          "resolved_description": null,
+          "source_ref": "s1",
+          "type_ref": "Cup"
+        },
+        {
+          "participant_id": "a",
+          "mention": "A桌子",
+          "role": "location",
+          "type_hint": "桌子",
+          "required": true,
+          "usage": "both",
+          "reference_status": "described",
+          "resolved_description": null,
+          "source_ref": "s1",
+          "type_ref": "Table"
+        },
+        {
+          "participant_id": "b",
+          "mention": "B桌子",
+          "role": "location",
+          "type_hint": "桌子",
+          "required": false,
+          "usage": "constraint_reference",
+          "reference_status": "described",
+          "resolved_description": null,
+          "source_ref": "s1",
+          "type_ref": "Table"
+        },
+        {
+          "participant_id": "region",
+          "mention": "白色区域",
+          "role": "destination",
+          "type_hint": "区域",
+          "required": true,
+          "usage": "task_argument",
+          "reference_status": "described",
+          "resolved_description": null,
+          "source_ref": "s1",
+          "type_ref": "SurfaceRegion"
+        }
+      ],
+      "user_constraints": [
+        {
+          "constraint_id": "red",
+          "kind": "reference_property",
+          "scope_goal_refs": [
+            "g1",
+            "g2"
+          ],
+          "subject_ref": "cup",
+          "role": "patient",
+          "property": "颜色",
+          "operator": "eq",
+          "value": "红色",
+          "unit": null,
+          "description": "用户指称属性",
+          "source_ref": "s1"
+        },
+        {
+          "constraint_id": "white",
+          "kind": "reference_property",
+          "scope_goal_refs": [
+            "g2"
+          ],
+          "subject_ref": "region",
+          "role": "destination",
+          "property": "颜色",
+          "operator": "eq",
+          "value": "白色",
+          "unit": null,
+          "description": "用户指称属性",
+          "source_ref": "s1"
+        },
+        {
+          "constraint_id": "name_a",
+          "kind": "reference_property",
+          "scope_goal_refs": [
+            "g1",
+            "g2"
+          ],
+          "subject_ref": "a",
+          "role": "location",
+          "property": "名称",
+          "operator": "eq",
+          "value": "A桌子",
+          "unit": null,
+          "description": "用户指称属性",
+          "source_ref": "s1"
+        },
+        {
+          "constraint_id": "name_b",
+          "kind": "reference_property",
+          "scope_goal_refs": [
+            "g2"
+          ],
+          "subject_ref": "b",
+          "role": "location",
+          "property": "名称",
+          "operator": "eq",
+          "value": "B桌子",
+          "unit": null,
+          "description": "用户指称属性",
+          "source_ref": "s1"
+        },
+        {
+          "constraint_id": "order",
+          "kind": "execution_order",
+          "scope_goal_refs": [
+            "g1",
+            "g2"
+          ],
+          "subject_ref": "g1",
+          "role": null,
+          "property": null,
+          "operator": "before",
+          "value": "g2",
+          "unit": null,
+          "description": "先拿后放",
+          "source_ref": "s1"
+        }
+      ],
+      "user_relations": [
+        {
+          "relation_id": "source",
+          "subject": "cup",
+          "relation": "on",
+          "object": "a",
+          "phase": "initial",
+          "scope_goal_refs": [
+            "g1",
+            "g2"
+          ],
+          "description": "位置限定或目标",
+          "source_ref": "s1"
+        },
+        {
+          "relation_id": "region_table",
+          "subject": "region",
+          "relation": "on",
+          "object": "b",
+          "phase": "initial",
+          "scope_goal_refs": [
+            "g2"
+          ],
+          "description": "位置限定或目标",
+          "source_ref": "s1"
+        },
+        {
+          "relation_id": "goal",
+          "subject": "cup",
+          "relation": "on",
+          "object": "region",
+          "phase": "goal",
+          "scope_goal_refs": [
+            "g2"
+          ],
+          "description": "位置限定或目标",
+          "source_ref": "s1"
+        }
+      ],
+      "example_entity_bindings": [
+        {
+          "target_ref": "cup",
+          "entity_id": "cup_red"
+        },
+        {
+          "target_ref": "a",
+          "entity_id": "table_a"
+        },
+        {
+          "target_ref": "b",
+          "entity_id": "table_b"
+        },
+        {
+          "target_ref": "region",
+          "entity_id": "region_white"
+        }
+      ],
+      "requirements_are_global_skill_knowledge": false
+    },
+    "skill_graph": {
+      "node_origin": "从现有意图与方法选择夹具投影，未解析视频，帧边界留空。",
+      "segments": [
+        {
+          "segment_id": "g1",
+          "video_span": {
+            "start_frame": null,
+            "end_frame": null,
+            "status": "NOT_ALIGNED_TO_VIDEO"
+          },
+          "intent_skill_ref": "AcquireObjectSkill",
+          "skill_ref": "GraspObjectSkill",
+          "method_selection": {
+            "goal_ref": "g1",
+            "skill_ref": "GraspObjectSkill",
+            "refinement": "PROVISIONAL",
+            "preference_ref": "AcquireObjectSkill"
+          },
+          "role_bindings": [
+            {
+              "goal_ref": "g1",
+              "slot_ref": "GraspTargetSkillSlot",
+              "participant_ref": "cup"
+            },
+            {
+              "goal_ref": "g1",
+              "slot_ref": "GraspSourceSkillSlot",
+              "participant_ref": "a"
+            }
+          ],
+          "entry_condition_refs": [
+            "condition::1a856786667d393838b9",
+            "condition::cf324c51e90f065cc164",
+            "condition::5300608e44608875b275",
+            "condition::068d99e94cf48142a13c",
+            "condition::5ff6962e3062b17657cd",
+            "condition::d40fa3bb53376314a7e9"
+          ],
+          "expected_effect_condition_refs": [
+            "condition::63eeab6e0fc8286f00c2",
+            "condition::f3470cbbe19fdba1230d"
+          ],
+          "observation_status": "REFERENCE_EXAMPLE_ONLY"
+        },
+        {
+          "segment_id": "g2",
+          "video_span": {
+            "start_frame": null,
+            "end_frame": null,
+            "status": "NOT_ALIGNED_TO_VIDEO"
+          },
+          "intent_skill_ref": "PlaceObjectSkill",
+          "skill_ref": "PlaceOnSurfaceSkill",
+          "method_selection": {
+            "goal_ref": "g2",
+            "skill_ref": "PlaceOnSurfaceSkill"
+          },
+          "role_bindings": [
+            {
+              "goal_ref": "g2",
+              "slot_ref": "PlaceObjectTargetSkillSlot",
+              "participant_ref": "cup"
+            },
+            {
+              "goal_ref": "g2",
+              "slot_ref": "PlaceDestinationSkillSlot",
+              "participant_ref": "region"
+            }
+          ],
+          "entry_condition_refs": [
+            "condition::883edd88b3bf7a638018",
+            "condition::a9e8bc51525c31aae298",
+            "condition::340d6d2c0abb2dc1f2a6",
+            "condition::4d54ef6ccaa55eca3ef2",
+            "condition::6e7fc5f4104a1f15ca9a"
+          ],
+          "expected_effect_condition_refs": [
+            "condition::36801d14550d6e6bc600",
+            "condition::530c199cefc412490adb"
+          ],
+          "observation_status": "REFERENCE_EXAMPLE_ONLY"
+        }
+      ],
+      "ordering_constraints": [
+        {
+          "constraint_id": "order",
+          "kind": "execution_order",
+          "scope_goal_refs": [
+            "g1",
+            "g2"
+          ],
+          "subject_ref": "g1",
+          "role": null,
+          "property": null,
+          "operator": "before",
+          "value": "g2",
+          "unit": null,
+          "description": "先拿后放",
+          "source_ref": "s1"
+        }
+      ],
+      "handoffs": [
+        {
+          "from_segment_ref": "g1",
+          "to_segment_ref": "g2",
+          "result_flow": {
+            "producer_goal_ref": "g1",
+            "result_ref": "GraspedResult",
+            "consumer_goal_ref": "g2",
+            "consumer_slot_ref": "PlaceObjectTargetSkillSlot",
+            "mode": "same_entity",
+            "source_relation_ref": "order"
+          },
+          "producer_result_source_slot_ref": "GraspTargetSkillSlot",
+          "producer_effect_condition_ref": "condition::63eeab6e0fc8286f00c2",
+          "producer_effect_ref": "AcquireHoldingEffect",
+          "consumer_entry_condition_ref": "condition::883edd88b3bf7a638018",
+          "state_dependency": {
+            "kind": "relation",
+            "subject": {
+              "kind": "actor",
+              "ref": "ActingRobot"
+            },
+            "relation_ref": "holding",
+            "operator": "eq",
+            "object": {
+              "kind": "slot",
+              "ref": "PlaceObjectTargetSkillSlot"
+            }
+          },
+          "transfer_time": "AFTER_PRODUCER_SUCCESS_AND_REQUIRED_RESULT_VERIFICATION",
+          "identity_requirement": "same_entity"
+        }
+      ],
+      "conditional_spatial_preparation": [
+        {
+          "producer_skill_ref": "NavigateToSkill",
+          "producer_effect_ref": "NavigationNearEffect",
+          "consumer_skill_ref": "GraspObjectSkill",
+          "consumer_condition_ref": "condition::cf324c51e90f065cc164",
+          "slot_substitution": {
+            "NavigateTargetSkillSlot": "GraspTargetSkillSlot"
+          },
+          "applicability": "仅在当前可访问性条件未得到满足且需要导航时插入；不是每段视频的固定步骤。",
+          "provenance": "DERIVED_EFFECT_PRECONDITION_MATCH_FOR_REVIEW"
+        },
+        {
+          "producer_skill_ref": "NavigateToSkill",
+          "producer_effect_ref": "NavigationNearEffect",
+          "consumer_skill_ref": "PlaceOnSurfaceSkill",
+          "consumer_condition_ref": "condition::a9e8bc51525c31aae298",
+          "slot_substitution": {
+            "NavigateTargetSkillSlot": "PlaceDestinationSkillSlot"
+          },
+          "applicability": "仅在当前可访问性条件未得到满足且需要导航时插入；不是每段视频的固定步骤。",
+          "provenance": "DERIVED_EFFECT_PRECONDITION_MATCH_FOR_REVIEW"
+        }
+      ]
+    }
+  },
+  "validation_focus": [
+    "能否识别抓取和表面放置两个主要语义片段，并正确选择其父技能与具体方法。",
+    "g1.GraspedResult 是否流向 g2.PlaceObjectTargetSkillSlot，且保持同一只杯子的身份。",
+    "是否保留红色、A 桌来源、白色区域及区域属于 B 桌的调用级要求。",
+    "抓取后预期 holding 与放置前 holding 条件能否连接，放置后是否检查释放和 locatedOn。",
+    "是否把未知与否定区分；有 insideContainer 正向观测才进入对应方法细化。",
+    "目标杯子具有 Container 类型本身不是方法切换的关系证据。"
+  ],
+  "known_limits": [
+    "本包是现有知识的验证用快照，不会自动更新；库变化后需重新导出。",
+    "视频时间边界及现场事实未提供，不填写虚构帧号、位姿或执行成功结果。",
+    "普通抓取偏好不证明它适用于当前现场；容器方法仍须检查完整角色资格和执行条件。",
+    "库内实现和完成检查的存在不表示真实硬件已验证；本轮未执行机器人。"
+  ]
+}

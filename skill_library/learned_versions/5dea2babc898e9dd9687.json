@@ -1,0 +1,4483 @@
+{
+  "schema_version": "learned_skill_catalog.v1",
+  "template_library_revision": "cff21e0a59fe63d8",
+  "tuple_fields": [
+    "X",
+    "O",
+    "C_pre",
+    "C_const",
+    "E",
+    "C_post",
+    "R"
+  ],
+  "skills": [
+    {
+      "skill_id": "skill_acquire_object",
+      "label": "获取对象",
+      "template_ref": "goal/acquire_object",
+      "goal_key": "acquire_object",
+      "learned_seven_tuple": {
+        "X": {
+          "subject": "actor",
+          "roles": [
+            "arm_1",
+            "gripper_1"
+          ],
+          "binding_status": "unbound"
+        },
+        "O": {
+          "roles": [
+            "target"
+          ],
+          "object_categories": [
+            "box"
+          ]
+        },
+        "C_pre": [],
+        "C_const": [],
+        "E": [
+          "eval_skill_acquire_object"
+        ],
+        "C_post": [
+          "Pb9a9a72ab846",
+          "P2dddc3335757"
+        ],
+        "R": [
+          {
+            "id": "R_2d85a2f0a95922cd06da",
+            "realization_ref": "R_2d85a2f0a95922cd06da",
+            "name": "右臂靠近后右手抓握并抬起",
+            "instance_ids": [
+              "e0ec55df75a6f303c65b",
+              "3055838dc5f7f4ff495b",
+              "76b0f58e0aae97d05730",
+              "e7fa6e8f662d940146b5"
+            ],
+            "C_pre": [
+              {
+                "predicate_ref": "Pa2371a74cb6c",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "e0ec55df75a6f303c65b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P72f523d87f93",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "e0ec55df75a6f303c65b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pe1e20a8d1630",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "e0ec55df75a6f303c65b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P211f8b78e9ac",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "e0ec55df75a6f303c65b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pa2371a74cb6c",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "3055838dc5f7f4ff495b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P72f523d87f93",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "3055838dc5f7f4ff495b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P9f8891a672d2",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "3055838dc5f7f4ff495b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P0741b253052d",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "3055838dc5f7f4ff495b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pa2371a74cb6c",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "76b0f58e0aae97d05730",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P72f523d87f93",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "76b0f58e0aae97d05730",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pbeafb0528a24",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "76b0f58e0aae97d05730",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P0741b253052d",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "76b0f58e0aae97d05730",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pa2371a74cb6c",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "e7fa6e8f662d940146b5",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pe7132545b9d4",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "e7fa6e8f662d940146b5",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P47d4bf0876a8",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "e7fa6e8f662d940146b5",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P0741b253052d",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "e7fa6e8f662d940146b5",
+                "verification_status": "unverified"
+              }
+            ],
+            "C_const": [
+              {
+                "predicate_ref": "P99bce6c69559",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "e0ec55df75a6f303c65b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P018d7dbf0e61",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "e0ec55df75a6f303c65b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P755c3435f091",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "e0ec55df75a6f303c65b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pb805e87f1696",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "e0ec55df75a6f303c65b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P99bce6c69559",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "3055838dc5f7f4ff495b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P858a9771ace4",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "3055838dc5f7f4ff495b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P755c3435f091",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "3055838dc5f7f4ff495b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P20ed22ea8060",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "3055838dc5f7f4ff495b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pdfefaaae91cb",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "3055838dc5f7f4ff495b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pdfefaaae91cb",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "3055838dc5f7f4ff495b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P99bce6c69559",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "76b0f58e0aae97d05730",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P018d7dbf0e61",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "76b0f58e0aae97d05730",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P755c3435f091",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "76b0f58e0aae97d05730",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P386df69de7e0",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "76b0f58e0aae97d05730",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P2064ed418134",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "76b0f58e0aae97d05730",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P99bce6c69559",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "e7fa6e8f662d940146b5",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P018d7dbf0e61",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "e7fa6e8f662d940146b5",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P755c3435f091",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "e7fa6e8f662d940146b5",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P7d23e4eb2883",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "e7fa6e8f662d940146b5",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P6015b344bfa8",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "e7fa6e8f662d940146b5",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P74adcebe5442",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "e7fa6e8f662d940146b5",
+                "verification_status": "unverified"
+              }
+            ],
+            "selection_guard": {
+              "status": "unresolved",
+              "reason": "requires_realization_specific_contrast"
+            },
+            "verification_status": "unverified",
+            "implementation_graph_ref": "general_graphs/skill_acquire_object.json",
+            "path_ids": [
+              "P_c975d99c085058047836",
+              "P_03ca26e382df4b94d7cf",
+              "P_0f360d5509990abbc7d6",
+              "P_6a2e0e6c8c67f8e5d103"
+            ],
+            "required_capabilities": [
+              "OperateGripper",
+              "move_chain_client"
+            ],
+            "capability_binding_status": "unbound",
+            "effect_review_status": "needs_review"
+          },
+          {
+            "id": "R_b0d35abc623704da9634",
+            "realization_ref": "R_b0d35abc623704da9634",
+            "name": "右臂靠近目标，右手按压并抓握建立稳定接触",
+            "instance_ids": [
+              "ed5e9a7625ba9d43abc3"
+            ],
+            "C_pre": [
+              {
+                "predicate_ref": "Pa2371a74cb6c",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "ed5e9a7625ba9d43abc3",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P72f523d87f93",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "ed5e9a7625ba9d43abc3",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pe1e20a8d1630",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "ed5e9a7625ba9d43abc3",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P0741b253052d",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "ed5e9a7625ba9d43abc3",
+                "verification_status": "unverified"
+              }
+            ],
+            "C_const": [
+              {
+                "predicate_ref": "P99bce6c69559",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "ed5e9a7625ba9d43abc3",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P018d7dbf0e61",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "ed5e9a7625ba9d43abc3",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P755c3435f091",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "ed5e9a7625ba9d43abc3",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pc61f2c178178",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "ed5e9a7625ba9d43abc3",
+                "verification_status": "unverified"
+              }
+            ],
+            "selection_guard": {
+              "status": "unresolved",
+              "reason": "requires_realization_specific_contrast"
+            },
+            "verification_status": "unverified",
+            "implementation_graph_ref": "general_graphs/skill_acquire_object.json",
+            "path_ids": [
+              "P_a0055dd9756beef0d905"
+            ],
+            "required_capabilities": [
+              "OperateGripper",
+              "move_chain_client"
+            ],
+            "capability_binding_status": "unbound",
+            "effect_review_status": "needs_review"
+          },
+          {
+            "id": "R_c593c5d6276ddb8a6b9f",
+            "realization_ref": "R_c593c5d6276ddb8a6b9f",
+            "name": "右臂靠近目标，右手抓握并建立稳定握持",
+            "instance_ids": [
+              "9e4751fbac5c050296a6"
+            ],
+            "C_pre": [
+              {
+                "predicate_ref": "P26c064713b9a",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "9e4751fbac5c050296a6",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P72f523d87f93",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "9e4751fbac5c050296a6",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P47d4bf0876a8",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "9e4751fbac5c050296a6",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pce3909f814c1",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "9e4751fbac5c050296a6",
+                "verification_status": "unverified"
+              }
+            ],
+            "C_const": [
+              {
+                "predicate_ref": "P99bce6c69559",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "9e4751fbac5c050296a6",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P018d7dbf0e61",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "9e4751fbac5c050296a6",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P755c3435f091",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "9e4751fbac5c050296a6",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P234744e7428d",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "9e4751fbac5c050296a6",
+                "verification_status": "unverified"
+              }
+            ],
+            "selection_guard": {
+              "status": "unresolved",
+              "reason": "requires_realization_specific_contrast"
+            },
+            "verification_status": "unverified",
+            "implementation_graph_ref": "general_graphs/skill_acquire_object.json",
+            "path_ids": [
+              "P_45acca26e0a736c6a16c"
+            ],
+            "required_capabilities": [
+              "OperateGripper",
+              "move_chain_client"
+            ],
+            "capability_binding_status": "unbound",
+            "effect_review_status": "needs_review"
+          },
+          {
+            "id": "R_c78f7e6200198d0c7a2e",
+            "realization_ref": "R_c78f7e6200198d0c7a2e",
+            "name": "左臂接近并托举塑料盒，使其脱离黑色区域支撑",
+            "instance_ids": [
+              "8aef781d4d86ab40124f"
+            ],
+            "C_pre": [],
+            "C_const": [
+              {
+                "predicate_ref": "P358dba4a3cc5",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "8aef781d4d86ab40124f",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P835e599a218b",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "8aef781d4d86ab40124f",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P9af847cc41fd",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "8aef781d4d86ab40124f",
+                "verification_status": "unverified"
+              }
+            ],
+            "selection_guard": {
+              "status": "unresolved",
+              "reason": "requires_realization_specific_contrast"
+            },
+            "verification_status": "unverified",
+            "implementation_graph_ref": "general_graphs/skill_acquire_object.json",
+            "path_ids": [
+              "P_825b80560aaf431f8456"
+            ],
+            "required_capabilities": [
+              "move_chain_client"
+            ],
+            "capability_binding_status": "unbound",
+            "effect_review_status": "needs_review"
+          }
+        ]
+      },
+      "source_video_count": 7,
+      "instance_count": 7,
+      "instance_ids": [
+        "9e4751fbac5c050296a6",
+        "ed5e9a7625ba9d43abc3",
+        "e0ec55df75a6f303c65b",
+        "8aef781d4d86ab40124f",
+        "3055838dc5f7f4ff495b",
+        "76b0f58e0aae97d05730",
+        "e7fa6e8f662d940146b5"
+      ],
+      "instance_bindings": [
+        {
+          "instance_id": "9e4751fbac5c050296a6",
+          "target": "透明塑料盒",
+          "destination": null
+        },
+        {
+          "instance_id": "ed5e9a7625ba9d43abc3",
+          "target": "透明塑料盒",
+          "destination": null
+        },
+        {
+          "instance_id": "e0ec55df75a6f303c65b",
+          "target": "透明塑料盒",
+          "destination": null
+        },
+        {
+          "instance_id": "8aef781d4d86ab40124f",
+          "target": "塑料盒",
+          "destination": null
+        },
+        {
+          "instance_id": "3055838dc5f7f4ff495b",
+          "target": "透明塑料盒",
+          "destination": null
+        },
+        {
+          "instance_id": "76b0f58e0aae97d05730",
+          "target": "透明塑料盒",
+          "destination": null
+        },
+        {
+          "instance_id": "e7fa6e8f662d940146b5",
+          "target": "透明塑料盒",
+          "destination": null
+        }
+      ],
+      "realization_count": 4,
+      "observed_effect_review": "requires_proposition_review",
+      "candidate_condition_summary": [
+        {
+          "goal_key": "acquire_object",
+          "condition_key": "target_reachable",
+          "phase": "pre",
+          "comparison_context": "unstratified",
+          "counts": {
+            "T_success": 0,
+            "T_failure": 0,
+            "T_not_executed": 0,
+            "T_unknown": 6,
+            "F_success": 0,
+            "F_failure": 0,
+            "F_not_executed": 0,
+            "F_unknown": 0,
+            "U_success": 0,
+            "U_failure": 0,
+            "U_not_executed": 0,
+            "U_unknown": 0
+          },
+          "reviewed_counts": {
+            "T_success": 0,
+            "T_failure": 0,
+            "T_not_executed": 0,
+            "T_unknown": 0,
+            "F_success": 0,
+            "F_failure": 0,
+            "F_not_executed": 0,
+            "F_unknown": 0,
+            "U_success": 0,
+            "U_failure": 0,
+            "U_not_executed": 0,
+            "U_unknown": 0
+          },
+          "necessity_status": "needs_negative_trials",
+          "causal_status": "not_established",
+          "distinct_video_count": 6,
+          "empirical_assessment": {
+            "condition_refuted_as_necessary": false,
+            "failure_trials": 0,
+            "nonexecution_is_censored": true,
+            "next_step": "needs_controlled_contrast_trials",
+            "causal_established": false
+          },
+          "conflicted_annotations": 0,
+          "examples": [
+            {
+              "subtask_id": "sub1",
+              "condition_key": "target_reachable",
+              "text": "目标在可抓取范围",
+              "truth": "T",
+              "at": "pre",
+              "evidence": [
+                {
+                  "evidence_id": "a1_world_before_0",
+                  "atomic_ref": 1,
+                  "field": "world_before",
+                  "quote": "透明塑料盒静止在黑色表面上"
+                }
+              ],
+              "provenance": "model_grounded_candidate",
+              "semantic_entailment_status": "model_assessment_requires_review",
+              "instance_id": "9e4751fbac5c050296a6",
+              "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+              "goal_key": "acquire_object",
+              "outcome": "unknown",
+              "outcome_evidence": []
+            },
+            {
+              "subtask_id": "sub1",
+              "condition_key": "target_reachable",
+              "text": "目标在可抓取范围",
+              "truth": "T",
+              "at": "pre",
+              "evidence": [
+                {
+                  "evidence_id": "a1_world_before_0",
+                  "atomic_ref": 1,
+                  "field": "world_before",
+                  "quote": "透明塑料盒静止在黑色区域"
+                }
+              ],
+              "provenance": "model_grounded_candidate",
+              "semantic_entailment_status": "model_assessment_requires_review",
+              "instance_id": "ed5e9a7625ba9d43abc3",
+              "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+              "goal_key": "acquire_object",
+              "outcome": "unknown",
+              "outcome_evidence": []
+            },
+            {
+              "subtask_id": "sub1",
+              "condition_key": "target_reachable",
+              "text": "塑料盒在可抓取范围",
+              "truth": "T",
+              "at": "pre",
+              "evidence": [
+                {
+                  "evidence_id": "a1_world_before_0",
+                  "atomic_ref": 1,
+                  "field": "world_before",
+                  "quote": "塑料盒静止在黑色区域"
+                }
+              ],
+              "provenance": "model_grounded_candidate",
+              "semantic_entailment_status": "model_assessment_requires_review",
+              "instance_id": "8aef781d4d86ab40124f",
+              "video_uid": "64bba6b880dabaf9c68f4f4c9047ed7d79828e8eb8c0a1eba429af953e47d7a2",
+              "goal_key": "acquire_object",
+              "outcome": "unknown",
+              "outcome_evidence": []
+            },
+            {
+              "subtask_id": "sub1",
+              "condition_key": "target_reachable",
+              "text": "目标在可抓取范围",
+              "truth": "T",
+              "at": "pre",
+              "evidence": [
+                {
+                  "evidence_id": "a1_world_before_0",
+                  "atomic_ref": 1,
+                  "field": "world_before",
+                  "quote": "透明塑料盒静止在黑色区域"
+                }
+              ],
+              "provenance": "model_grounded_candidate",
+              "semantic_entailment_status": "model_assessment_requires_review",
+              "instance_id": "3055838dc5f7f4ff495b",
+              "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+              "goal_key": "acquire_object",
+              "outcome": "unknown",
+              "outcome_evidence": []
+            },
+            {
+              "subtask_id": "sub1",
+              "condition_key": "target_reachable",
+              "text": "目标在可抓取范围",
+              "truth": "T",
+              "at": "pre",
+              "evidence": [
+                {
+                  "evidence_id": "a1_world_before_0",
+                  "atomic_ref": 1,
+                  "field": "world_before",
+                  "quote": "透明塑料盒静止在黑色区域"
+                }
+              ],
+              "provenance": "model_grounded_candidate",
+              "semantic_entailment_status": "model_assessment_requires_review",
+              "instance_id": "76b0f58e0aae97d05730",
+              "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+              "goal_key": "acquire_object",
+              "outcome": "unknown",
+              "outcome_evidence": []
+            },
+            {
+              "subtask_id": "sub1",
+              "condition_key": "target_reachable",
+              "text": "目标在可抓取范围",
+              "truth": "T",
+              "at": "pre",
+              "evidence": [
+                {
+                  "evidence_id": "a1_world_before_0",
+                  "atomic_ref": 1,
+                  "field": "world_before",
+                  "quote": "透明塑料盒静止在黑色区域"
+                }
+              ],
+              "provenance": "model_grounded_candidate",
+              "semantic_entailment_status": "model_assessment_requires_review",
+              "instance_id": "e7fa6e8f662d940146b5",
+              "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+              "goal_key": "acquire_object",
+              "outcome": "unknown",
+              "outcome_evidence": []
+            }
+          ],
+          "missing_evidence": [
+            "condition_violated_trials",
+            "real_failure_trials"
+          ],
+          "policy": "Nonexecution is censored; failure is not proof of a single cause; unstratified data cannot identify causality."
+        }
+      ],
+      "origin": "cross_video_induction",
+      "public_condition_policy": "Do not promote R-specific conditions by union."
+    },
+    {
+      "skill_id": "skill_grasp_object",
+      "label": "抓取对象",
+      "template_ref": "goal/grasp_object",
+      "goal_key": "grasp_object",
+      "learned_seven_tuple": {
+        "X": {
+          "subject": "actor",
+          "roles": [
+            "gripper_1"
+          ],
+          "binding_status": "unbound"
+        },
+        "O": {
+          "roles": [
+            "target"
+          ],
+          "object_categories": [
+            "box"
+          ]
+        },
+        "C_pre": [],
+        "C_const": [],
+        "E": [
+          "eval_skill_grasp_object"
+        ],
+        "C_post": [
+          "Pb9a9a72ab846"
+        ],
+        "R": [
+          {
+            "id": "R_140a9ba433186fd91011",
+            "realization_ref": "R_140a9ba433186fd91011",
+            "name": "单节点抓取",
+            "instance_ids": [
+              "58006604cb065169f1b2",
+              "becedf6ba82489ec9dfb",
+              "e9955e74b0918fd7b3e7",
+              "3e04953e5a5640aad4a1"
+            ],
+            "C_pre": [
+              {
+                "predicate_ref": "Pe1e20a8d1630",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "58006604cb065169f1b2",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P211f8b78e9ac",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "58006604cb065169f1b2",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P9f8891a672d2",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "becedf6ba82489ec9dfb",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P0741b253052d",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "becedf6ba82489ec9dfb",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pbeafb0528a24",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "e9955e74b0918fd7b3e7",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P0741b253052d",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "e9955e74b0918fd7b3e7",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P47d4bf0876a8",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "3e04953e5a5640aad4a1",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P0741b253052d",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "3e04953e5a5640aad4a1",
+                "verification_status": "unverified"
+              }
+            ],
+            "C_const": [
+              {
+                "predicate_ref": "P018d7dbf0e61",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "58006604cb065169f1b2",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P755c3435f091",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "58006604cb065169f1b2",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P858a9771ace4",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "becedf6ba82489ec9dfb",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P755c3435f091",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "becedf6ba82489ec9dfb",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P20ed22ea8060",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "becedf6ba82489ec9dfb",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pdfefaaae91cb",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "becedf6ba82489ec9dfb",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P018d7dbf0e61",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "e9955e74b0918fd7b3e7",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P755c3435f091",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "e9955e74b0918fd7b3e7",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P2064ed418134",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "e9955e74b0918fd7b3e7",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P018d7dbf0e61",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "3e04953e5a5640aad4a1",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P755c3435f091",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "3e04953e5a5640aad4a1",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P6015b344bfa8",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "3e04953e5a5640aad4a1",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P74adcebe5442",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "3e04953e5a5640aad4a1",
+                "verification_status": "unverified"
+              }
+            ],
+            "selection_guard": {
+              "status": "unresolved",
+              "reason": "requires_realization_specific_contrast"
+            },
+            "verification_status": "unverified",
+            "implementation_graph_ref": "general_graphs/skill_grasp_object.json",
+            "path_ids": [
+              "P_2a6bb4c0fc01b3f449a8",
+              "P_cbfaa59d7e044bfb600a",
+              "P_64f13381537933ab0583",
+              "P_c569af329174fba92e3a"
+            ],
+            "required_capabilities": [
+              "OperateGripper"
+            ],
+            "capability_binding_status": "unbound",
+            "effect_review_status": "needs_review"
+          },
+          {
+            "id": "R_1a4114f1d239348eccf4",
+            "realization_ref": "R_1a4114f1d239348eccf4",
+            "name": "单节点抓取",
+            "instance_ids": [
+              "297389d71ecf89c48f84"
+            ],
+            "C_pre": [
+              {
+                "predicate_ref": "P47d4bf0876a8",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "297389d71ecf89c48f84",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pce3909f814c1",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "297389d71ecf89c48f84",
+                "verification_status": "unverified"
+              }
+            ],
+            "C_const": [
+              {
+                "predicate_ref": "P018d7dbf0e61",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "297389d71ecf89c48f84",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P755c3435f091",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "297389d71ecf89c48f84",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P234744e7428d",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "297389d71ecf89c48f84",
+                "verification_status": "unverified"
+              }
+            ],
+            "selection_guard": {
+              "status": "unresolved",
+              "reason": "requires_realization_specific_contrast"
+            },
+            "verification_status": "unverified",
+            "implementation_graph_ref": "general_graphs/skill_grasp_object.json",
+            "path_ids": [
+              "P_d2751e2e463e394a2803"
+            ],
+            "required_capabilities": [
+              "OperateGripper"
+            ],
+            "capability_binding_status": "unbound",
+            "effect_review_status": "needs_review"
+          },
+          {
+            "id": "R_eee6db28245e5999eb23",
+            "realization_ref": "R_eee6db28245e5999eb23",
+            "name": "单节点抓取",
+            "instance_ids": [
+              "98d574074eed2e297331"
+            ],
+            "C_pre": [
+              {
+                "predicate_ref": "Pe1e20a8d1630",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "98d574074eed2e297331",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P0741b253052d",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "98d574074eed2e297331",
+                "verification_status": "unverified"
+              }
+            ],
+            "C_const": [
+              {
+                "predicate_ref": "P018d7dbf0e61",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "98d574074eed2e297331",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P755c3435f091",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "98d574074eed2e297331",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pc61f2c178178",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "98d574074eed2e297331",
+                "verification_status": "unverified"
+              }
+            ],
+            "selection_guard": {
+              "status": "unresolved",
+              "reason": "requires_realization_specific_contrast"
+            },
+            "verification_status": "unverified",
+            "implementation_graph_ref": "general_graphs/skill_grasp_object.json",
+            "path_ids": [
+              "P_57d6a95983ad7f19b4b4"
+            ],
+            "required_capabilities": [
+              "OperateGripper"
+            ],
+            "capability_binding_status": "unbound",
+            "effect_review_status": "needs_review"
+          }
+        ]
+      },
+      "source_video_count": 6,
+      "instance_count": 6,
+      "instance_ids": [
+        "297389d71ecf89c48f84",
+        "98d574074eed2e297331",
+        "58006604cb065169f1b2",
+        "becedf6ba82489ec9dfb",
+        "e9955e74b0918fd7b3e7",
+        "3e04953e5a5640aad4a1"
+      ],
+      "instance_bindings": [
+        {
+          "instance_id": "297389d71ecf89c48f84",
+          "target": "透明塑料盒",
+          "destination": null
+        },
+        {
+          "instance_id": "98d574074eed2e297331",
+          "target": "透明塑料盒",
+          "destination": null
+        },
+        {
+          "instance_id": "58006604cb065169f1b2",
+          "target": "透明塑料盒",
+          "destination": null
+        },
+        {
+          "instance_id": "becedf6ba82489ec9dfb",
+          "target": "透明塑料盒",
+          "destination": null
+        },
+        {
+          "instance_id": "e9955e74b0918fd7b3e7",
+          "target": "透明塑料盒",
+          "destination": null
+        },
+        {
+          "instance_id": "3e04953e5a5640aad4a1",
+          "target": "透明塑料盒",
+          "destination": null
+        }
+      ],
+      "realization_count": 3,
+      "observed_effect_review": "requires_proposition_review",
+      "candidate_condition_summary": [],
+      "origin": "cross_video_induction",
+      "public_condition_policy": "Do not promote R-specific conditions by union."
+    },
+    {
+      "skill_id": "skill_open_object",
+      "label": "打开对象",
+      "template_ref": "goal/open_object",
+      "goal_key": "open_object",
+      "learned_seven_tuple": {
+        "X": {
+          "subject": "actor",
+          "roles": [
+            "arm_1",
+            "gripper_1"
+          ],
+          "binding_status": "unbound"
+        },
+        "O": {
+          "roles": [
+            "target"
+          ],
+          "object_categories": [
+            "box"
+          ]
+        },
+        "C_pre": [],
+        "C_const": [],
+        "E": [
+          "eval_skill_open_object"
+        ],
+        "C_post": [
+          "Pf84b7d33ab49"
+        ],
+        "R": [
+          {
+            "id": "R_6b18905205793c6622a9",
+            "realization_ref": "R_6b18905205793c6622a9",
+            "name": "右臂移动至盒子上方，右手手指接触盒盖边缘并施力向上掀起",
+            "instance_ids": [
+              "ee64959271d327c2b19a"
+            ],
+            "C_pre": [
+              {
+                "predicate_ref": "P7db6e0080d4e",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "ee64959271d327c2b19a",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P72f523d87f93",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "ee64959271d327c2b19a",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pe1e20a8d1630",
+                "scope": "implementation_node",
+                "node_ref": "step_2",
+                "source_instance": "ee64959271d327c2b19a",
+                "verification_status": "unverified"
+              }
+            ],
+            "C_const": [
+              {
+                "predicate_ref": "P99bce6c69559",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "ee64959271d327c2b19a",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P81ddc2c2f365",
+                "scope": "implementation_node",
+                "node_ref": "step_2",
+                "source_instance": "ee64959271d327c2b19a",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pfb58010b79d4",
+                "scope": "implementation_node",
+                "node_ref": "step_2",
+                "source_instance": "ee64959271d327c2b19a",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P2cbade2a43be",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "ee64959271d327c2b19a",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P2cbade2a43be",
+                "scope": "implementation_node",
+                "node_ref": "step_2",
+                "source_instance": "ee64959271d327c2b19a",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P86185d61ec4a",
+                "scope": "implementation_node",
+                "node_ref": "step_2",
+                "source_instance": "ee64959271d327c2b19a",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P87d426fa444d",
+                "scope": "implementation_node",
+                "node_ref": "step_2",
+                "source_instance": "ee64959271d327c2b19a",
+                "verification_status": "unverified"
+              }
+            ],
+            "selection_guard": {
+              "status": "unresolved",
+              "reason": "requires_realization_specific_contrast"
+            },
+            "verification_status": "unverified",
+            "implementation_graph_ref": "general_graphs/skill_open_object.json",
+            "path_ids": [
+              "P_6ca1e45c81455dc3e58a"
+            ],
+            "required_capabilities": [
+              "move_chain_client"
+            ],
+            "capability_binding_status": "unbound",
+            "effect_review_status": "needs_review"
+          }
+        ]
+      },
+      "source_video_count": 1,
+      "instance_count": 1,
+      "instance_ids": [
+        "ee64959271d327c2b19a"
+      ],
+      "instance_bindings": [
+        {
+          "instance_id": "ee64959271d327c2b19a",
+          "target": "白色塑料盒",
+          "destination": null
+        }
+      ],
+      "realization_count": 1,
+      "observed_effect_review": "requires_proposition_review",
+      "candidate_condition_summary": [
+        {
+          "goal_key": "open_object",
+          "condition_key": "target_reachable",
+          "phase": "pre",
+          "comparison_context": "unstratified",
+          "counts": {
+            "T_success": 0,
+            "T_failure": 0,
+            "T_not_executed": 0,
+            "T_unknown": 1,
+            "F_success": 0,
+            "F_failure": 0,
+            "F_not_executed": 0,
+            "F_unknown": 0,
+            "U_success": 0,
+            "U_failure": 0,
+            "U_not_executed": 0,
+            "U_unknown": 0
+          },
+          "reviewed_counts": {
+            "T_success": 0,
+            "T_failure": 0,
+            "T_not_executed": 0,
+            "T_unknown": 0,
+            "F_success": 0,
+            "F_failure": 0,
+            "F_not_executed": 0,
+            "F_unknown": 0,
+            "U_success": 0,
+            "U_failure": 0,
+            "U_not_executed": 0,
+            "U_unknown": 0
+          },
+          "necessity_status": "needs_negative_trials",
+          "causal_status": "not_established",
+          "distinct_video_count": 1,
+          "empirical_assessment": {
+            "condition_refuted_as_necessary": false,
+            "failure_trials": 0,
+            "nonexecution_is_censored": true,
+            "next_step": "needs_controlled_contrast_trials",
+            "causal_established": false
+          },
+          "conflicted_annotations": 0,
+          "examples": [
+            {
+              "subtask_id": "sub1",
+              "condition_key": "target_reachable",
+              "text": "白色塑料盒在可操作范围内",
+              "truth": "T",
+              "at": "pre",
+              "evidence": [
+                {
+                  "evidence_id": "a1_world_before_0",
+                  "atomic_ref": 1,
+                  "field": "world_before",
+                  "quote": "白色塑料盒静止在桌面上"
+                }
+              ],
+              "provenance": "model_grounded_candidate",
+              "semantic_entailment_status": "model_assessment_requires_review",
+              "instance_id": "ee64959271d327c2b19a",
+              "video_uid": "56456ad2921248480103e61fb2a4dfb9d30a6ef278d72f3b8b6aaa990c70a096",
+              "goal_key": "open_object",
+              "outcome": "unknown",
+              "outcome_evidence": []
+            }
+          ],
+          "missing_evidence": [
+            "condition_violated_trials",
+            "real_failure_trials"
+          ],
+          "policy": "Nonexecution is censored; failure is not proof of a single cause; unstratified data cannot identify causality."
+        }
+      ],
+      "origin": "cross_video_induction",
+      "public_condition_policy": "Do not promote R-specific conditions by union."
+    },
+    {
+      "skill_id": "skill_place_object",
+      "label": "放置对象",
+      "template_ref": "goal/place_object",
+      "goal_key": "place_object",
+      "learned_seven_tuple": {
+        "X": {
+          "subject": "actor",
+          "roles": [
+            "arm_1",
+            "gripper_1"
+          ],
+          "binding_status": "unbound"
+        },
+        "O": {
+          "roles": [
+            "target",
+            "destination"
+          ],
+          "object_categories": [
+            "box"
+          ]
+        },
+        "C_pre": [],
+        "C_const": [],
+        "E": [
+          "eval_skill_place_object"
+        ],
+        "C_post": [
+          "P41c245a31a7d",
+          "P17e4f365a7da",
+          "P4f90531ce355"
+        ],
+        "R": [
+          {
+            "id": "R_0420b3729909c526cf39",
+            "realization_ref": "R_0420b3729909c526cf39",
+            "name": "左臂带载移动至白色区域，左手释放使物体获得支撑",
+            "instance_ids": [
+              "53d540031da61b0ea24f"
+            ],
+            "C_pre": [
+              {
+                "predicate_ref": "P4694a54100c1",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "53d540031da61b0ea24f",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P7b2ca9d120af",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "53d540031da61b0ea24f",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P6fa863afd31e",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "53d540031da61b0ea24f",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pd03d30ceddd5",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "53d540031da61b0ea24f",
+                "verification_status": "unverified"
+              }
+            ],
+            "C_const": [
+              {
+                "predicate_ref": "Pe4e64c96599d",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "53d540031da61b0ea24f",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P99bce6c69559",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "53d540031da61b0ea24f",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P755c3435f091",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "53d540031da61b0ea24f",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pfed781683a06",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "53d540031da61b0ea24f",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P865e8ced6c36",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "53d540031da61b0ea24f",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P74adcebe5442",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "53d540031da61b0ea24f",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P484c46419fb5",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "53d540031da61b0ea24f",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P484c46419fb5",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "53d540031da61b0ea24f",
+                "verification_status": "unverified"
+              }
+            ],
+            "selection_guard": {
+              "status": "unresolved",
+              "reason": "requires_realization_specific_contrast"
+            },
+            "verification_status": "unverified",
+            "implementation_graph_ref": "general_graphs/skill_place_object.json",
+            "path_ids": [
+              "P_100ef1f8357491c987ce"
+            ],
+            "required_capabilities": [
+              "OperateGripper",
+              "move_chain_client"
+            ],
+            "capability_binding_status": "unbound",
+            "effect_review_status": "needs_review"
+          },
+          {
+            "id": "R_0d2a205a632987961489",
+            "realization_ref": "R_0d2a205a632987961489",
+            "name": "右臂携带盒子移动至白色区域上方，右手释放使其静止在桌面",
+            "instance_ids": [
+              "53358186ad331fb74c24"
+            ],
+            "C_pre": [
+              {
+                "predicate_ref": "Pe9dda6783f98",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "53358186ad331fb74c24",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pc93fe1674c2d",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "53358186ad331fb74c24",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pa957586412bb",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "53358186ad331fb74c24",
+                "verification_status": "unverified"
+              }
+            ],
+            "C_const": [
+              {
+                "predicate_ref": "P358dba4a3cc5",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "53358186ad331fb74c24",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P99bce6c69559",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "53358186ad331fb74c24",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P755c3435f091",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "53358186ad331fb74c24",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Peac690e683f0",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "53358186ad331fb74c24",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P20ed22ea8060",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "53358186ad331fb74c24",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pd3a3d297abdb",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "53358186ad331fb74c24",
+                "verification_status": "unverified"
+              }
+            ],
+            "selection_guard": {
+              "status": "unresolved",
+              "reason": "requires_realization_specific_contrast"
+            },
+            "verification_status": "unverified",
+            "implementation_graph_ref": "general_graphs/skill_place_object.json",
+            "path_ids": [
+              "P_c1d87b314aa71aa0c08b"
+            ],
+            "required_capabilities": [
+              "OperateGripper",
+              "move_chain_client"
+            ],
+            "capability_binding_status": "unbound",
+            "effect_review_status": "needs_review"
+          },
+          {
+            "id": "R_2d42e016c77087ccdec8",
+            "realization_ref": "R_2d42e016c77087ccdec8",
+            "name": "右臂带载移动至白色桌面，右手释放使盒子获得支撑",
+            "instance_ids": [
+              "81c3048b6d0f7bb8e2fd"
+            ],
+            "C_pre": [
+              {
+                "predicate_ref": "P4694a54100c1",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "81c3048b6d0f7bb8e2fd",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P9052d3068b36",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "81c3048b6d0f7bb8e2fd",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P42b0102ba85e",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "81c3048b6d0f7bb8e2fd",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P7b5a0fb59813",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "81c3048b6d0f7bb8e2fd",
+                "verification_status": "unverified"
+              }
+            ],
+            "C_const": [
+              {
+                "predicate_ref": "P99bce6c69559",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "81c3048b6d0f7bb8e2fd",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P755c3435f091",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "81c3048b6d0f7bb8e2fd",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P547449eba616",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "81c3048b6d0f7bb8e2fd",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pf315e40cb94a",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "81c3048b6d0f7bb8e2fd",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P2062f0af9f8b",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "81c3048b6d0f7bb8e2fd",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P3bd3231ce7e0",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "81c3048b6d0f7bb8e2fd",
+                "verification_status": "unverified"
+              }
+            ],
+            "selection_guard": {
+              "status": "unresolved",
+              "reason": "requires_realization_specific_contrast"
+            },
+            "verification_status": "unverified",
+            "implementation_graph_ref": "general_graphs/skill_place_object.json",
+            "path_ids": [
+              "P_1e0e7fed82019c4b7ce5"
+            ],
+            "required_capabilities": [
+              "OperateGripper",
+              "move_chain_client"
+            ],
+            "capability_binding_status": "unbound",
+            "effect_review_status": "needs_review"
+          },
+          {
+            "id": "R_5937dc2757c558659457",
+            "realization_ref": "R_5937dc2757c558659457",
+            "name": "右臂带载移动至白色区域后右手释放",
+            "instance_ids": [
+              "c7d3752a03bb848ba3eb"
+            ],
+            "C_pre": [
+              {
+                "predicate_ref": "P4694a54100c1",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "c7d3752a03bb848ba3eb",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pc93fe1674c2d",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "c7d3752a03bb848ba3eb",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P33da9b2651c6",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "c7d3752a03bb848ba3eb",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P81d88498dab1",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "c7d3752a03bb848ba3eb",
+                "verification_status": "unverified"
+              }
+            ],
+            "C_const": [
+              {
+                "predicate_ref": "Pd0cd8bcfbd09",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "c7d3752a03bb848ba3eb",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P835e599a218b",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "c7d3752a03bb848ba3eb",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P755c3435f091",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "c7d3752a03bb848ba3eb",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pb5d2ede02c82",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "c7d3752a03bb848ba3eb",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pdbe0e50f8758",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "c7d3752a03bb848ba3eb",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P0f056ea2fb20",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "c7d3752a03bb848ba3eb",
+                "verification_status": "unverified"
+              }
+            ],
+            "selection_guard": {
+              "status": "unresolved",
+              "reason": "requires_realization_specific_contrast"
+            },
+            "verification_status": "unverified",
+            "implementation_graph_ref": "general_graphs/skill_place_object.json",
+            "path_ids": [
+              "P_8ee42f31cbb18463c03d"
+            ],
+            "required_capabilities": [
+              "OperateGripper",
+              "move_chain_client"
+            ],
+            "capability_binding_status": "unbound",
+            "effect_review_status": "needs_review"
+          },
+          {
+            "id": "R_8d3439393b9bedee2634",
+            "realization_ref": "R_8d3439393b9bedee2634",
+            "name": "左臂将塑料盒向下放置于白色桌面并释放",
+            "instance_ids": [
+              "8e6929b88b9f3ecaa95b"
+            ],
+            "C_pre": [],
+            "C_const": [
+              {
+                "predicate_ref": "P358dba4a3cc5",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "8e6929b88b9f3ecaa95b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P835e599a218b",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "8e6929b88b9f3ecaa95b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P9af847cc41fd",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "8e6929b88b9f3ecaa95b",
+                "verification_status": "unverified"
+              }
+            ],
+            "selection_guard": {
+              "status": "unresolved",
+              "reason": "requires_realization_specific_contrast"
+            },
+            "verification_status": "unverified",
+            "implementation_graph_ref": "general_graphs/skill_place_object.json",
+            "path_ids": [
+              "P_1de388dec34a07ddee51"
+            ],
+            "required_capabilities": [
+              "move_chain_client"
+            ],
+            "capability_binding_status": "unbound",
+            "effect_review_status": "needs_review"
+          },
+          {
+            "id": "R_ad75f69fb71b1e586596",
+            "realization_ref": "R_ad75f69fb71b1e586596",
+            "name": "右手在白色区域释放塑料盒",
+            "instance_ids": [
+              "91e46457427163a64a70",
+              "574986ac005d28d7ade5",
+              "4e87102b33cd748de367"
+            ],
+            "C_pre": [
+              {
+                "predicate_ref": "Pb4a0cbe42327",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "91e46457427163a64a70",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pca0e490e7dea",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "574986ac005d28d7ade5",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pc33823b1d969",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "574986ac005d28d7ade5",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P4f9aaf75ff54",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "4e87102b33cd748de367",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pfe4ce65bb002",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "4e87102b33cd748de367",
+                "verification_status": "unverified"
+              }
+            ],
+            "C_const": [
+              {
+                "predicate_ref": "P72077749f794",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "91e46457427163a64a70",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P3102edd34e6e",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "91e46457427163a64a70",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pcbb41f45e98c",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "574986ac005d28d7ade5",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P72077749f794",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "4e87102b33cd748de367",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P84d999589bd3",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "4e87102b33cd748de367",
+                "verification_status": "unverified"
+              }
+            ],
+            "selection_guard": {
+              "status": "unresolved",
+              "reason": "requires_realization_specific_contrast"
+            },
+            "verification_status": "unverified",
+            "implementation_graph_ref": "general_graphs/skill_place_object.json",
+            "path_ids": [
+              "P_60f4e94a4a496550da84",
+              "P_072a910f96d92c448b47",
+              "P_5ad57373fc057db43844"
+            ],
+            "required_capabilities": [
+              "OperateGripper"
+            ],
+            "capability_binding_status": "unbound",
+            "effect_review_status": "needs_review"
+          }
+        ]
+      },
+      "source_video_count": 8,
+      "instance_count": 8,
+      "instance_ids": [
+        "81c3048b6d0f7bb8e2fd",
+        "91e46457427163a64a70",
+        "c7d3752a03bb848ba3eb",
+        "8e6929b88b9f3ecaa95b",
+        "53358186ad331fb74c24",
+        "574986ac005d28d7ade5",
+        "53d540031da61b0ea24f",
+        "4e87102b33cd748de367"
+      ],
+      "instance_bindings": [
+        {
+          "instance_id": "81c3048b6d0f7bb8e2fd",
+          "target": "透明塑料盒",
+          "destination": "白色桌面"
+        },
+        {
+          "instance_id": "91e46457427163a64a70",
+          "target": "透明塑料盒",
+          "destination": "白色区域"
+        },
+        {
+          "instance_id": "c7d3752a03bb848ba3eb",
+          "target": "透明塑料盒",
+          "destination": "白色区域"
+        },
+        {
+          "instance_id": "8e6929b88b9f3ecaa95b",
+          "target": "塑料盒",
+          "destination": "白色区域"
+        },
+        {
+          "instance_id": "53358186ad331fb74c24",
+          "target": "透明塑料盒",
+          "destination": "白色区域"
+        },
+        {
+          "instance_id": "574986ac005d28d7ade5",
+          "target": "透明塑料盒",
+          "destination": "白色区域"
+        },
+        {
+          "instance_id": "53d540031da61b0ea24f",
+          "target": "透明塑料盒",
+          "destination": "白色区域"
+        },
+        {
+          "instance_id": "4e87102b33cd748de367",
+          "target": "塑料盒",
+          "destination": "白色区域"
+        }
+      ],
+      "realization_count": 6,
+      "observed_effect_review": "requires_proposition_review",
+      "candidate_condition_summary": [],
+      "origin": "cross_video_induction",
+      "public_condition_policy": "Do not promote R-specific conditions by union."
+    },
+    {
+      "skill_id": "skill_relocate_and_release",
+      "label": "搬移到目标区并结束接触",
+      "template_ref": "goal/relocate_and_release",
+      "goal_key": "relocate_and_release",
+      "learned_seven_tuple": {
+        "X": {
+          "subject": "actor",
+          "roles": [
+            "arm_1",
+            "gripper_1"
+          ],
+          "binding_status": "unbound"
+        },
+        "O": {
+          "roles": [
+            "target",
+            "destination"
+          ],
+          "object_categories": [
+            "box"
+          ]
+        },
+        "C_pre": [],
+        "C_const": [],
+        "E": [
+          "eval_skill_relocate_and_release"
+        ],
+        "C_post": [
+          "P41c245a31a7d",
+          "Pe4a3515feb02",
+          "P4f90531ce355"
+        ],
+        "R": [
+          {
+            "id": "R_0a3667a7e05c40b6a955",
+            "realization_ref": "R_0a3667a7e05c40b6a955",
+            "name": "GraspMove",
+            "instance_ids": [
+              "e142c13ee2524b771a0b"
+            ],
+            "C_pre": [
+              {
+                "predicate_ref": "Pa2371a74cb6c",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "e142c13ee2524b771a0b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P72f523d87f93",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "e142c13ee2524b771a0b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pe1e20a8d1630",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "e142c13ee2524b771a0b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P211f8b78e9ac",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "e142c13ee2524b771a0b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P4694a54100c1",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "e142c13ee2524b771a0b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pc93fe1674c2d",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "e142c13ee2524b771a0b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P3a9b36ce3cde",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "e142c13ee2524b771a0b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P81d88498dab1",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "e142c13ee2524b771a0b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P23f205a2e386",
+                "scope": "implementation_node",
+                "node_ref": "step_6",
+                "source_instance": "e142c13ee2524b771a0b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pbec7267d203c",
+                "scope": "implementation_node",
+                "node_ref": "step_6",
+                "source_instance": "e142c13ee2524b771a0b",
+                "verification_status": "unverified"
+              }
+            ],
+            "C_const": [
+              {
+                "predicate_ref": "P99bce6c69559",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "e142c13ee2524b771a0b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P018d7dbf0e61",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "e142c13ee2524b771a0b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P755c3435f091",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "e142c13ee2524b771a0b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pd0cd8bcfbd09",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "e142c13ee2524b771a0b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P835e599a218b",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "e142c13ee2524b771a0b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P755c3435f091",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "e142c13ee2524b771a0b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pb5d2ede02c82",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "e142c13ee2524b771a0b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P99bce6c69559",
+                "scope": "implementation_node",
+                "node_ref": "step_6",
+                "source_instance": "e142c13ee2524b771a0b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pb805e87f1696",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "e142c13ee2524b771a0b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pdbe0e50f8758",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "e142c13ee2524b771a0b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P0f056ea2fb20",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "e142c13ee2524b771a0b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P817cfe721923",
+                "scope": "implementation_node",
+                "node_ref": "step_6",
+                "source_instance": "e142c13ee2524b771a0b",
+                "verification_status": "unverified"
+              }
+            ],
+            "selection_guard": {
+              "status": "unresolved",
+              "reason": "requires_realization_specific_contrast"
+            },
+            "verification_status": "unverified",
+            "implementation_graph_ref": "general_graphs/skill_relocate_and_release.json",
+            "path_ids": [
+              "P_b8f208f3044c1549dcc6"
+            ],
+            "required_capabilities": [
+              "OperateGripper",
+              "move_chain_client"
+            ],
+            "capability_binding_status": "unbound",
+            "effect_review_status": "needs_review"
+          },
+          {
+            "id": "R_16d04e0f2cf8fa6452be",
+            "realization_ref": "R_16d04e0f2cf8fa6452be",
+            "name": "Pull",
+            "instance_ids": [
+              "dc306a6095cb8db53b35"
+            ],
+            "C_pre": [
+              {
+                "predicate_ref": "P26c064713b9a",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "dc306a6095cb8db53b35",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P72f523d87f93",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "dc306a6095cb8db53b35",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P47d4bf0876a8",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "dc306a6095cb8db53b35",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pce3909f814c1",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "dc306a6095cb8db53b35",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P4694a54100c1",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "dc306a6095cb8db53b35",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P9052d3068b36",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "dc306a6095cb8db53b35",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P42b0102ba85e",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "dc306a6095cb8db53b35",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P7b5a0fb59813",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "dc306a6095cb8db53b35",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Ped41955cfe35",
+                "scope": "implementation_node",
+                "node_ref": "step_6",
+                "source_instance": "dc306a6095cb8db53b35",
+                "verification_status": "unverified"
+              }
+            ],
+            "C_const": [
+              {
+                "predicate_ref": "P99bce6c69559",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "dc306a6095cb8db53b35",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P018d7dbf0e61",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "dc306a6095cb8db53b35",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P755c3435f091",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "dc306a6095cb8db53b35",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P99bce6c69559",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "dc306a6095cb8db53b35",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P755c3435f091",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "dc306a6095cb8db53b35",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P547449eba616",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "dc306a6095cb8db53b35",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P99bce6c69559",
+                "scope": "implementation_node",
+                "node_ref": "step_6",
+                "source_instance": "dc306a6095cb8db53b35",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P9e4ffddcc822",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "dc306a6095cb8db53b35",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P2062f0af9f8b",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "dc306a6095cb8db53b35",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P59e700e189e6",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "dc306a6095cb8db53b35",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P234744e7428d",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "dc306a6095cb8db53b35",
+                "verification_status": "unverified"
+              }
+            ],
+            "selection_guard": {
+              "status": "unresolved",
+              "reason": "requires_realization_specific_contrast"
+            },
+            "verification_status": "unverified",
+            "implementation_graph_ref": "general_graphs/skill_relocate_and_release.json",
+            "path_ids": [
+              "P_572d201c9d208272e119"
+            ],
+            "required_capabilities": [
+              "OperateGripper",
+              "move_chain_client"
+            ],
+            "capability_binding_status": "unbound",
+            "effect_review_status": "needs_review"
+          },
+          {
+            "id": "R_2795bdff06f9ee62887a",
+            "realization_ref": "R_2795bdff06f9ee62887a",
+            "name": "Push",
+            "instance_ids": [
+              "fe1523075b2021c64e7b"
+            ],
+            "C_pre": [
+              {
+                "predicate_ref": "P522dc787bfd0",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "fe1523075b2021c64e7b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P16e41f354d7e",
+                "scope": "implementation_node",
+                "node_ref": "step_2",
+                "source_instance": "fe1523075b2021c64e7b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P0ebbcefc1f74",
+                "scope": "implementation_node",
+                "node_ref": "step_2",
+                "source_instance": "fe1523075b2021c64e7b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P6185f994bac6",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "fe1523075b2021c64e7b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P7b2ca9d120af",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "fe1523075b2021c64e7b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P20981e8c6433",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "fe1523075b2021c64e7b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P4f9aaf75ff54",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "fe1523075b2021c64e7b",
+                "verification_status": "unverified"
+              }
+            ],
+            "C_const": [
+              {
+                "predicate_ref": "P63dabea05cf4",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "fe1523075b2021c64e7b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P98c5413f9f82",
+                "scope": "implementation_node",
+                "node_ref": "step_2",
+                "source_instance": "fe1523075b2021c64e7b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P2fe9ee8d42e5",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "fe1523075b2021c64e7b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pab2b18397e1b",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "fe1523075b2021c64e7b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pa4bc3a761350",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "fe1523075b2021c64e7b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P39fe35568481",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "fe1523075b2021c64e7b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pdb703ed7c9cc",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "fe1523075b2021c64e7b",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P0031f3228db8",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "fe1523075b2021c64e7b",
+                "verification_status": "unverified"
+              }
+            ],
+            "selection_guard": {
+              "status": "unresolved",
+              "reason": "requires_realization_specific_contrast"
+            },
+            "verification_status": "unverified",
+            "implementation_graph_ref": "general_graphs/skill_relocate_and_release.json",
+            "path_ids": [
+              "P_38f1e9a9ec7c3ee1c669"
+            ],
+            "required_capabilities": [
+              "OperateGripper",
+              "move_chain_client"
+            ],
+            "capability_binding_status": "unbound",
+            "effect_review_status": "needs_review"
+          },
+          {
+            "id": "R_40f761a875964b207af1",
+            "realization_ref": "R_40f761a875964b207af1",
+            "name": "GraspSlide",
+            "instance_ids": [
+              "138c662a8d0607da9700"
+            ],
+            "C_pre": [
+              {
+                "predicate_ref": "P56b48ffa1dda",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "138c662a8d0607da9700",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P0ebbcefc1f74",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "138c662a8d0607da9700",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P7f39a72f6e28",
+                "scope": "implementation_node",
+                "node_ref": "step_2",
+                "source_instance": "138c662a8d0607da9700",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pf07941956ff9",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "138c662a8d0607da9700",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pf07941956ff9",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "138c662a8d0607da9700",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P94ab27d338d9",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "138c662a8d0607da9700",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Ped41955cfe35",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "138c662a8d0607da9700",
+                "verification_status": "unverified"
+              }
+            ],
+            "C_const": [
+              {
+                "predicate_ref": "P99bce6c69559",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "138c662a8d0607da9700",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P2fe9ee8d42e5",
+                "scope": "implementation_node",
+                "node_ref": "step_2",
+                "source_instance": "138c662a8d0607da9700",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pb80724acceef",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "138c662a8d0607da9700",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pec3994ab0075",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "138c662a8d0607da9700",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P1c21b95d74a3",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "138c662a8d0607da9700",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P99bce6c69559",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "138c662a8d0607da9700",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P28ed7dfaa1d0",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "138c662a8d0607da9700",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pe30507aafc62",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "138c662a8d0607da9700",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P52975590bd80",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "138c662a8d0607da9700",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P52975590bd80",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "138c662a8d0607da9700",
+                "verification_status": "unverified"
+              }
+            ],
+            "selection_guard": {
+              "status": "unresolved",
+              "reason": "requires_realization_specific_contrast"
+            },
+            "verification_status": "unverified",
+            "implementation_graph_ref": "general_graphs/skill_relocate_and_release.json",
+            "path_ids": [
+              "P_4e5d8f4274441ed1e4db"
+            ],
+            "required_capabilities": [
+              "OperateGripper",
+              "move_chain_client"
+            ],
+            "capability_binding_status": "unbound",
+            "effect_review_status": "needs_review"
+          },
+          {
+            "id": "R_47dd966c212677b901e4",
+            "realization_ref": "R_47dd966c212677b901e4",
+            "name": "Pull",
+            "instance_ids": [
+              "06d5188b27417877288a"
+            ],
+            "C_pre": [
+              {
+                "predicate_ref": "Pa2371a74cb6c",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "06d5188b27417877288a",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pe7132545b9d4",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "06d5188b27417877288a",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P47d4bf0876a8",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "06d5188b27417877288a",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P0741b253052d",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "06d5188b27417877288a",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P4694a54100c1",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "06d5188b27417877288a",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P7b2ca9d120af",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "06d5188b27417877288a",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pb9fd302569da",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "06d5188b27417877288a",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pd03d30ceddd5",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "06d5188b27417877288a",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P7f60afffac77",
+                "scope": "implementation_node",
+                "node_ref": "step_6",
+                "source_instance": "06d5188b27417877288a",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P2591fe09e52b",
+                "scope": "implementation_node",
+                "node_ref": "step_6",
+                "source_instance": "06d5188b27417877288a",
+                "verification_status": "unverified"
+              }
+            ],
+            "C_const": [
+              {
+                "predicate_ref": "P99bce6c69559",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "06d5188b27417877288a",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P018d7dbf0e61",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "06d5188b27417877288a",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P755c3435f091",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "06d5188b27417877288a",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pe4e64c96599d",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "06d5188b27417877288a",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P99bce6c69559",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "06d5188b27417877288a",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P755c3435f091",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "06d5188b27417877288a",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pfed781683a06",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "06d5188b27417877288a",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P99bce6c69559",
+                "scope": "implementation_node",
+                "node_ref": "step_6",
+                "source_instance": "06d5188b27417877288a",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P7d23e4eb2883",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "06d5188b27417877288a",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P7d23e4eb2883",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "06d5188b27417877288a",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P6015b344bfa8",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "06d5188b27417877288a",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P74adcebe5442",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "06d5188b27417877288a",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P74adcebe5442",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "06d5188b27417877288a",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pdf45f7e21f86",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "06d5188b27417877288a",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pdf45f7e21f86",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "06d5188b27417877288a",
+                "verification_status": "unverified"
+              }
+            ],
+            "selection_guard": {
+              "status": "unresolved",
+              "reason": "requires_realization_specific_contrast"
+            },
+            "verification_status": "unverified",
+            "implementation_graph_ref": "general_graphs/skill_relocate_and_release.json",
+            "path_ids": [
+              "P_160f7bd72c1af1407d74"
+            ],
+            "required_capabilities": [
+              "OperateGripper",
+              "move_chain_client"
+            ],
+            "capability_binding_status": "unbound",
+            "effect_review_status": "needs_review"
+          },
+          {
+            "id": "R_751a40225664acf96a40",
+            "realization_ref": "R_751a40225664acf96a40",
+            "name": "Push",
+            "instance_ids": [
+              "df009bee8387adc91b01"
+            ],
+            "C_pre": [
+              {
+                "predicate_ref": "P6f0e120dca22",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "df009bee8387adc91b01",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P68cda9f7c781",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "df009bee8387adc91b01",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pfba7c0079288",
+                "scope": "implementation_node",
+                "node_ref": "step_2",
+                "source_instance": "df009bee8387adc91b01",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P220914627ef0",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "df009bee8387adc91b01",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P4f9aaf75ff54",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "df009bee8387adc91b01",
+                "verification_status": "unverified"
+              }
+            ],
+            "C_const": [
+              {
+                "predicate_ref": "P98c5413f9f82",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "df009bee8387adc91b01",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P2fe9ee8d42e5",
+                "scope": "implementation_node",
+                "node_ref": "step_2",
+                "source_instance": "df009bee8387adc91b01",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P4af6a559b9da",
+                "scope": "implementation_node",
+                "node_ref": "step_2",
+                "source_instance": "df009bee8387adc91b01",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pa4bc3a761350",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "df009bee8387adc91b01",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P8a077fa4f7ca",
+                "scope": "implementation_node",
+                "node_ref": "step_2",
+                "source_instance": "df009bee8387adc91b01",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pb30d41c2bf0b",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "df009bee8387adc91b01",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pb30d41c2bf0b",
+                "scope": "implementation_node",
+                "node_ref": "step_2",
+                "source_instance": "df009bee8387adc91b01",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pc51425adeb40",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "df009bee8387adc91b01",
+                "verification_status": "unverified"
+              }
+            ],
+            "selection_guard": {
+              "status": "unresolved",
+              "reason": "requires_realization_specific_contrast"
+            },
+            "verification_status": "unverified",
+            "implementation_graph_ref": "general_graphs/skill_relocate_and_release.json",
+            "path_ids": [
+              "P_46fb972313d17bd53d3d"
+            ],
+            "required_capabilities": [
+              "move_chain_client"
+            ],
+            "capability_binding_status": "unbound",
+            "effect_review_status": "needs_review"
+          },
+          {
+            "id": "R_b0182d48e268d7f2f2ba",
+            "realization_ref": "R_b0182d48e268d7f2f2ba",
+            "name": "Pull",
+            "instance_ids": [
+              "bd47466782b45cb74131"
+            ],
+            "C_pre": [
+              {
+                "predicate_ref": "Pa2371a74cb6c",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "bd47466782b45cb74131",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P72f523d87f93",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "bd47466782b45cb74131",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pe1e20a8d1630",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "bd47466782b45cb74131",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P0741b253052d",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "bd47466782b45cb74131",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P4816fbf55598",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "bd47466782b45cb74131",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pab4a2fb9b511",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "bd47466782b45cb74131",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P5778b8022ffe",
+                "scope": "implementation_node",
+                "node_ref": "step_6",
+                "source_instance": "bd47466782b45cb74131",
+                "verification_status": "unverified"
+              }
+            ],
+            "C_const": [
+              {
+                "predicate_ref": "P99bce6c69559",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "bd47466782b45cb74131",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P018d7dbf0e61",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "bd47466782b45cb74131",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P755c3435f091",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "bd47466782b45cb74131",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P99bce6c69559",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "bd47466782b45cb74131",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P755c3435f091",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "bd47466782b45cb74131",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P72077749f794",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "bd47466782b45cb74131",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P99bce6c69559",
+                "scope": "implementation_node",
+                "node_ref": "step_6",
+                "source_instance": "bd47466782b45cb74131",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P87224e7ae78f",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "bd47466782b45cb74131",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P82824c4f7726",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "bd47466782b45cb74131",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P80f5b5e121a5",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "bd47466782b45cb74131",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pc61f2c178178",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "bd47466782b45cb74131",
+                "verification_status": "unverified"
+              }
+            ],
+            "selection_guard": {
+              "status": "unresolved",
+              "reason": "requires_realization_specific_contrast"
+            },
+            "verification_status": "unverified",
+            "implementation_graph_ref": "general_graphs/skill_relocate_and_release.json",
+            "path_ids": [
+              "P_390e9ba44543c320ecb4"
+            ],
+            "required_capabilities": [
+              "OperateGripper",
+              "move_chain_client"
+            ],
+            "capability_binding_status": "unbound",
+            "effect_review_status": "needs_review"
+          },
+          {
+            "id": "R_da82fc7596050b460748",
+            "realization_ref": "R_da82fc7596050b460748",
+            "name": "GraspMove",
+            "instance_ids": [
+              "fd48505574af12a4cf60",
+              "b103d9765ee56eb96d24"
+            ],
+            "C_pre": [
+              {
+                "predicate_ref": "Pa2371a74cb6c",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "fd48505574af12a4cf60",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P72f523d87f93",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "fd48505574af12a4cf60",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P9f8891a672d2",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "fd48505574af12a4cf60",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P0741b253052d",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "fd48505574af12a4cf60",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pe9dda6783f98",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "fd48505574af12a4cf60",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pc93fe1674c2d",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "fd48505574af12a4cf60",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P033b3f762224",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "fd48505574af12a4cf60",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P3e0061a229df",
+                "scope": "implementation_node",
+                "node_ref": "step_6",
+                "source_instance": "fd48505574af12a4cf60",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P6f5952df96b4",
+                "scope": "implementation_node",
+                "node_ref": "step_6",
+                "source_instance": "fd48505574af12a4cf60",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pa2371a74cb6c",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "b103d9765ee56eb96d24",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P72f523d87f93",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "b103d9765ee56eb96d24",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pbeafb0528a24",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "b103d9765ee56eb96d24",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P0741b253052d",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "b103d9765ee56eb96d24",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pe9dda6783f98",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "b103d9765ee56eb96d24",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pc93fe1674c2d",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "b103d9765ee56eb96d24",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P736afbf68366",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "b103d9765ee56eb96d24",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P443b69b03f01",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "b103d9765ee56eb96d24",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P23f205a2e386",
+                "scope": "implementation_node",
+                "node_ref": "step_6",
+                "source_instance": "b103d9765ee56eb96d24",
+                "verification_status": "unverified"
+              }
+            ],
+            "C_const": [
+              {
+                "predicate_ref": "P99bce6c69559",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "fd48505574af12a4cf60",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P858a9771ace4",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "fd48505574af12a4cf60",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P755c3435f091",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "fd48505574af12a4cf60",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P358dba4a3cc5",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "fd48505574af12a4cf60",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P99bce6c69559",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "fd48505574af12a4cf60",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P755c3435f091",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "fd48505574af12a4cf60",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Peac690e683f0",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "fd48505574af12a4cf60",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P99bce6c69559",
+                "scope": "implementation_node",
+                "node_ref": "step_6",
+                "source_instance": "fd48505574af12a4cf60",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P20ed22ea8060",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "fd48505574af12a4cf60",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P20ed22ea8060",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "fd48505574af12a4cf60",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P3939a1f9cc1e",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "fd48505574af12a4cf60",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pdfefaaae91cb",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "fd48505574af12a4cf60",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pdfefaaae91cb",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "fd48505574af12a4cf60",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P99bce6c69559",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "b103d9765ee56eb96d24",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P018d7dbf0e61",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "b103d9765ee56eb96d24",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P755c3435f091",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "b103d9765ee56eb96d24",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P99bce6c69559",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "b103d9765ee56eb96d24",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P755c3435f091",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "b103d9765ee56eb96d24",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P99bce6c69559",
+                "scope": "implementation_node",
+                "node_ref": "step_6",
+                "source_instance": "b103d9765ee56eb96d24",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P386df69de7e0",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "b103d9765ee56eb96d24",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P2064ed418134",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "b103d9765ee56eb96d24",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pacd658314f21",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "b103d9765ee56eb96d24",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P4e34be49c0c1",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "b103d9765ee56eb96d24",
+                "verification_status": "unverified"
+              }
+            ],
+            "selection_guard": {
+              "status": "unresolved",
+              "reason": "requires_realization_specific_contrast"
+            },
+            "verification_status": "unverified",
+            "implementation_graph_ref": "general_graphs/skill_relocate_and_release.json",
+            "path_ids": [
+              "P_e464168bdf0ef4a238c2",
+              "P_6b18986a994f445ab937"
+            ],
+            "required_capabilities": [
+              "OperateGripper",
+              "move_chain_client"
+            ],
+            "capability_binding_status": "unbound",
+            "effect_review_status": "needs_review"
+          },
+          {
+            "id": "R_eb0c0c0ed4849844414a",
+            "realization_ref": "R_eb0c0c0ed4849844414a",
+            "name": "Push",
+            "instance_ids": [
+              "6ece37d71e3d9dd7a533"
+            ],
+            "C_pre": [
+              {
+                "predicate_ref": "P22baefe96e44",
+                "scope": "implementation_node",
+                "node_ref": "step_2",
+                "source_instance": "6ece37d71e3d9dd7a533",
+                "verification_status": "unverified"
+              }
+            ],
+            "C_const": [
+              {
+                "predicate_ref": "P358dba4a3cc5",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "6ece37d71e3d9dd7a533",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P835e599a218b",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "6ece37d71e3d9dd7a533",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P99bce6c69559",
+                "scope": "implementation_node",
+                "node_ref": "step_2",
+                "source_instance": "6ece37d71e3d9dd7a533",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P9af847cc41fd",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "6ece37d71e3d9dd7a533",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pd5c317b25a03",
+                "scope": "implementation_node",
+                "node_ref": "step_2",
+                "source_instance": "6ece37d71e3d9dd7a533",
+                "verification_status": "unverified"
+              }
+            ],
+            "selection_guard": {
+              "status": "unresolved",
+              "reason": "requires_realization_specific_contrast"
+            },
+            "verification_status": "unverified",
+            "implementation_graph_ref": "general_graphs/skill_relocate_and_release.json",
+            "path_ids": [
+              "P_1ae811ea4dcb16b67de3"
+            ],
+            "required_capabilities": [
+              "move_chain_client"
+            ],
+            "capability_binding_status": "unbound",
+            "effect_review_status": "needs_review"
+          },
+          {
+            "id": "R_edcf7bba797884d1be0c",
+            "realization_ref": "R_edcf7bba797884d1be0c",
+            "name": "Push",
+            "instance_ids": [
+              "e6d117262229379a61d4"
+            ],
+            "C_pre": [
+              {
+                "predicate_ref": "P82685bedafc2",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "e6d117262229379a61d4",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P0ebbcefc1f74",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "e6d117262229379a61d4",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P4f9aaf75ff54",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "e6d117262229379a61d4",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pfe4ce65bb002",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "e6d117262229379a61d4",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Ped41955cfe35",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "e6d117262229379a61d4",
+                "verification_status": "unverified"
+              }
+            ],
+            "C_const": [
+              {
+                "predicate_ref": "P99bce6c69559",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "e6d117262229379a61d4",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P77a67e422ebe",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "e6d117262229379a61d4",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P8e35cc80d823",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "e6d117262229379a61d4",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P72077749f794",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "e6d117262229379a61d4",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P99bce6c69559",
+                "scope": "implementation_node",
+                "node_ref": "step_5",
+                "source_instance": "e6d117262229379a61d4",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P14667bfbc174",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "e6d117262229379a61d4",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P896f49ceefb5",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "e6d117262229379a61d4",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P84d999589bd3",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "e6d117262229379a61d4",
+                "verification_status": "unverified"
+              }
+            ],
+            "selection_guard": {
+              "status": "unresolved",
+              "reason": "requires_realization_specific_contrast"
+            },
+            "verification_status": "unverified",
+            "implementation_graph_ref": "general_graphs/skill_relocate_and_release.json",
+            "path_ids": [
+              "P_6d89866e0c4a01893b8e"
+            ],
+            "required_capabilities": [
+              "OperateGripper",
+              "move_chain_client"
+            ],
+            "capability_binding_status": "unbound",
+            "effect_review_status": "needs_review"
+          }
+        ]
+      },
+      "source_video_count": 11,
+      "instance_count": 11,
+      "instance_ids": [
+        "dc306a6095cb8db53b35",
+        "df009bee8387adc91b01",
+        "bd47466782b45cb74131",
+        "e142c13ee2524b771a0b",
+        "6ece37d71e3d9dd7a533",
+        "fd48505574af12a4cf60",
+        "b103d9765ee56eb96d24",
+        "138c662a8d0607da9700",
+        "fe1523075b2021c64e7b",
+        "06d5188b27417877288a",
+        "e6d117262229379a61d4"
+      ],
+      "instance_bindings": [
+        {
+          "instance_id": "dc306a6095cb8db53b35",
+          "target": "透明塑料盒",
+          "destination": "白色桌面 B"
+        },
+        {
+          "instance_id": "df009bee8387adc91b01",
+          "target": "长方形塑料盒",
+          "destination": "白色桌面 B"
+        },
+        {
+          "instance_id": "bd47466782b45cb74131",
+          "target": "透明塑料盒",
+          "destination": "白色桌面 B"
+        },
+        {
+          "instance_id": "e142c13ee2524b771a0b",
+          "target": "透明塑料盒",
+          "destination": "白色桌面 B"
+        },
+        {
+          "instance_id": "6ece37d71e3d9dd7a533",
+          "target": "塑料盒",
+          "destination": "白色桌面 B"
+        },
+        {
+          "instance_id": "fd48505574af12a4cf60",
+          "target": "透明塑料盒",
+          "destination": "白色桌面 B"
+        },
+        {
+          "instance_id": "b103d9765ee56eb96d24",
+          "target": "透明塑料盒",
+          "destination": "白色桌面 B"
+        },
+        {
+          "instance_id": "138c662a8d0607da9700",
+          "target": "粉色塑料盒",
+          "destination": "白色桌面 B"
+        },
+        {
+          "instance_id": "fe1523075b2021c64e7b",
+          "target": "塑料盒",
+          "destination": "白色桌面 B"
+        },
+        {
+          "instance_id": "06d5188b27417877288a",
+          "target": "透明塑料盒",
+          "destination": "白色桌面 B"
+        },
+        {
+          "instance_id": "e6d117262229379a61d4",
+          "target": "塑料盒",
+          "destination": "白色桌面 B"
+        }
+      ],
+      "realization_count": 10,
+      "observed_effect_review": "requires_proposition_review",
+      "candidate_condition_summary": [],
+      "origin": "cross_video_induction",
+      "public_condition_policy": "Do not promote R-specific conditions by union."
+    },
+    {
+      "skill_id": "skill_relocate_object",
+      "label": "搬移对象",
+      "template_ref": "goal/relocate_object",
+      "goal_key": "relocate_object",
+      "learned_seven_tuple": {
+        "X": {
+          "subject": "actor",
+          "roles": [
+            "arm_1",
+            "gripper_1"
+          ],
+          "binding_status": "unbound"
+        },
+        "O": {
+          "roles": [
+            "target",
+            "destination"
+          ],
+          "object_categories": [
+            "box"
+          ]
+        },
+        "C_pre": [],
+        "C_const": [],
+        "E": [
+          "eval_skill_relocate_object"
+        ],
+        "C_post": [
+          "P41c245a31a7d"
+        ],
+        "R": [
+          {
+            "id": "R_02978436ac9ccf368018",
+            "realization_ref": "R_02978436ac9ccf368018",
+            "name": "右臂带动握持的塑料盒从黑色区域移动至白色区域",
+            "instance_ids": [
+              "ccd7f2d13a160932ad4f"
+            ],
+            "C_pre": [
+              {
+                "predicate_ref": "P4816fbf55598",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "ccd7f2d13a160932ad4f",
+                "verification_status": "unverified"
+              }
+            ],
+            "C_const": [
+              {
+                "predicate_ref": "P99bce6c69559",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "ccd7f2d13a160932ad4f",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P755c3435f091",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "ccd7f2d13a160932ad4f",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P1c39cd39a894",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "ccd7f2d13a160932ad4f",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P82824c4f7726",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "ccd7f2d13a160932ad4f",
+                "verification_status": "unverified"
+              }
+            ],
+            "selection_guard": {
+              "status": "unresolved",
+              "reason": "requires_realization_specific_contrast"
+            },
+            "verification_status": "unverified",
+            "implementation_graph_ref": "general_graphs/skill_relocate_object.json",
+            "path_ids": [
+              "P_aec6065ef2868f80e905"
+            ],
+            "required_capabilities": [
+              "move_chain_client"
+            ],
+            "capability_binding_status": "unbound",
+            "effect_review_status": "needs_review"
+          },
+          {
+            "id": "R_1fa5ef5ad15703b60459",
+            "realization_ref": "R_1fa5ef5ad15703b60459",
+            "name": "左臂接近并接触长方形塑料盒，通过推动使其向右平移至小塑料盒左侧",
+            "instance_ids": [
+              "58465f27744d3c5ab768"
+            ],
+            "C_pre": [
+              {
+                "predicate_ref": "P6f0e120dca22",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "58465f27744d3c5ab768",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P68cda9f7c781",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "58465f27744d3c5ab768",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pfba7c0079288",
+                "scope": "implementation_node",
+                "node_ref": "step_2",
+                "source_instance": "58465f27744d3c5ab768",
+                "verification_status": "unverified"
+              }
+            ],
+            "C_const": [
+              {
+                "predicate_ref": "P98c5413f9f82",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "58465f27744d3c5ab768",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P2fe9ee8d42e5",
+                "scope": "implementation_node",
+                "node_ref": "step_2",
+                "source_instance": "58465f27744d3c5ab768",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P4af6a559b9da",
+                "scope": "implementation_node",
+                "node_ref": "step_2",
+                "source_instance": "58465f27744d3c5ab768",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P8a077fa4f7ca",
+                "scope": "implementation_node",
+                "node_ref": "step_2",
+                "source_instance": "58465f27744d3c5ab768",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pb30d41c2bf0b",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "58465f27744d3c5ab768",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pb30d41c2bf0b",
+                "scope": "implementation_node",
+                "node_ref": "step_2",
+                "source_instance": "58465f27744d3c5ab768",
+                "verification_status": "unverified"
+              }
+            ],
+            "selection_guard": {
+              "status": "unresolved",
+              "reason": "requires_realization_specific_contrast"
+            },
+            "verification_status": "unverified",
+            "implementation_graph_ref": "general_graphs/skill_relocate_object.json",
+            "path_ids": [
+              "P_1526ef2f7be2ee33cf31"
+            ],
+            "required_capabilities": [
+              "move_chain_client"
+            ],
+            "capability_binding_status": "unbound",
+            "effect_review_status": "needs_review"
+          },
+          {
+            "id": "R_3c76f4bd947082eb1bc0",
+            "realization_ref": "R_3c76f4bd947082eb1bc0",
+            "name": "右臂接近并右手按压建立接触，随后右臂水平推动粉色塑料盒至小盒子旁，最后右手释放",
+            "instance_ids": [
+              "b87527d6eb09eaa3cb96"
+            ],
+            "C_pre": [
+              {
+                "predicate_ref": "P56b48ffa1dda",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "b87527d6eb09eaa3cb96",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P0ebbcefc1f74",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "b87527d6eb09eaa3cb96",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P7f39a72f6e28",
+                "scope": "implementation_node",
+                "node_ref": "step_2",
+                "source_instance": "b87527d6eb09eaa3cb96",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pf07941956ff9",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "b87527d6eb09eaa3cb96",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pf07941956ff9",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "b87527d6eb09eaa3cb96",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P94ab27d338d9",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "b87527d6eb09eaa3cb96",
+                "verification_status": "unverified"
+              }
+            ],
+            "C_const": [
+              {
+                "predicate_ref": "P99bce6c69559",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "b87527d6eb09eaa3cb96",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P2fe9ee8d42e5",
+                "scope": "implementation_node",
+                "node_ref": "step_2",
+                "source_instance": "b87527d6eb09eaa3cb96",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pb80724acceef",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "b87527d6eb09eaa3cb96",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pec3994ab0075",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "b87527d6eb09eaa3cb96",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P1c21b95d74a3",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "b87527d6eb09eaa3cb96",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P28ed7dfaa1d0",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "b87527d6eb09eaa3cb96",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pe30507aafc62",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "b87527d6eb09eaa3cb96",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P52975590bd80",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "b87527d6eb09eaa3cb96",
+                "verification_status": "unverified"
+              }
+            ],
+            "selection_guard": {
+              "status": "unresolved",
+              "reason": "requires_realization_specific_contrast"
+            },
+            "verification_status": "unverified",
+            "implementation_graph_ref": "general_graphs/skill_relocate_object.json",
+            "path_ids": [
+              "P_79d581fb05728136678c"
+            ],
+            "required_capabilities": [
+              "OperateGripper",
+              "move_chain_client"
+            ],
+            "capability_binding_status": "unbound",
+            "effect_review_status": "needs_review"
+          },
+          {
+            "id": "R_51698955067276391d3b",
+            "realization_ref": "R_51698955067276391d3b",
+            "name": "通过手掌接触并水平推动，使物体从黑色区域移动至白色区域",
+            "instance_ids": [
+              "196477c3123361d22cfd"
+            ],
+            "C_pre": [
+              {
+                "predicate_ref": "P6185f994bac6",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "196477c3123361d22cfd",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P7b2ca9d120af",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "196477c3123361d22cfd",
+                "verification_status": "unverified"
+              }
+            ],
+            "C_const": [
+              {
+                "predicate_ref": "P2fe9ee8d42e5",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "196477c3123361d22cfd",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pab2b18397e1b",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "196477c3123361d22cfd",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P39fe35568481",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "196477c3123361d22cfd",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P23cb3f31915a",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "196477c3123361d22cfd",
+                "verification_status": "unverified"
+              }
+            ],
+            "selection_guard": {
+              "status": "unresolved",
+              "reason": "requires_realization_specific_contrast"
+            },
+            "verification_status": "unverified",
+            "implementation_graph_ref": "general_graphs/skill_relocate_object.json",
+            "path_ids": [
+              "P_06ee3c498c4b5f296967"
+            ],
+            "required_capabilities": [],
+            "capability_binding_status": "unbound",
+            "effect_review_status": "needs_review"
+          },
+          {
+            "id": "R_5812e167a7caff9b4a4a",
+            "realization_ref": "R_5812e167a7caff9b4a4a",
+            "name": "右臂携带盒子从黑色区域移动至白色区域",
+            "instance_ids": [
+              "b79b3be0e040042c27d2"
+            ],
+            "C_pre": [
+              {
+                "predicate_ref": "Pe9dda6783f98",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "b79b3be0e040042c27d2",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pc93fe1674c2d",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "b79b3be0e040042c27d2",
+                "verification_status": "unverified"
+              }
+            ],
+            "C_const": [
+              {
+                "predicate_ref": "P99bce6c69559",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "b79b3be0e040042c27d2",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P755c3435f091",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "b79b3be0e040042c27d2",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "Pacd658314f21",
+                "scope": "implementation_node",
+                "node_ref": "step_4",
+                "source_instance": "b79b3be0e040042c27d2",
+                "verification_status": "unverified"
+              }
+            ],
+            "selection_guard": {
+              "status": "unresolved",
+              "reason": "requires_realization_specific_contrast"
+            },
+            "verification_status": "unverified",
+            "implementation_graph_ref": "general_graphs/skill_relocate_object.json",
+            "path_ids": [
+              "P_d27a807b589a800e6028"
+            ],
+            "required_capabilities": [
+              "move_chain_client"
+            ],
+            "capability_binding_status": "unbound",
+            "effect_review_status": "needs_review"
+          },
+          {
+            "id": "R_95ab22b3629d275d4159",
+            "realization_ref": "R_95ab22b3629d275d4159",
+            "name": "左臂接近并接触塑料盒，通过推动使其从黑色区域移动至白色区域",
+            "instance_ids": [
+              "23ce650d0d87c60d0d10"
+            ],
+            "C_pre": [
+              {
+                "predicate_ref": "P82685bedafc2",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "23ce650d0d87c60d0d10",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P0ebbcefc1f74",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "23ce650d0d87c60d0d10",
+                "verification_status": "unverified"
+              }
+            ],
+            "C_const": [
+              {
+                "predicate_ref": "P99bce6c69559",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "23ce650d0d87c60d0d10",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P77a67e422ebe",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "23ce650d0d87c60d0d10",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P8e35cc80d823",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "23ce650d0d87c60d0d10",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P14667bfbc174",
+                "scope": "implementation_node",
+                "node_ref": "step_3",
+                "source_instance": "23ce650d0d87c60d0d10",
+                "verification_status": "unverified"
+              },
+              {
+                "predicate_ref": "P896f49ceefb5",
+                "scope": "implementation_node",
+                "node_ref": "step_1",
+                "source_instance": "23ce650d0d87c60d0d10",
+                "verification_status": "unverified"
+              }
+            ],
+            "selection_guard": {
+              "status": "unresolved",
+              "reason": "requires_realization_specific_contrast"
+            },
+            "verification_status": "unverified",
+            "implementation_graph_ref": "general_graphs/skill_relocate_object.json",
+            "path_ids": [
+              "P_0f1f47de1df592fc87df"
+            ],
+            "required_capabilities": [
+              "move_chain_client"
+            ],
+            "capability_binding_status": "unbound",
+            "effect_review_status": "needs_review"
+          }
+        ]
+      },
+      "source_video_count": 6,
+      "instance_count": 6,
+      "instance_ids": [
+        "58465f27744d3c5ab768",
+        "ccd7f2d13a160932ad4f",
+        "b79b3be0e040042c27d2",
+        "b87527d6eb09eaa3cb96",
+        "196477c3123361d22cfd",
+        "23ce650d0d87c60d0d10"
+      ],
+      "instance_bindings": [
+        {
+          "instance_id": "58465f27744d3c5ab768",
+          "target": "长方形塑料盒",
+          "destination": "小塑料盒左侧"
+        },
+        {
+          "instance_id": "ccd7f2d13a160932ad4f",
+          "target": "透明塑料盒",
+          "destination": "白色区域"
+        },
+        {
+          "instance_id": "b79b3be0e040042c27d2",
+          "target": "透明塑料盒",
+          "destination": "白色区域"
+        },
+        {
+          "instance_id": "b87527d6eb09eaa3cb96",
+          "target": "粉色塑料盒",
+          "destination": "小盒子旁"
+        },
+        {
+          "instance_id": "196477c3123361d22cfd",
+          "target": "塑料盒",
+          "destination": "白色区域"
+        },
+        {
+          "instance_id": "23ce650d0d87c60d0d10",
+          "target": "塑料盒",
+          "destination": "白色区域"
+        }
+      ],
+      "realization_count": 6,
+      "observed_effect_review": "requires_proposition_review",
+      "candidate_condition_summary": [
+        {
+          "goal_key": "relocate_object",
+          "condition_key": "target_reachable",
+          "phase": "pre",
+          "comparison_context": "unstratified",
+          "counts": {
+            "T_success": 0,
+            "T_failure": 0,
+            "T_not_executed": 0,
+            "T_unknown": 4,
+            "F_success": 0,
+            "F_failure": 0,
+            "F_not_executed": 0,
+            "F_unknown": 0,
+            "U_success": 0,
+            "U_failure": 0,
+            "U_not_executed": 0,
+            "U_unknown": 0
+          },
+          "reviewed_counts": {
+            "T_success": 0,
+            "T_failure": 0,
+            "T_not_executed": 0,
+            "T_unknown": 0,
+            "F_success": 0,
+            "F_failure": 0,
+            "F_not_executed": 0,
+            "F_unknown": 0,
+            "U_success": 0,
+            "U_failure": 0,
+            "U_not_executed": 0,
+            "U_unknown": 0
+          },
+          "necessity_status": "needs_negative_trials",
+          "causal_status": "not_established",
+          "distinct_video_count": 4,
+          "empirical_assessment": {
+            "condition_refuted_as_necessary": false,
+            "failure_trials": 0,
+            "nonexecution_is_censored": true,
+            "next_step": "needs_controlled_contrast_trials",
+            "causal_established": false
+          },
+          "conflicted_annotations": 0,
+          "examples": [
+            {
+              "subtask_id": "sub1",
+              "condition_key": "target_reachable",
+              "text": "长方形塑料盒在左臂可接触范围内",
+              "truth": "T",
+              "at": "pre",
+              "evidence": [
+                {
+                  "evidence_id": "a1_world_before_0",
+                  "atomic_ref": 1,
+                  "field": "world_before",
+                  "quote": "长方形塑料盒位于画面左侧"
+                }
+              ],
+              "provenance": "model_grounded_candidate",
+              "semantic_entailment_status": "model_assessment_requires_review",
+              "instance_id": "58465f27744d3c5ab768",
+              "video_uid": "8d8d07c0461817e219c187cf9bb736b9ded46df48bbf554cd068ef4faecdcbc3",
+              "goal_key": "relocate_object",
+              "outcome": "unknown",
+              "outcome_evidence": [
+                {
+                  "evidence_id": "a2_world_after_0",
+                  "atomic_ref": 2,
+                  "field": "world_after",
+                  "quote": "长方形塑料盒位于小塑料盒左侧"
+                }
+              ]
+            },
+            {
+              "subtask_id": "sub1",
+              "condition_key": "target_reachable",
+              "text": "粉色塑料盒在可操作范围内",
+              "truth": "T",
+              "at": "pre",
+              "evidence": [
+                {
+                  "evidence_id": "a1_world_before_0",
+                  "atomic_ref": 1,
+                  "field": "world_before",
+                  "quote": "粉色塑料盒位于左侧"
+                }
+              ],
+              "provenance": "model_grounded_candidate",
+              "semantic_entailment_status": "model_assessment_requires_review",
+              "instance_id": "b87527d6eb09eaa3cb96",
+              "video_uid": "8ce7588bdfd5c6f7f603e88f1364861fdeb76d318d149a46a059da7536c0a608",
+              "goal_key": "relocate_object",
+              "outcome": "unknown",
+              "outcome_evidence": []
+            },
+            {
+              "subtask_id": "sub1",
+              "condition_key": "target_reachable",
+              "text": "手已接触或可接触塑料盒边缘",
+              "truth": "T",
+              "at": "pre",
+              "evidence": [
+                {
+                  "evidence_id": "a3_state_before_0",
+                  "atomic_ref": 3,
+                  "field": "state_before",
+                  "quote": "右臂静止于塑料盒右侧"
+                }
+              ],
+              "provenance": "model_grounded_candidate",
+              "semantic_entailment_status": "model_assessment_requires_review",
+              "instance_id": "196477c3123361d22cfd",
+              "video_uid": "a3b17a9eaf87f0fff255ad581c5e72e3df479d9658e8b8acd9306a28f460a0fc",
+              "goal_key": "relocate_object",
+              "outcome": "unknown",
+              "outcome_evidence": [
+                {
+                  "evidence_id": "a3_world_after_0",
+                  "atomic_ref": 3,
+                  "field": "world_after",
+                  "quote": "塑料盒位于白色区域"
+                }
+              ]
+            },
+            {
+              "subtask_id": "sub1",
+              "condition_key": "target_reachable",
+              "text": "塑料盒在可接触范围内",
+              "truth": "T",
+              "at": "pre",
+              "evidence": [
+                {
+                  "evidence_id": "a1_world_before_0",
+                  "atomic_ref": 1,
+                  "field": "world_before",
+                  "quote": "塑料盒静止在黑色背景上"
+                }
+              ],
+              "provenance": "model_grounded_candidate",
+              "semantic_entailment_status": "model_assessment_requires_review",
+              "instance_id": "23ce650d0d87c60d0d10",
+              "video_uid": "c5151974b28491217a5a7475d3261ff6c1c90a28b27c7e48fcebd1e6089a043d",
+              "goal_key": "relocate_object",
+              "outcome": "unknown",
+              "outcome_evidence": [
+                {
+                  "evidence_id": "a3_world_after_0",
+                  "atomic_ref": 3,
+                  "field": "world_after",
+                  "quote": "塑料盒位于白色区域"
+                }
+              ]
+            }
+          ],
+          "missing_evidence": [
+            "condition_violated_trials",
+            "real_failure_trials"
+          ],
+          "policy": "Nonexecution is censored; failure is not proof of a single cause; unstratified data cannot identify causality."
+        }
+      ],
+      "origin": "cross_video_induction",
+      "public_condition_policy": "Do not promote R-specific conditions by union."
+    }
+  ],
+  "source_video_uids": [
+    "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+    "93437aa1fe6c2cf85ca0c1389911f04f91561dccc1bbfee4d48e8eb2cf524b10",
+    "8d8d07c0461817e219c187cf9bb736b9ded46df48bbf554cd068ef4faecdcbc3",
+    "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+    "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+    "64bba6b880dabaf9c68f4f4c9047ed7d79828e8eb8c0a1eba429af953e47d7a2",
+    "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+    "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+    "56456ad2921248480103e61fb2a4dfb9d30a6ef278d72f3b8b6aaa990c70a096",
+    "8ce7588bdfd5c6f7f603e88f1364861fdeb76d318d149a46a059da7536c0a608",
+    "a3b17a9eaf87f0fff255ad581c5e72e3df479d9658e8b8acd9306a28f460a0fc",
+    "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+    "c5151974b28491217a5a7475d3261ff6c1c90a28b27c7e48fcebd1e6089a043d"
+  ],
+  "provenance": "Learned membership, conditions and R; declared definitions remain in the shared library."
+}

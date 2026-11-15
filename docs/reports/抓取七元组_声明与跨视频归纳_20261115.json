@@ -1,0 +1,2417 @@
+{
+  "template": {
+    "template_id": "skill/GraspObjectSkill",
+    "skill_ref": "GraspObjectSkill",
+    "label": "抓取对象",
+    "level": "semantic_skill",
+    "meaning": "按角色、条件和结果定义的技能",
+    "parent_refs": [
+      "AcquireObjectSkill"
+    ],
+    "method_selection_required": false,
+    "seven_tuple": {
+      "X": {
+        "role": "acting_agent",
+        "binding_status": "unbound",
+        "ontology_actor_refs": [
+          "ActingRobot"
+        ],
+        "policy": "Human demonstrators bind locally; they are not current robot facts."
+      },
+      "O": {
+        "role_slots": [
+          {
+            "slot_ref": "GraspSourceSkillSlot",
+            "role_ref": "GraspSourceRole",
+            "label": "抓取来源平面",
+            "channel_ref": "SourceChannel",
+            "language_roles": [
+              "source"
+            ],
+            "binding_mode": "input",
+            "collection_consumption": [],
+            "min_count": 0,
+            "max_count": 1,
+            "declared_by": "GraspObjectSkill"
+          },
+          {
+            "slot_ref": "GraspTargetSkillSlot",
+            "role_ref": "GraspedObjectRole",
+            "label": "被抓取对象",
+            "channel_ref": "PrimaryPatientChannel",
+            "language_roles": [
+              "patient"
+            ],
+            "binding_mode": "input",
+            "collection_consumption": [],
+            "min_count": 1,
+            "max_count": 1,
+            "declared_by": "AcquireObjectSkill"
+          }
+        ],
+        "role_constraints": [
+          {
+            "condition_ref": "condition::5300608e44608875b275",
+            "kind": "role_constraint",
+            "phase": "entry",
+            "expression": {
+              "kind": "type",
+              "subject": {
+                "kind": "slot",
+                "ref": "GraspSourceSkillSlot"
+              },
+              "class_ref": "Surface"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "GraspSourceSkillSlot",
+                "Surface"
+              ]
+            },
+            "applies_when_bound_slots": [],
+            "truth": "U",
+            "verification_status": "not_observed"
+          },
+          {
+            "condition_ref": "condition::068d99e94cf48142a13c",
+            "kind": "role_constraint",
+            "phase": "entry",
+            "expression": {
+              "kind": "affordance",
+              "subject": {
+                "kind": "slot",
+                "ref": "GraspTargetSkillSlot"
+              },
+              "affordance_ref": "GraspableAffordance"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "GraspTargetSkillSlot",
+                "GraspableAffordance"
+              ]
+            },
+            "applies_when_bound_slots": [],
+            "truth": "U",
+            "verification_status": "not_observed"
+          },
+          {
+            "condition_ref": "condition::5ff6962e3062b17657cd",
+            "kind": "role_constraint",
+            "phase": "entry",
+            "expression": {
+              "kind": "type",
+              "subject": {
+                "kind": "slot",
+                "ref": "GraspTargetSkillSlot"
+              },
+              "class_ref": "Object"
+            },
+            "origin": {
+              "kind": "ontology",
+              "source_refs": [
+                "GraspTargetSkillSlot",
+                "Object"
+              ]
+            },
+            "applies_when_bound_slots": [],
+            "truth": "U",
+            "verification_status": "not_observed"
+          }
+        ]
+      },
+      "C_pre": [
+        {
+          "condition_ref": "condition::1a856786667d393838b9",
+          "kind": "precondition",
+          "phase": "entry",
+          "expression": {
+            "kind": "relation_absent",
+            "subject": {
+              "kind": "actor",
+              "ref": "ActingRobot"
+            },
+            "relation_ref": "holding"
+          },
+          "origin": {
+            "kind": "ontology",
+            "source_refs": [
+              "EmptyGripperCondition"
+            ]
+          },
+          "applies_when_bound_slots": [],
+          "truth": "U",
+          "verification_status": "not_observed"
+        },
+        {
+          "condition_ref": "condition::cf324c51e90f065cc164",
+          "kind": "precondition",
+          "phase": "entry",
+          "expression": {
+            "kind": "relation",
+            "subject": {
+              "kind": "actor",
+              "ref": "ActingRobot"
+            },
+            "relation_ref": "near",
+            "operator": "eq",
+            "object": {
+              "kind": "slot",
+              "ref": "GraspTargetSkillSlot"
+            }
+          },
+          "origin": {
+            "kind": "ontology",
+            "source_refs": [
+              "GraspAccessCondition"
+            ]
+          },
+          "applies_when_bound_slots": [],
+          "truth": "U",
+          "verification_status": "not_observed"
+        },
+        {
+          "condition_ref": "condition::d40fa3bb53376314a7e9",
+          "kind": "precondition",
+          "phase": "entry",
+          "expression": {
+            "kind": "relation",
+            "subject": {
+              "kind": "slot",
+              "ref": "GraspTargetSkillSlot"
+            },
+            "relation_ref": "locatedOn",
+            "operator": "eq",
+            "object": {
+              "kind": "slot",
+              "ref": "GraspSourceSkillSlot"
+            }
+          },
+          "origin": {
+            "kind": "ontology",
+            "source_refs": [
+              "GraspSourceCondition"
+            ]
+          },
+          "applies_when_bound_slots": [
+            "GraspSourceSkillSlot"
+          ],
+          "truth": "U",
+          "verification_status": "not_observed"
+        }
+      ],
+      "C_const": [],
+      "E": {
+        "completion_checks": [
+          {
+            "condition_id": "robot_holds_grasp_target",
+            "kind": "relation",
+            "subject": "RobotSelf",
+            "relation": "holding",
+            "object_parameter": "target",
+            "operator": "equals"
+          }
+        ],
+        "detector_binding": "unbound"
+      },
+      "C_post": [
+        {
+          "condition_ref": "condition::63eeab6e0fc8286f00c2",
+          "kind": "expected_effect",
+          "phase": "after_success",
+          "expression": {
+            "kind": "effect",
+            "subject": {
+              "kind": "slot",
+              "ref": "GraspTargetSkillSlot"
+            },
+            "effect_ref": "AcquireHoldingEffect"
+          },
+          "origin": {
+            "kind": "ontology",
+            "source_refs": [
+              "AcquireHoldingEffect"
+            ]
+          },
+          "applies_when_bound_slots": [],
+          "truth": "U",
+          "verification_status": "not_observed"
+        },
+        {
+          "condition_ref": "condition::f3470cbbe19fdba1230d",
+          "kind": "expected_effect",
+          "phase": "after_success",
+          "expression": {
+            "kind": "effect",
+            "subject": {
+              "kind": "slot",
+              "ref": "GraspTargetSkillSlot"
+            },
+            "effect_ref": "GraspRelationEffect"
+          },
+          "origin": {
+            "kind": "ontology",
+            "source_refs": [
+              "GraspRelationEffect"
+            ]
+          },
+          "applies_when_bound_slots": [],
+          "truth": "U",
+          "verification_status": "not_observed"
+        }
+      ],
+      "R": [
+        {
+          "id": "reference/grasp_object",
+          "name": "grasp_object",
+          "origin": "implementation_reference",
+          "reference_path": "implementation_reference.templates.grasp_object",
+          "expansion": [
+            {
+              "skill": "estimate_object_pose",
+              "bindings": {
+                "target": "$slot.GraspTargetSkillSlot"
+              }
+            },
+            {
+              "action": "generate_grasp_pose"
+            },
+            {
+              "action": "plan_motion"
+            },
+            {
+              "action": "execute_motion"
+            },
+            {
+              "action": "set_gripper"
+            }
+          ],
+          "required_capabilities": [
+            "ManipulationCapability",
+            "PerceptionCapability",
+            "PoseEstimationCapability"
+          ],
+          "binding_status": "unbound",
+          "observation_status": "not_observed"
+        }
+      ]
+    },
+    "result_ports": [
+      {
+        "result_ref": "GraspedResult",
+        "role_ref": "GraspedObjectRole",
+        "label": "被持有的同一对象",
+        "source_slot_ref": "GraspTargetSkillSlot",
+        "identity": "same_entity",
+        "state_family_refs": [],
+        "entailed_state_refs": [],
+        "quantity_refs": [],
+        "consumer": "cerebellum.result_requirements",
+        "declared_by": "AcquireObjectSkill"
+      }
+    ],
+    "source_contract": {
+      "schema": "skill_semantic_contract.v2.3",
+      "ontology_revision": "sha256:d2baec79a4c8aaabf174504c49583fec25934e338262715dfe802413ac922a44"
+    },
+    "origin": "declared_reference_not_video_induction",
+    "unresolved": [
+      "No explicit process invariant supplied; C_const remains empty."
+    ]
+  },
+  "learned": {
+    "skill_id": "skill_grasp_object",
+    "label": "抓取对象",
+    "template_ref": "goal/grasp_object",
+    "goal_key": "grasp_object",
+    "learned_seven_tuple": {
+      "X": {
+        "subject": "actor",
+        "roles": [
+          "gripper_1"
+        ],
+        "binding_status": "unbound"
+      },
+      "O": {
+        "roles": [
+          "target"
+        ],
+        "object_categories": [
+          "box"
+        ]
+      },
+      "C_pre": [],
+      "C_const": [],
+      "E": [
+        "eval_skill_grasp_object"
+      ],
+      "C_post": [
+        "Pb9a9a72ab846"
+      ],
+      "R": [
+        {
+          "id": "R_140a9ba433186fd91011",
+          "realization_ref": "R_140a9ba433186fd91011",
+          "name": "单节点抓取",
+          "instance_ids": [
+            "58006604cb065169f1b2",
+            "becedf6ba82489ec9dfb",
+            "e9955e74b0918fd7b3e7",
+            "3e04953e5a5640aad4a1"
+          ],
+          "C_pre": [
+            {
+              "predicate_ref": "Pe1e20a8d1630",
+              "scope": "implementation_node",
+              "node_ref": "step_3",
+              "source_instance": "58006604cb065169f1b2",
+              "verification_status": "unverified"
+            },
+            {
+              "predicate_ref": "P211f8b78e9ac",
+              "scope": "implementation_node",
+              "node_ref": "step_3",
+              "source_instance": "58006604cb065169f1b2",
+              "verification_status": "unverified"
+            },
+            {
+              "predicate_ref": "P9f8891a672d2",
+              "scope": "implementation_node",
+              "node_ref": "step_3",
+              "source_instance": "becedf6ba82489ec9dfb",
+              "verification_status": "unverified"
+            },
+            {
+              "predicate_ref": "P0741b253052d",
+              "scope": "implementation_node",
+              "node_ref": "step_3",
+              "source_instance": "becedf6ba82489ec9dfb",
+              "verification_status": "unverified"
+            },
+            {
+              "predicate_ref": "Pbeafb0528a24",
+              "scope": "implementation_node",
+              "node_ref": "step_3",
+              "source_instance": "e9955e74b0918fd7b3e7",
+              "verification_status": "unverified"
+            },
+            {
+              "predicate_ref": "P0741b253052d",
+              "scope": "implementation_node",
+              "node_ref": "step_3",
+              "source_instance": "e9955e74b0918fd7b3e7",
+              "verification_status": "unverified"
+            },
+            {
+              "predicate_ref": "P47d4bf0876a8",
+              "scope": "implementation_node",
+              "node_ref": "step_3",
+              "source_instance": "3e04953e5a5640aad4a1",
+              "verification_status": "unverified"
+            },
+            {
+              "predicate_ref": "P0741b253052d",
+              "scope": "implementation_node",
+              "node_ref": "step_3",
+              "source_instance": "3e04953e5a5640aad4a1",
+              "verification_status": "unverified"
+            }
+          ],
+          "C_const": [
+            {
+              "predicate_ref": "P018d7dbf0e61",
+              "scope": "implementation_node",
+              "node_ref": "step_3",
+              "source_instance": "58006604cb065169f1b2",
+              "verification_status": "unverified"
+            },
+            {
+              "predicate_ref": "P755c3435f091",
+              "scope": "implementation_node",
+              "node_ref": "step_3",
+              "source_instance": "58006604cb065169f1b2",
+              "verification_status": "unverified"
+            },
+            {
+              "predicate_ref": "P858a9771ace4",
+              "scope": "implementation_node",
+              "node_ref": "step_3",
+              "source_instance": "becedf6ba82489ec9dfb",
+              "verification_status": "unverified"
+            },
+            {
+              "predicate_ref": "P755c3435f091",
+              "scope": "implementation_node",
+              "node_ref": "step_3",
+              "source_instance": "becedf6ba82489ec9dfb",
+              "verification_status": "unverified"
+            },
+            {
+              "predicate_ref": "P20ed22ea8060",
+              "scope": "implementation_node",
+              "node_ref": "step_3",
+              "source_instance": "becedf6ba82489ec9dfb",
+              "verification_status": "unverified"
+            },
+            {
+              "predicate_ref": "Pdfefaaae91cb",
+              "scope": "implementation_node",
+              "node_ref": "step_3",
+              "source_instance": "becedf6ba82489ec9dfb",
+              "verification_status": "unverified"
+            },
+            {
+              "predicate_ref": "P018d7dbf0e61",
+              "scope": "implementation_node",
+              "node_ref": "step_3",
+              "source_instance": "e9955e74b0918fd7b3e7",
+              "verification_status": "unverified"
+            },
+            {
+              "predicate_ref": "P755c3435f091",
+              "scope": "implementation_node",
+              "node_ref": "step_3",
+              "source_instance": "e9955e74b0918fd7b3e7",
+              "verification_status": "unverified"
+            },
+            {
+              "predicate_ref": "P2064ed418134",
+              "scope": "implementation_node",
+              "node_ref": "step_3",
+              "source_instance": "e9955e74b0918fd7b3e7",
+              "verification_status": "unverified"
+            },
+            {
+              "predicate_ref": "P018d7dbf0e61",
+              "scope": "implementation_node",
+              "node_ref": "step_3",
+              "source_instance": "3e04953e5a5640aad4a1",
+              "verification_status": "unverified"
+            },
+            {
+              "predicate_ref": "P755c3435f091",
+              "scope": "implementation_node",
+              "node_ref": "step_3",
+              "source_instance": "3e04953e5a5640aad4a1",
+              "verification_status": "unverified"
+            },
+            {
+              "predicate_ref": "P6015b344bfa8",
+              "scope": "implementation_node",
+              "node_ref": "step_3",
+              "source_instance": "3e04953e5a5640aad4a1",
+              "verification_status": "unverified"
+            },
+            {
+              "predicate_ref": "P74adcebe5442",
+              "scope": "implementation_node",
+              "node_ref": "step_3",
+              "source_instance": "3e04953e5a5640aad4a1",
+              "verification_status": "unverified"
+            }
+          ],
+          "selection_guard": {
+            "status": "unresolved",
+            "reason": "requires_realization_specific_contrast"
+          },
+          "verification_status": "unverified",
+          "implementation_graph_ref": "general_graphs/skill_grasp_object.json",
+          "path_ids": [
+            "P_2a6bb4c0fc01b3f449a8",
+            "P_cbfaa59d7e044bfb600a",
+            "P_64f13381537933ab0583",
+            "P_c569af329174fba92e3a"
+          ],
+          "required_capabilities": [
+            "OperateGripper"
+          ],
+          "capability_binding_status": "unbound",
+          "effect_review_status": "needs_review"
+        },
+        {
+          "id": "R_1a4114f1d239348eccf4",
+          "realization_ref": "R_1a4114f1d239348eccf4",
+          "name": "单节点抓取",
+          "instance_ids": [
+            "297389d71ecf89c48f84"
+          ],
+          "C_pre": [
+            {
+              "predicate_ref": "P47d4bf0876a8",
+              "scope": "implementation_node",
+              "node_ref": "step_3",
+              "source_instance": "297389d71ecf89c48f84",
+              "verification_status": "unverified"
+            },
+            {
+              "predicate_ref": "Pce3909f814c1",
+              "scope": "implementation_node",
+              "node_ref": "step_3",
+              "source_instance": "297389d71ecf89c48f84",
+              "verification_status": "unverified"
+            }
+          ],
+          "C_const": [
+            {
+              "predicate_ref": "P018d7dbf0e61",
+              "scope": "implementation_node",
+              "node_ref": "step_3",
+              "source_instance": "297389d71ecf89c48f84",
+              "verification_status": "unverified"
+            },
+            {
+              "predicate_ref": "P755c3435f091",
+              "scope": "implementation_node",
+              "node_ref": "step_3",
+              "source_instance": "297389d71ecf89c48f84",
+              "verification_status": "unverified"
+            },
+            {
+              "predicate_ref": "P234744e7428d",
+              "scope": "implementation_node",
+              "node_ref": "step_3",
+              "source_instance": "297389d71ecf89c48f84",
+              "verification_status": "unverified"
+            }
+          ],
+          "selection_guard": {
+            "status": "unresolved",
+            "reason": "requires_realization_specific_contrast"
+          },
+          "verification_status": "unverified",
+          "implementation_graph_ref": "general_graphs/skill_grasp_object.json",
+          "path_ids": [
+            "P_d2751e2e463e394a2803"
+          ],
+          "required_capabilities": [
+            "OperateGripper"
+          ],
+          "capability_binding_status": "unbound",
+          "effect_review_status": "needs_review"
+        },
+        {
+          "id": "R_eee6db28245e5999eb23",
+          "realization_ref": "R_eee6db28245e5999eb23",
+          "name": "单节点抓取",
+          "instance_ids": [
+            "98d574074eed2e297331"
+          ],
+          "C_pre": [
+            {
+              "predicate_ref": "Pe1e20a8d1630",
+              "scope": "implementation_node",
+              "node_ref": "step_3",
+              "source_instance": "98d574074eed2e297331",
+              "verification_status": "unverified"
+            },
+            {
+              "predicate_ref": "P0741b253052d",
+              "scope": "implementation_node",
+              "node_ref": "step_3",
+              "source_instance": "98d574074eed2e297331",
+              "verification_status": "unverified"
+            }
+          ],
+          "C_const": [
+            {
+              "predicate_ref": "P018d7dbf0e61",
+              "scope": "implementation_node",
+              "node_ref": "step_3",
+              "source_instance": "98d574074eed2e297331",
+              "verification_status": "unverified"
+            },
+            {
+              "predicate_ref": "P755c3435f091",
+              "scope": "implementation_node",
+              "node_ref": "step_3",
+              "source_instance": "98d574074eed2e297331",
+              "verification_status": "unverified"
+            },
+            {
+              "predicate_ref": "Pc61f2c178178",
+              "scope": "implementation_node",
+              "node_ref": "step_3",
+              "source_instance": "98d574074eed2e297331",
+              "verification_status": "unverified"
+            }
+          ],
+          "selection_guard": {
+            "status": "unresolved",
+            "reason": "requires_realization_specific_contrast"
+          },
+          "verification_status": "unverified",
+          "implementation_graph_ref": "general_graphs/skill_grasp_object.json",
+          "path_ids": [
+            "P_57d6a95983ad7f19b4b4"
+          ],
+          "required_capabilities": [
+            "OperateGripper"
+          ],
+          "capability_binding_status": "unbound",
+          "effect_review_status": "needs_review"
+        }
+      ]
+    },
+    "source_video_count": 6,
+    "instance_count": 6,
+    "instance_ids": [
+      "297389d71ecf89c48f84",
+      "98d574074eed2e297331",
+      "58006604cb065169f1b2",
+      "becedf6ba82489ec9dfb",
+      "e9955e74b0918fd7b3e7",
+      "3e04953e5a5640aad4a1"
+    ],
+    "instance_bindings": [
+      {
+        "instance_id": "297389d71ecf89c48f84",
+        "target": "透明塑料盒",
+        "destination": null
+      },
+      {
+        "instance_id": "98d574074eed2e297331",
+        "target": "透明塑料盒",
+        "destination": null
+      },
+      {
+        "instance_id": "58006604cb065169f1b2",
+        "target": "透明塑料盒",
+        "destination": null
+      },
+      {
+        "instance_id": "becedf6ba82489ec9dfb",
+        "target": "透明塑料盒",
+        "destination": null
+      },
+      {
+        "instance_id": "e9955e74b0918fd7b3e7",
+        "target": "透明塑料盒",
+        "destination": null
+      },
+      {
+        "instance_id": "3e04953e5a5640aad4a1",
+        "target": "透明塑料盒",
+        "destination": null
+      }
+    ],
+    "realization_count": 3,
+    "observed_effect_review": "requires_proposition_review",
+    "candidate_condition_summary": [],
+    "origin": "cross_video_induction",
+    "public_condition_policy": "Do not promote R-specific conditions by union."
+  },
+  "predicates": {
+    "Pb9a9a72ab846": {
+      "text": "{\"predicate\": \"holding\", \"roles\": [\"actor\", \"target\"], \"value\": true}",
+      "origin": "seed_semantic_vocabulary",
+      "verification_status": "unverified",
+      "sources": [],
+      "expression": {
+        "predicate": "holding",
+        "roles": [
+          "actor",
+          "target"
+        ],
+        "value": true
+      }
+    },
+    "Pe1e20a8d1630": {
+      "text": "$gripper位于$target上方",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "e0ec55df75a6f303c65b",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P92fd3acd392c"
+        },
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "ed5e9a7625ba9d43abc3",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P92fd3acd392c"
+        },
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "58006604cb065169f1b2",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P92fd3acd392c"
+        },
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "98d574074eed2e297331",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P92fd3acd392c"
+        },
+        {
+          "video_uid": "56456ad2921248480103e61fb2a4dfb9d30a6ef278d72f3b8b6aaa990c70a096",
+          "instance_id": "ee64959271d327c2b19a",
+          "source_node_id": "step_2",
+          "case_predicate_ref": "P2c1770ebc316"
+        },
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "e142c13ee2524b771a0b",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P92fd3acd392c"
+        },
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "bd47466782b45cb74131",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P92fd3acd392c"
+        }
+      ]
+    },
+    "P211f8b78e9ac": {
+      "text": "$gripper手指已张开",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "e0ec55df75a6f303c65b",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "Pdc7ec3993b36"
+        },
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "58006604cb065169f1b2",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "Pdc7ec3993b36"
+        },
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "e142c13ee2524b771a0b",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "Pdc7ec3993b36"
+        }
+      ]
+    },
+    "P018d7dbf0e61": {
+      "text": "握持稳定",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "e0ec55df75a6f303c65b",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P018d7dbf0e61"
+        },
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "76b0f58e0aae97d05730",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P018d7dbf0e61"
+        },
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "e7fa6e8f662d940146b5",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P018d7dbf0e61"
+        },
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "ed5e9a7625ba9d43abc3",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P018d7dbf0e61"
+        },
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "9e4751fbac5c050296a6",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P018d7dbf0e61"
+        },
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "58006604cb065169f1b2",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P018d7dbf0e61"
+        },
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "e9955e74b0918fd7b3e7",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P018d7dbf0e61"
+        },
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "3e04953e5a5640aad4a1",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P018d7dbf0e61"
+        },
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "297389d71ecf89c48f84",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P018d7dbf0e61"
+        },
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "98d574074eed2e297331",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P018d7dbf0e61"
+        },
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "e142c13ee2524b771a0b",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P018d7dbf0e61"
+        },
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "dc306a6095cb8db53b35",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P018d7dbf0e61"
+        },
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "06d5188b27417877288a",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P018d7dbf0e61"
+        },
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "bd47466782b45cb74131",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P018d7dbf0e61"
+        },
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "b103d9765ee56eb96d24",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P018d7dbf0e61"
+        }
+      ]
+    },
+    "P755c3435f091": {
+      "text": "$gripper对$target的稳定抓握在抓握成功后生效，持续至释放动作开始前",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "e0ec55df75a6f303c65b",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P7b80b84646f6"
+        },
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "3055838dc5f7f4ff495b",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P7b80b84646f6"
+        },
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "76b0f58e0aae97d05730",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P7b80b84646f6"
+        },
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "e7fa6e8f662d940146b5",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P54e80ff7dc80"
+        },
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "ed5e9a7625ba9d43abc3",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P7b80b84646f6"
+        },
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "9e4751fbac5c050296a6",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P7b80b84646f6"
+        },
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "58006604cb065169f1b2",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P7b80b84646f6"
+        },
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "becedf6ba82489ec9dfb",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P7b80b84646f6"
+        },
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "e9955e74b0918fd7b3e7",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P7b80b84646f6"
+        },
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "3e04953e5a5640aad4a1",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P54e80ff7dc80"
+        },
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "297389d71ecf89c48f84",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P7b80b84646f6"
+        },
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "98d574074eed2e297331",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P7b80b84646f6"
+        },
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "53d540031da61b0ea24f",
+          "source_node_id": "step_4",
+          "case_predicate_ref": "P54e80ff7dc80"
+        },
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "53358186ad331fb74c24",
+          "source_node_id": "step_4",
+          "case_predicate_ref": "P7b80b84646f6"
+        },
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "81c3048b6d0f7bb8e2fd",
+          "source_node_id": "step_4",
+          "case_predicate_ref": "P7b80b84646f6"
+        },
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "c7d3752a03bb848ba3eb",
+          "source_node_id": "step_4",
+          "case_predicate_ref": "P7b80b84646f6"
+        },
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "e142c13ee2524b771a0b",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P7b80b84646f6"
+        },
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "e142c13ee2524b771a0b",
+          "source_node_id": "step_4",
+          "case_predicate_ref": "P7b80b84646f6"
+        },
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "dc306a6095cb8db53b35",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P7b80b84646f6"
+        },
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "dc306a6095cb8db53b35",
+          "source_node_id": "step_4",
+          "case_predicate_ref": "P7b80b84646f6"
+        },
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "06d5188b27417877288a",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P54e80ff7dc80"
+        },
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "06d5188b27417877288a",
+          "source_node_id": "step_4",
+          "case_predicate_ref": "P54e80ff7dc80"
+        },
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "bd47466782b45cb74131",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P7b80b84646f6"
+        },
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "bd47466782b45cb74131",
+          "source_node_id": "step_4",
+          "case_predicate_ref": "P7b80b84646f6"
+        },
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "fd48505574af12a4cf60",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P7b80b84646f6"
+        },
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "fd48505574af12a4cf60",
+          "source_node_id": "step_4",
+          "case_predicate_ref": "P7b80b84646f6"
+        },
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "b103d9765ee56eb96d24",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P7b80b84646f6"
+        },
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "b103d9765ee56eb96d24",
+          "source_node_id": "step_4",
+          "case_predicate_ref": "P7b80b84646f6"
+        },
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "ccd7f2d13a160932ad4f",
+          "source_node_id": "step_4",
+          "case_predicate_ref": "P7b80b84646f6"
+        },
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "b79b3be0e040042c27d2",
+          "source_node_id": "step_4",
+          "case_predicate_ref": "P7b80b84646f6"
+        }
+      ]
+    },
+    "P9f8891a672d2": {
+      "text": "$gripper处于$target上方",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "3055838dc5f7f4ff495b",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P566dfdaaf20e"
+        },
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "becedf6ba82489ec9dfb",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P566dfdaaf20e"
+        },
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "fd48505574af12a4cf60",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P566dfdaaf20e"
+        }
+      ]
+    },
+    "P0741b253052d": {
+      "text": "$gripper处于张开状态",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "3055838dc5f7f4ff495b",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "Pe45b647ae906"
+        },
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "76b0f58e0aae97d05730",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "Pe45b647ae906"
+        },
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "e7fa6e8f662d940146b5",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P7d18069bf4e5"
+        },
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "ed5e9a7625ba9d43abc3",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "Pe45b647ae906"
+        },
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "becedf6ba82489ec9dfb",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "Pe45b647ae906"
+        },
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "e9955e74b0918fd7b3e7",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "Pe45b647ae906"
+        },
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "3e04953e5a5640aad4a1",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P7d18069bf4e5"
+        },
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "98d574074eed2e297331",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "Pe45b647ae906"
+        },
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "06d5188b27417877288a",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P7d18069bf4e5"
+        },
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "bd47466782b45cb74131",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "Pe45b647ae906"
+        },
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "fd48505574af12a4cf60",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "Pe45b647ae906"
+        },
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "b103d9765ee56eb96d24",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "Pe45b647ae906"
+        }
+      ]
+    },
+    "P858a9771ace4": {
+      "text": "建立稳定握持",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "3055838dc5f7f4ff495b",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P858a9771ace4"
+        },
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "becedf6ba82489ec9dfb",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P858a9771ace4"
+        },
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "fd48505574af12a4cf60",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P858a9771ace4"
+        }
+      ]
+    },
+    "P20ed22ea8060": {
+      "text": "从抓取成功到释放开始前，$gripper必须持续保持对盒子的稳定握持",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "3055838dc5f7f4ff495b",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P15fc040b745c"
+        },
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "becedf6ba82489ec9dfb",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P15fc040b745c"
+        },
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "53358186ad331fb74c24",
+          "source_node_id": "step_4",
+          "case_predicate_ref": "P15fc040b745c"
+        },
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "fd48505574af12a4cf60",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P15fc040b745c"
+        },
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "fd48505574af12a4cf60",
+          "source_node_id": "step_4",
+          "case_predicate_ref": "P15fc040b745c"
+        }
+      ]
+    },
+    "Pdfefaaae91cb": {
+      "text": "靠近动作必须在抓取动作之前完成，且手必须处于张开状态以准备包络物体",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "3055838dc5f7f4ff495b",
+          "source_node_id": "step_1",
+          "case_predicate_ref": "Pdfefaaae91cb"
+        },
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "3055838dc5f7f4ff495b",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "Pdfefaaae91cb"
+        },
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "becedf6ba82489ec9dfb",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "Pdfefaaae91cb"
+        },
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "fd48505574af12a4cf60",
+          "source_node_id": "step_1",
+          "case_predicate_ref": "Pdfefaaae91cb"
+        },
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "fd48505574af12a4cf60",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "Pdfefaaae91cb"
+        }
+      ]
+    },
+    "Pbeafb0528a24": {
+      "text": "$gripper处于$target上方可抓取位置",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "76b0f58e0aae97d05730",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P2e04e91ebddf"
+        },
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "e9955e74b0918fd7b3e7",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P2e04e91ebddf"
+        },
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "b103d9765ee56eb96d24",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P2e04e91ebddf"
+        }
+      ]
+    },
+    "P2064ed418134": {
+      "text": "执行抓取前，$gripper手指必须处于张开状态且位于物体可包络位置。",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "76b0f58e0aae97d05730",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P72a7391f6c74"
+        },
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "e9955e74b0918fd7b3e7",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P72a7391f6c74"
+        },
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "b103d9765ee56eb96d24",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P72a7391f6c74"
+        }
+      ]
+    },
+    "P47d4bf0876a8": {
+      "text": "$gripper处于$target的可抓取位置",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "e7fa6e8f662d940146b5",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P9b42f5e1fe04"
+        },
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "9e4751fbac5c050296a6",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "Pcfde2a2471b2"
+        },
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "3e04953e5a5640aad4a1",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P9b42f5e1fe04"
+        },
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "297389d71ecf89c48f84",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "Pcfde2a2471b2"
+        },
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "dc306a6095cb8db53b35",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "Pcfde2a2471b2"
+        },
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "06d5188b27417877288a",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P9b42f5e1fe04"
+        }
+      ]
+    },
+    "P6015b344bfa8": {
+      "text": "抓取前$gripper必须处于张开状态且位于物体可抓位置",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "e7fa6e8f662d940146b5",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "Pb435a0ea7cc6"
+        },
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "3e04953e5a5640aad4a1",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "Pb435a0ea7cc6"
+        },
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "06d5188b27417877288a",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "Pb435a0ea7cc6"
+        }
+      ]
+    },
+    "P74adcebe5442": {
+      "text": "从抓取成功到释放开始，$gripper必须持续保持对$target的握持",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "e7fa6e8f662d940146b5",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P09c0d3b06edc"
+        },
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "3e04953e5a5640aad4a1",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P09c0d3b06edc"
+        },
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "53d540031da61b0ea24f",
+          "source_node_id": "step_4",
+          "case_predicate_ref": "P09c0d3b06edc"
+        },
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "06d5188b27417877288a",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P09c0d3b06edc"
+        },
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "06d5188b27417877288a",
+          "source_node_id": "step_4",
+          "case_predicate_ref": "P09c0d3b06edc"
+        }
+      ]
+    },
+    "Pc61f2c178178": {
+      "text": "抓取前（node_3），$gripper必须与$target建立有效接触并施加足够力以克服重力。",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "ed5e9a7625ba9d43abc3",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P50c2f1199a41"
+        },
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "98d574074eed2e297331",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P50c2f1199a41"
+        },
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "bd47466782b45cb74131",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P50c2f1199a41"
+        }
+      ]
+    },
+    "Pce3909f814c1": {
+      "text": "$gripper手指张开",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "9e4751fbac5c050296a6",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P032f1e75070c"
+        },
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "297389d71ecf89c48f84",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P032f1e75070c"
+        },
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "dc306a6095cb8db53b35",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P032f1e75070c"
+        }
+      ]
+    },
+    "P234744e7428d": {
+      "text": "抓取前$gripper手指必须处于张开状态以包络盒子边缘",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "9e4751fbac5c050296a6",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P1b097204b9dd"
+        },
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "297389d71ecf89c48f84",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P1b097204b9dd"
+        },
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "dc306a6095cb8db53b35",
+          "source_node_id": "step_3",
+          "case_predicate_ref": "P1b097204b9dd"
+        }
+      ]
+    },
+    "Pb775cfdb3724": {
+      "text": "手指收拢接触盒子边缘",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "9e4751fbac5c050296a6"
+        },
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "297389d71ecf89c48f84"
+        },
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "dc306a6095cb8db53b35"
+        }
+      ]
+    },
+    "P1c76254b0a60": {
+      "text": "施加足够力建立稳定握持",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "9e4751fbac5c050296a6"
+        },
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "297389d71ecf89c48f84"
+        },
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "dc306a6095cb8db53b35"
+        }
+      ]
+    },
+    "Pe5d674969820": {
+      "text": "$gripper手指收拢握住盒子边缘",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "9e4751fbac5c050296a6"
+        },
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "e0ec55df75a6f303c65b"
+        },
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "297389d71ecf89c48f84"
+        },
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "58006604cb065169f1b2"
+        },
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "dc306a6095cb8db53b35"
+        },
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "e142c13ee2524b771a0b"
+        }
+      ]
+    },
+    "P2a06c6df057a": {
+      "text": "$gripper稳定握持盒子",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "9e4751fbac5c050296a6"
+        },
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "e0ec55df75a6f303c65b"
+        },
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "297389d71ecf89c48f84"
+        },
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "58006604cb065169f1b2"
+        },
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "dc306a6095cb8db53b35"
+        },
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "e142c13ee2524b771a0b"
+        }
+      ]
+    },
+    "P4694a54100c1": {
+      "text": "$gripper稳定握持$target",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "9e4751fbac5c050296a6"
+        },
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "ed5e9a7625ba9d43abc3"
+        },
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "e7fa6e8f662d940146b5"
+        },
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "297389d71ecf89c48f84"
+        },
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "98d574074eed2e297331"
+        },
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "3e04953e5a5640aad4a1"
+        },
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "53d540031da61b0ea24f",
+          "source_node_id": "step_4",
+          "case_predicate_ref": "P60c87ce978be"
+        },
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "81c3048b6d0f7bb8e2fd",
+          "source_node_id": "step_4",
+          "case_predicate_ref": "Pcaab3f4d3ee4"
+        },
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "c7d3752a03bb848ba3eb",
+          "source_node_id": "step_4",
+          "case_predicate_ref": "Pcaab3f4d3ee4"
+        },
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "e142c13ee2524b771a0b",
+          "source_node_id": "step_4",
+          "case_predicate_ref": "Pcaab3f4d3ee4"
+        },
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "dc306a6095cb8db53b35",
+          "source_node_id": "step_4",
+          "case_predicate_ref": "Pcaab3f4d3ee4"
+        },
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "06d5188b27417877288a",
+          "source_node_id": "step_4",
+          "case_predicate_ref": "P60c87ce978be"
+        },
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "dc306a6095cb8db53b35"
+        },
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "bd47466782b45cb74131"
+        },
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "06d5188b27417877288a"
+        }
+      ]
+    },
+    "P3cb04d336f92": {
+      "text": "$gripper稳定握持$target，盒子不再相对手滑动",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "9e4751fbac5c050296a6"
+        },
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "297389d71ecf89c48f84"
+        },
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "dc306a6095cb8db53b35"
+        }
+      ]
+    },
+    "P4993fc8ba858": {
+      "text": "手指打滑",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "9e4751fbac5c050296a6"
+        },
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "ed5e9a7625ba9d43abc3"
+        },
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "297389d71ecf89c48f84"
+        },
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "98d574074eed2e297331"
+        },
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "dc306a6095cb8db53b35"
+        },
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "bd47466782b45cb74131"
+        }
+      ]
+    },
+    "Pb744e1f472de": {
+      "text": "盒子未被提起或晃动",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "9e4751fbac5c050296a6"
+        },
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "297389d71ecf89c48f84"
+        },
+        {
+          "video_uid": "bc7c557696bd1cd0710190d56575c1c7fb60f8e2cdb8dc1f1d7f08d91a3290c9",
+          "instance_id": "dc306a6095cb8db53b35"
+        }
+      ]
+    },
+    "Pef30fd90faf0": {
+      "text": "手指扣住盒体边缘",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "ed5e9a7625ba9d43abc3"
+        },
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "98d574074eed2e297331"
+        },
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "bd47466782b45cb74131"
+        }
+      ]
+    },
+    "Peb62376b2c81": {
+      "text": "手指接触盒体边缘",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "ed5e9a7625ba9d43abc3"
+        },
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "98d574074eed2e297331"
+        },
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "bd47466782b45cb74131"
+        }
+      ]
+    },
+    "P1e0ba5baaacc": {
+      "text": "施加压力建立稳定握持",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "ed5e9a7625ba9d43abc3"
+        },
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "98d574074eed2e297331"
+        },
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "bd47466782b45cb74131"
+        }
+      ]
+    },
+    "Pa1a74c478f18": {
+      "text": "$gripper手指扣住盒体边缘建立稳定接触",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "ed5e9a7625ba9d43abc3"
+        },
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "98d574074eed2e297331"
+        },
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "bd47466782b45cb74131"
+        }
+      ]
+    },
+    "Pd37be6d636c2": {
+      "text": "$gripper稳定握持塑料盒",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "ed5e9a7625ba9d43abc3"
+        },
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "98d574074eed2e297331"
+        },
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "bd47466782b45cb74131"
+        }
+      ]
+    },
+    "Pc6f9b0b66fd9": {
+      "text": "$gripper稳定握持$target，物体不再相对滑动",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "ed5e9a7625ba9d43abc3"
+        },
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "98d574074eed2e297331"
+        },
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "bd47466782b45cb74131"
+        }
+      ]
+    },
+    "Pe4a6a19a5cae": {
+      "text": "物体未被提起或发生位移",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "ed5e9a7625ba9d43abc3"
+        },
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "98d574074eed2e297331"
+        },
+        {
+          "video_uid": "d29edc48c845e9f4ef6bda50d47f5db9af6abbd683d731ab610c7e33086f6a0a",
+          "instance_id": "bd47466782b45cb74131"
+        }
+      ]
+    },
+    "P32a5b6278cc3": {
+      "text": "手指收拢",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "e0ec55df75a6f303c65b"
+        },
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "e7fa6e8f662d940146b5"
+        },
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "58006604cb065169f1b2"
+        },
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "3e04953e5a5640aad4a1"
+        },
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "e142c13ee2524b771a0b"
+        },
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "06d5188b27417877288a"
+        }
+      ]
+    },
+    "Pa7cdd21380d4": {
+      "text": "手指收拢包络物体",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "e0ec55df75a6f303c65b"
+        },
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "58006604cb065169f1b2"
+        },
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "e142c13ee2524b771a0b"
+        }
+      ]
+    },
+    "P0bc1bccb3ff1": {
+      "text": "握持力逐渐建立",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "e0ec55df75a6f303c65b"
+        },
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "3055838dc5f7f4ff495b"
+        },
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "58006604cb065169f1b2"
+        },
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "becedf6ba82489ec9dfb"
+        },
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "e142c13ee2524b771a0b"
+        },
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "fd48505574af12a4cf60"
+        }
+      ]
+    },
+    "P344368360cce": {
+      "text": "$gripper稳定握持盒子，物体不再相对滑动",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "e0ec55df75a6f303c65b"
+        },
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "58006604cb065169f1b2"
+        },
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "e142c13ee2524b771a0b"
+        }
+      ]
+    },
+    "P9326b0554190": {
+      "text": "手指滑脱",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "e0ec55df75a6f303c65b"
+        },
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "58006604cb065169f1b2"
+        },
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "e142c13ee2524b771a0b"
+        }
+      ]
+    },
+    "Pe0a7c2d9c44c": {
+      "text": "握持不稳导致物体晃动",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "e0ec55df75a6f303c65b"
+        },
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "76b0f58e0aae97d05730"
+        },
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "58006604cb065169f1b2"
+        },
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "e9955e74b0918fd7b3e7"
+        },
+        {
+          "video_uid": "f77c7026d80f50e0c16864c52d47459c76ae091179a9f036203f7a059c86be75",
+          "instance_id": "e142c13ee2524b771a0b"
+        },
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "b103d9765ee56eb96d24"
+        }
+      ]
+    },
+    "P8995e2dbb3c6": {
+      "text": "手指收拢包裹物体",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "3055838dc5f7f4ff495b"
+        },
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "76b0f58e0aae97d05730"
+        },
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "e7fa6e8f662d940146b5"
+        },
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "becedf6ba82489ec9dfb"
+        },
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "e9955e74b0918fd7b3e7"
+        },
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "3e04953e5a5640aad4a1"
+        },
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "fd48505574af12a4cf60"
+        },
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "b103d9765ee56eb96d24"
+        },
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "06d5188b27417877288a"
+        }
+      ]
+    },
+    "P9c7f7e546671": {
+      "text": "$gripper手指收拢握住盒子",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "3055838dc5f7f4ff495b"
+        },
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "76b0f58e0aae97d05730"
+        },
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "becedf6ba82489ec9dfb"
+        },
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "e9955e74b0918fd7b3e7"
+        },
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "fd48505574af12a4cf60"
+        },
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "b103d9765ee56eb96d24"
+        }
+      ]
+    },
+    "Pe9dda6783f98": {
+      "text": "$gripper稳定握住盒子",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "3055838dc5f7f4ff495b"
+        },
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "76b0f58e0aae97d05730"
+        },
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "becedf6ba82489ec9dfb"
+        },
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "e9955e74b0918fd7b3e7"
+        },
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "53358186ad331fb74c24",
+          "source_node_id": "step_4",
+          "case_predicate_ref": "P5a2a60a2ec04"
+        },
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "fd48505574af12a4cf60",
+          "source_node_id": "step_4",
+          "case_predicate_ref": "P5a2a60a2ec04"
+        },
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "b103d9765ee56eb96d24",
+          "source_node_id": "step_4",
+          "case_predicate_ref": "P5a2a60a2ec04"
+        },
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "fd48505574af12a4cf60"
+        },
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "b103d9765ee56eb96d24"
+        },
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "b79b3be0e040042c27d2",
+          "source_node_id": "step_4",
+          "case_predicate_ref": "P5a2a60a2ec04"
+        }
+      ]
+    },
+    "P2f6e96bfc803": {
+      "text": "$gripper稳定握住盒子，无滑动迹象",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "3055838dc5f7f4ff495b"
+        },
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "becedf6ba82489ec9dfb"
+        },
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "fd48505574af12a4cf60"
+        }
+      ]
+    },
+    "Pf4a6fb9067bd": {
+      "text": "抓握后盒子滑动或掉落",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "3055838dc5f7f4ff495b"
+        },
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "becedf6ba82489ec9dfb"
+        },
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "fd48505574af12a4cf60"
+        }
+      ]
+    },
+    "Pab41c45868ad": {
+      "text": "握持不稳定",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "3055838dc5f7f4ff495b"
+        },
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "becedf6ba82489ec9dfb"
+        },
+        {
+          "video_uid": "6a74bd7d81437a57bfd0aae5a10575083288a5a465b8e1bfa7f25c2a9cc2ab56",
+          "instance_id": "fd48505574af12a4cf60"
+        }
+      ]
+    },
+    "P4b71dbdb7b84": {
+      "text": "握持力稳定",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "76b0f58e0aae97d05730"
+        },
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "e9955e74b0918fd7b3e7"
+        },
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "b103d9765ee56eb96d24"
+        }
+      ]
+    },
+    "P1ef5865cb584": {
+      "text": "$gripper稳定握住盒子，物体不再相对滑动",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "76b0f58e0aae97d05730"
+        },
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "e9955e74b0918fd7b3e7"
+        },
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "b103d9765ee56eb96d24"
+        }
+      ]
+    },
+    "P3c1f351e5d4c": {
+      "text": "物体滑脱",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "76b0f58e0aae97d05730"
+        },
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "e7fa6e8f662d940146b5"
+        },
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "e9955e74b0918fd7b3e7"
+        },
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "3e04953e5a5640aad4a1"
+        },
+        {
+          "video_uid": "fd5333d73c8aca87348e7f3b61c3f719cc09fddf7b52992562e4c810a94bc8db",
+          "instance_id": "b103d9765ee56eb96d24"
+        },
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "06d5188b27417877288a"
+        }
+      ]
+    },
+    "P5f7ff6bbbfab": {
+      "text": "握持稳定无滑动",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "e7fa6e8f662d940146b5"
+        },
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "3e04953e5a5640aad4a1"
+        },
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "06d5188b27417877288a"
+        }
+      ]
+    },
+    "Paec360a42ba3": {
+      "text": "$gripper手指收拢握住$target边缘",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "e7fa6e8f662d940146b5"
+        },
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "3e04953e5a5640aad4a1"
+        },
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "06d5188b27417877288a"
+        }
+      ]
+    },
+    "Pdb068d01f963": {
+      "text": "握持不稳",
+      "origin": "video_derived",
+      "verification_status": "unverified",
+      "sources": [
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "e7fa6e8f662d940146b5"
+        },
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "3e04953e5a5640aad4a1"
+        },
+        {
+          "video_uid": "19e22268448a86672956905ca11a9d8b261bdb300f47162180610dbfd2ff09d4",
+          "instance_id": "06d5188b27417877288a"
+        }
+      ]
+    }
+  },
+  "evaluators": [
+    {
+      "evaluator_id": "eval_skill_grasp_object",
+      "skill_id": "skill_grasp_object",
+      "completion": {
+        "operator": "all",
+        "predicate_refs": [
+          "Pb9a9a72ab846"
+        ],
+        "unknown_policy": "U_remains_unknown"
+      },
+      "process": {
+        "candidate_predicate_refs": [
+          "Pb775cfdb3724",
+          "P1c76254b0a60",
+          "Pef30fd90faf0",
+          "Peb62376b2c81",
+          "P1e0ba5baaacc",
+          "P32a5b6278cc3",
+          "Pa7cdd21380d4",
+          "P0bc1bccb3ff1",
+          "P8995e2dbb3c6",
+          "P4b71dbdb7b84",
+          "P5f7ff6bbbfab"
+        ]
+      },
+      "failure_signals": {
+        "candidate_predicate_refs": [
+          "P4993fc8ba858",
+          "Pb744e1f472de",
+          "Pe4a6a19a5cae",
+          "P9326b0554190",
+          "Pe0a7c2d9c44c",
+          "Pf4a6fb9067bd",
+          "Pab41c45868ad",
+          "P3c1f351e5d4c",
+          "Pdb068d01f963"
+        ]
+      },
+      "completion_candidates": [
+        "Pe5d674969820",
+        "P2a06c6df057a",
+        "P4694a54100c1",
+        "P3cb04d336f92",
+        "Pa1a74c478f18",
+        "Pd37be6d636c2",
+        "Pc6f9b0b66fd9",
+        "P344368360cce",
+        "P9c7f7e546671",
+        "Pe9dda6783f98",
+        "P2f6e96bfc803",
+        "P1ef5865cb584",
+        "Paec360a42ba3"
+      ],
+      "detector": {
+        "binding_status": "unbound",
+        "implementation": null
+      },
+      "verification_status": "unverified",
+      "origin": "declared_goal_contract_with_video_derived_criteria"
+    }
+  ],
+  "note": "声明模板、跨视频归纳、单视频实例分层保存，均保留七元组；候选R不等于已验证的新物理方法。"
+}

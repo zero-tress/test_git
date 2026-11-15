@@ -151,6 +151,8 @@ def export(knowledge, out, clip_manifest=None):
                      path_ids=detail["path_ids"], required_capabilities=detail["required_capabilities"],
                      capability_binding_status="unbound", effect_review_status=detail["effect_review_status"])
     save(out/"skill_tuples.json", artifacts["skill_tuples"])
+    from .skill_library import export_learned
+    export_learned(knowledge, artifacts["skill_tuples"], out)
     save(out/"skill_definitions.json", data["definitions"])
     save(out/"functional_realizations.json", data["realizations"])
     save(out/"merge_decisions.json", data["merge_decisions"])
@@ -168,7 +170,27 @@ def export(knowledge, out, clip_manifest=None):
         allowed = {s["video_uid"] for s in knowledge["sources"]}
         for row in cm["instances"]:
             if row["kind"] == "skills" and row["video_uid"] in allowed:
-                clips[row["instance_id"]] = row
+                clips[row["instance_id"]] = {**row, "clip_root": str(clip_root)}
+    # New layout: each analysis owns clip/sequence.json. Read it directly when
+    # no historical cross-video clip manifest has been supplied.
+    for iid, item in instances.items():
+        if iid in clips:
+            continue
+        case = Path(item.get("analysis_source", item["source"])).parent
+        sequence = case/"clip/sequence.json"
+        if not sequence.is_file():
+            continue
+        local = json.loads(sequence.read_text(encoding="utf-8"))
+        if local["source_video"]["sha256"] != item["video_uid"]:
+            raise ValueError("Case clip source identity mismatch: " + iid)
+        matching = [r for r in local["clips"] if r["status"] == "exported"
+                    and set(r["atomic_refs"]) & set(item["atomic_refs"])]
+        clips[iid] = {"instance_id": iid, "case_id": local["source_video"]["name"],
+                      "clip_root": str(case/"clip"), "boundary_status": "model_candidate_with_context",
+                      "segments": [{"path": r["filename"], "start": r["source_start_sec"],
+                                    "end": r["source_end_sec"], "atomic_refs": r["atomic_refs"]}
+                                   for r in matching],
+                      "case_workbench": str(case/"workbench.html")}
     evidence_index = []
     for iid, i in instances.items():
         clip = clips.get(iid)
@@ -176,7 +198,7 @@ def export(knowledge, out, clip_manifest=None):
                                "analysis_source": i.get("analysis_source", i["source"]),
                                "operation_subgraph": i["operation_subgraph"], "atomic_refs": i["atomic_refs"],
                                "clip_segments": deepcopy(clip["segments"]) if clip else [],
-                               "clip_root": str(clip_root) if clip else None,
+                               "clip_root": str(clip.get("clip_root", clip_root)) if clip else None,
                                "outcome": i["outcome"], "outcome_status": i["outcome_status"],
                                "goal_effect_audit": i.get("goal_effect_audit", {})})
     save(out/"evidence_index.json", evidence_index)
@@ -214,7 +236,7 @@ def export(knowledge, out, clip_manifest=None):
                 c = clips.get(iid)
                 if c:
                     for seg in c["segments"]:
-                        url = quote(os.path.relpath(clip_root/seg["path"], out).replace(os.sep, "/"), safe="/")
+                        url = quote(os.path.relpath(Path(c.get("clip_root", clip_root))/seg["path"], out).replace(os.sep, "/"), safe="/")
                         rows.append(f'<p>源视频 {c["case_id"]}，{seg["start"]:.3f}—{seg["end"]:.3f}秒；{html.escape(c["boundary_status"])}</p><video controls preload="none" src="{url}"></video>')
                 rows.append("<p>结果："+html.escape(instances[iid]["outcome"])+"；审阅状态："+html.escape(instances[iid]["outcome_status"])+"</p>")
             rows.append("</details>")

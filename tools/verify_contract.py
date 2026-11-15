@@ -189,7 +189,9 @@ def main() -> int:
         candidate = Path(sys.argv[1])
         out = candidate if candidate.is_dir() else config.OUTPUT_DIR / sys.argv[1]
         graph_path = out / "semantic_graph.yaml"
-        if graph_path.exists() and yaml.safe_load(graph_path.read_text()).get("layer") == "semantic":
+        result_path = out / "result.json"
+        semantic_graph = json.loads(result_path.read_text()).get("semantic_graph", {}) if result_path.exists() else {}
+        if semantic_graph.get("layer") == "semantic" or (graph_path.exists() and yaml.safe_load(graph_path.read_text()).get("layer") == "semantic"):
             from video2op.semantic_interface import validate_files
             result = validate_files(out)
             print(json.dumps(result, ensure_ascii=False, indent=2))

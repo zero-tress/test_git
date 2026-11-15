@@ -8,14 +8,14 @@
 
 ## 从哪里看结果
 
-**统一入口：[output/index.html](output/index.html)**；稳定目录 `output/current/` 指向目前保留的最新交付 `semantic_learning_20261111_delivery/`。
+**统一入口：[output/index.html](output/index.html)**；稳定目录 `output/current/` 指向本轮单视频布局交付；旧交付保留在原目录。
 
 - [13 段开发集知识](output/current/knowledge_development/review.html)：用于归纳。
 - [全部 16 段展示](output/current/knowledge_all_16/review.html)：含参考标注的事后展示。
 - [验收报告](docs/reports/按两张图完成任务验收报告.md)：能力、证据缺口和 38 项账本。
 - [本次整理记录](docs/reports/项目整理_20261112.md)：清理范围、归档位置与验证结果。
 
-已有交付的结构检查为 16/16 通过；整理前回归为 394 项通过。结构通过不代表语义结论全部得到实证。局部效果、复杂时序、因果条件仍有待复核项；参数、检测器与执行器接口为 `unbound`，尚未验证机器人执行。
+已有交付的结构检查为 16/16 通过；本轮回归为 434 项通过。结构通过不代表语义结论全部得到实证。局部效果、复杂时序、因果条件仍有待复核项；参数、检测器与执行器接口为 `unbound`，尚未验证机器人执行。
 
 ## 目录约定
 
@@ -107,3 +107,30 @@ conda run -n study python -B tools/verify_cross_video_delivery.py --delivery out
 ~~~
 
 真实模型复核脚本为tools/review_cross_video_samples.py。必须先获得仅访问现有本机模型服务的网络授权，再使用--allow-local-model；仅处理3个代表样例，失败重试保留独立记录。tools/attach_cross_video_reviews.py只附加候选证据，保持冻结知识与原片段不变。新导出片段保留源分辨率和帧率；已有media.make_clip仍负责供模型使用的压缩窗口。
+
+
+## 单视频布局与统一技能大纲（2026-11-15）
+
+[当前案例总入口](output/current/index.html) · [8032重跑的抓取2](output/抓取2_semantic_v3/workbench.html) · [统一技能库索引](skill_library/index.json)
+
+单视频目录保留result.json、operations.svg、workbench.html、skill_instances.json和clip/。
+不再生成report.html、semantic_graph.yaml、action_catalog.json。
+clip目录内的视频命名为“原视频名_动作_序号_分析时间.mp4”；sequence.json记录原动作时间、含上下文的片段时间、序号、先后/重叠关系和证据来源。分析时间按Asia/Shanghai记录。
+
+技能定义只在skill_library中维护：action_catalog.json是项目动作与技能大纲，skill_templates.json是声明模板，learned_skill_catalog.json是开发集跨视频归纳结果。它们都保留X、O、C_pre、C_const、E、C_post、R七字段。单视频的skill_instances.json引用模板，并保存本视频的对象、条件与证据。two_table_skill_knowledge.json已作为只读参考快照保存在references/。
+
+~~~bash
+# 新视频分析默认导出自己的clip目录；需先取得模型网络授权
+conda run -n study python -B run.py data/抓取2.mp4
+
+# 只需要时间索引时可显式跳过MP4导出
+conda run -n study python -B run.py data/抓取2.mp4 --no-clips
+
+# 跨视频归纳自动读取各单视频的clip/sequence.json，输出skill_catalog.json
+conda run -n study python -B learn.py --inputs output/current/knowledge_development/cases/01_video_01_semantic_v3/result.json --out output/runs/learning_新实验
+
+# 验证本轮格式、七元组引用、切片文件与旧证据保留
+conda run -n study python -B tools/verify_case_layout.py --out output/current --live-case output/抓取2_semantic_v3
+~~~
+
+本轮没有改动机器人执行绑定、知识工作台数据库表或8032服务。模型的预期条件和视频观察仍分别记录，统一模板不代表检测器已经绑定或因果关系已经证实。

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """视频学习：观察证据 → 受控任务动作 → 语义七元组图。
-新结果写 output/<视频名>_semantic_v3/，主交付为 semantic_graph.yaml 和 operations.svg。
+新结果写 output/<视频名>_semantic_v3/，主交付为 result.json、operations.svg、workbench.html 和 clip/sequence.json。
 不生成执行程序、保持节点或执行策略。build_legacy_execution_graph 只供旧执行契约回归使用。
 """
 
@@ -211,7 +211,7 @@ def run_observation_branches(stage, client, ctx):
         raise errors[0]
 
 
-def run_case(video: Path, force: bool = False, verbose: bool = True, description: str | None = None) -> dict:
+def run_case(video: Path, force: bool = False, verbose: bool = True, description: str | None = None, export_clips: bool = True, clip_padding: float = .25) -> dict:
     t_start = time.time()
     video = Path(video).resolve()
     if not video.exists():
@@ -406,7 +406,7 @@ def run_case(video: Path, force: bool = False, verbose: bool = True, description
     t_render = time.time()
     from .knowledge import video_identity
     bundle["source_video_sha256"], _ = video_identity(bundle)
-    semantic.export(bundle, out_dir)
+    semantic.export(bundle, out_dir, export_clips=export_clips, clip_padding=clip_padding)
     semantic.render(bundle, out_dir)
 
     timings["render_export"] = round(time.time() - t_render, 3)
@@ -424,20 +424,20 @@ def run_case(video: Path, force: bool = False, verbose: bool = True, description
             print(f"  门控：{stats.get('gates', 0)} 个（T {stats.get('T', 0)} · "
                   f"U {stats.get('U', 0)} · F {stats.get('F', 0)}）· "
                   f"待确认条件 {stats.get('unresolved', 0)} 条")
-        print(f"  产物：{out_dir}/report.html · operations.svg（语义七元组）· workbench.html（可交互工作台）· "
-              f"semantic_graph.yaml · action_catalog.json"
+        print(f"  产物：{out_dir}/result.json · operations.svg（语义七元组）· workbench.html（可交互工作台）· "
+              f"skill_instances.json · clip/sequence.json"
               f"（用时 {bundle['pipeline']['wall_seconds']}s）")
     return bundle
 
 
-def run_all(force: bool = False, description: str | None = None) -> list[dict]:
+def run_all(force: bool = False, description: str | None = None, export_clips: bool = True, clip_padding: float = .25) -> list[dict]:
     videos = sorted(p for p in config.DATA_DIR.glob("*.mp4"))
     if not videos:
         print(f"data/ 下没有 mp4：{config.DATA_DIR}")
         return []
     out = []
     for v in videos:
-        out.append(run_case(v, force=force, **({"description": description} if description is not None else {})))
+        out.append(run_case(v, force=force, export_clips=export_clips, clip_padding=clip_padding, **({"description": description} if description is not None else {})))
     if out:
         from .knowledge import aggregate, extract, render
         knowledge = aggregate([extract(b, str(config.OUTPUT_DIR / (b["meta"]["name"] + "_semantic_v3") / "result.json")) for b in out])
@@ -445,4 +445,6 @@ def run_all(force: bool = False, description: str | None = None) -> list[dict]:
         destination.mkdir(parents=True, exist_ok=True)
         _dump(destination / "knowledge.json", knowledge)
         (destination / "review.html").write_text(render(knowledge), encoding="utf-8")
+        from .cross_video_delivery import export as export_cross_video
+        export_cross_video(knowledge, destination)
     return out
