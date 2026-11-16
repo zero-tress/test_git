@@ -1,0 +1,9 @@
+{
+  "scope": "本批次拿起笔语义任务合并图",
+  "origin": "explicit_user_requirement",
+  "entry_policy": {
+    "start_successor_role": "approach_target",
+    "start_successor_count": 1,
+    "allow_direct_preparation": false
+  }
+}

@@ -16,7 +16,17 @@ if __name__ == "__main__":
     )
     parser.add_argument("--allow-model-service", action="store_true")
     parser.add_argument("--force", action="store_true")
+    parser.add_argument(
+        "--graph-requirements", type=Path, help="Explicit user graph policy JSON; applies to this output only"
+    )
     args = parser.parse_args()
+    if args.graph_requirements:
+        from video2op.skill_clips import save
+
+        requirements = json.loads(args.graph_requirements.read_text())
+        if not isinstance(requirements, dict):
+            raise ValueError("Graph requirements must be a JSON object")
+        save(args.out / "graph_requirements.json", requirements)
     result = (
         analyze_then_export(args.out, allow_model_service=args.allow_model_service, force=args.force)
         if args.analyze

@@ -40,10 +40,27 @@ APPROACH_POLICY = {
 }
 
 
-def validate_approach_coverage(graph, evidence):
+def validate_entry_policy(graph, requirements):
+    policy = (requirements or {}).get("entry_policy")
+    if not policy:
+        return
+    if graph.get("entry_policy") != policy:
+        raise ValueError("Merged graph must echo the user entry policy")
+    if not graph["nodes"]:
+        return
+    nodes = {n["id"]: n for n in graph["nodes"]}
+    outgoing = [e for e in graph["edges"] if e["from"] == graph["start_node_id"]]
+    if len(outgoing) != policy["start_successor_count"]:
+        raise ValueError("User entry policy: START must have exactly one successor")
+    if any(nodes[e["to"]].get("action_role") != policy["start_successor_role"] for e in outgoing):
+        raise ValueError("User entry policy: START may only lead to approach")
+
+
+def validate_approach_coverage(graph, evidence, requirements=None):
     """Check model-declared motion roles and topology without interpreting video/labels."""
     if graph.get("approach_policy") != APPROACH_POLICY:
         raise ValueError("Keep the user approach preservation policy exactly")
+    validate_entry_policy(graph, requirements)
     nodes = {n["id"]: n for n in graph["nodes"]}
     edges = {(e["from"], e["to"]): e for e in graph["edges"]}
     paths = {p["case_id"]: p["node_ids"] for p in graph["paths"]}
@@ -78,13 +95,39 @@ def validate_approach_coverage(graph, evidence):
         rows = review.get("occurrences", [])
         if review.get("status") not in {"observed", "uncertain", "not_observed"}:
             raise ValueError("Approach review needs observed/uncertain/not_observed status")
-        if [r.get("node_id") for r in rows] != expected:
+        planned = [r for r in graph.get("rule_only_occurrences", []) if r.get("case_id") == review["case_id"]]
+        combined = sorted(rows + planned, key=lambda r: walk.index(r["node_id"]) if r.get("node_id") in walk else -1)
+        if [r.get("node_id") for r in combined] != expected:
             raise ValueError("Approach occurrence coverage/order differs from source path")
-        if review["status"] == "observed" and not expected:
+        if review["status"] == "observed" and not rows:
             raise ValueError("Observed approach cannot disappear from the main graph")
-        if review["status"] == "not_observed" and expected:
+        if review["status"] == "not_observed" and rows:
             raise ValueError("Do not invent an observed approach")
-        for row in rows:
+        for rule in planned:
+            if (
+                not (requirements or {}).get("entry_policy")
+                or rule.get("basis") != "user_requirement"
+                or rule.get("observed") is not False
+                or rule.get("evidence_refs")
+            ):
+                raise ValueError("Rule-only approach needs explicit user policy and must not claim video evidence")
+            supports = [
+                r
+                for r in nodes[rule["node_id"]].get("sources", [])
+                if r["case_id"] == review["case_id"] and r.get("basis") == "user_requirement"
+            ]
+            if not supports or any(
+                r.get("observed") is not False
+                or r.get("start_sec") is not None
+                or r.get("end_sec") is not None
+                or r.get("evidence_refs")
+                for r in supports
+            ):
+                raise ValueError("Rule-only approach source must be marked unobserved with null times")
+            path = next(p for p in graph["paths"] if p["case_id"] == review["case_id"])
+            if path.get("path_kind") != "policy_constrained_success_projection":
+                raise ValueError("Rule-only step must be identified as a policy-constrained path")
+        for row in combined:
             i = walk.index(row["node_id"])
             if i + 1 >= len(walk) or row.get("grasp_gate_id") != walk[i + 1]:
                 raise ValueError("Each approach occurrence must reference its following gate")
@@ -111,7 +154,7 @@ def validate_approach_coverage(graph, evidence):
                         raise ValueError("A false grasp condition requires a new approach occurrence before grasp")
 
 
-def validate_graph(graph, cases, evidence):
+def validate_graph(graph, cases, evidence, requirements=None):
     if not isinstance(graph, dict) or graph.get("schema_version") != SCHEMA:
         raise ValueError("Expected " + SCHEMA)
     required_policy = {
@@ -218,7 +261,7 @@ def validate_graph(graph, cases, evidence):
     if not selected:
         if nodes or edges or paths or graph.get("start_node_id") is not None or graph.get("end_node_id") is not None:
             raise ValueError("No eligible success: do not invent a learned graph")
-        validate_approach_coverage(graph, evidence)
+        validate_approach_coverage(graph, evidence, requirements)
         return graph
     ids = [n.get("id") for n in nodes]
     if not nodes or any(not isinstance(i, str) or not i for i in ids) or len(ids) != len(set(ids)):
@@ -315,7 +358,7 @@ def validate_graph(graph, cases, evidence):
                 if cid is None or cid in by_pair[node, target]["source_case_ids"]:
                     yield from walks(target, path, cid)
 
-    validate_approach_coverage(graph, evidence)
+    validate_approach_coverage(graph, evidence, requirements)
     list(walks(start, ()))
     for p in paths:
         if set(walks(start, (), p["case_id"])) != {tuple(p["node_ids"])}:
@@ -410,13 +453,10 @@ def analyze(root, *, allow_model_service=False, force=False):
     if file.exists() and not force:
         current = json.loads(file.read_text())
         if current.get("input_fingerprint") == digest and current.get("model") == config.MODEL:
-            validate_graph(current["response"], cases, evidence)
-            from .model_graph_alignment import PROMPT as alignment_prompt
-            from .model_graph_alignment import align
+            from .model_graph_alignment import align, alignment_is_current, read_requirements
 
-            if current.get("graph_stage") == "semantic_merged" and current.get("alignment_prompt_sha256") == sha256(
-                alignment_prompt
-            ):
+            if alignment_is_current(current, root):
+                validate_graph(current["response"], cases, evidence, read_requirements(root))
                 return current
             if current.get("graph_stage") == "semantic_merged":
                 original = root / current["instance_record"]
@@ -487,13 +527,11 @@ def load_model_graph(root):
     record = json.loads(file.read_text())
     if record.get("analysis_origin") != "deployed_model" or record.get("input_fingerprint") != digest:
         raise ValueError("Model graph is stale or not model-authored; rerun its model stage")
-    validate_graph(record["response"], cases, evidence)
-    from .model_graph_alignment import PROMPT as alignment_prompt
+    from .model_graph_alignment import alignment_is_current, read_requirements
 
-    if record.get("graph_stage") != "semantic_merged" or record.get("alignment_prompt_sha256") != sha256(
-        alignment_prompt
-    ):
+    if not alignment_is_current(record, root):
         raise ValueError("Run deployed-model semantic alignment before rendering; no host merge fallback")
+    validate_graph(record["response"], cases, evidence, read_requirements(root))
     if sha256(root / record["instance_record"]) != record["instance_record_sha256"]:
         raise ValueError("Source instance model record changed")
     return record, cases, evidence

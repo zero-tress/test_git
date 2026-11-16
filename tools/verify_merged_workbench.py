@@ -141,6 +141,13 @@ def verify(root):
         "source_videos_unchanged": len(cases),
         "source_paths": len(graph["paths"]),
         "nodes": len(graph["nodes"]),
+        "start_successors": [
+            n["label"]
+            for n in graph["nodes"]
+            if n["id"] in {e["to"] for e in graph["edges"] if e["from"] == graph["start_node_id"]}
+        ],
+        "user_entry_policy": graph.get("entry_policy"),
+        "rule_only_occurrences": len(graph.get("rule_only_occurrences", [])),
         "approach_nodes": sum(n.get("action_role") == "approach_target" for n in graph["nodes"]),
         "pregrasp_gates": sum(n.get("gate_role") == "grasp_precondition" for n in graph["nodes"]),
         "approach_source_reviews": len(graph["approach_review"]),

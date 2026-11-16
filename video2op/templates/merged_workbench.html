@@ -18,7 +18,7 @@ function el(tag,text,cls){const e=document.createElement(tag);if(text!==undefine
 function link(text,path){const a=el("a",text);a.href=path;return a}
 function clipCards(clips){const grid=el("div",undefined,"clipgrid");for(const c of clips||[]){const box=el("div",undefined,"clip");box.append(el("strong",c.action),el("div",c.start.toFixed(2)+"～"+c.end.toFixed(2)+" 秒"));const video=el("video");video.controls=true;video.preload="none";video.src=c.path;box.append(video,link("打开切片",c.path));grid.append(box)}return grid}
 function sourceCards(rows){
- for(const row of rows||[]){const h=el("div",undefined,"source-title");h.append(el("strong",row.name||row.case_id),"　",link("原视频",row.source_video),"　",link("模型原始输出",row.model_result));sources.append(h);
+ for(const row of rows||[]){const h=el("div",undefined,"source-title");h.append(el("strong",row.name||row.case_id),"　",link("原视频",row.source_video),"　",link("模型原始输出",row.model_result));sources.append(h);if(row.basis==="user_requirement"&&row.observed===false)sources.append(el("p","用户流程规则中的抽象步骤，未宣称在该视频中观测到；不生成伪造时间切片。","note"));
  sources.append(el("p","模型给出的源范围："+(row.start_sec==null?"未确定":row.start_sec.toFixed(2)+"～"+row.end_sec.toFixed(2)+" 秒"),"muted"));
  sources.append(el("p","模型证据引用："+(row.evidence_refs||[]).join("、"),"muted"));
  sources.append(clipCards(row.clips));if(!(row.clips||[]).length)sources.append(el("p","没有可靠的非零片段边界时，程序不补猜切片范围。","empty"))}
@@ -52,6 +52,7 @@ exampleRoot.append(el("h2","模型给出的正反例条件对照"),el("pre",JSON
 const selection=document.getElementById("selection-content");
 for(const d of graph.source_decisions||[]){const card=el("article",undefined,"card panel");card.append(el("h2","来源 "+d.case_id+" · "+(outcomes[d.whole_task_outcome]||d.whole_task_outcome)),el("p",d.included?"模型判定：纳入成功流程学习":"模型判定：不纳入成功流程学习"),el("p",d.reason),el("h3","保留的成功范围"),el("pre",JSON.stringify(d.retained_segments||[],null,2)),el("h3","从主图移除的失败范围"),el("pre",JSON.stringify(d.removed_failed_segments||[],null,2)));selection.append(card)}
 selection.append(el("h2","模型对步骤简化的判断"));for(const s of graph.simplifications||[]){const card=el("article",undefined,"card panel");card.append(el("h3","来源 "+s.case_id+" · "+s.step+" · "+s.decision),el("p",s.reason),el("p","模型判定的必要性状态："+s.necessity_status,"muted"));selection.append(card)}
+selection.append(el("h2","用户指定的入口规则"),el("pre",JSON.stringify(graph.entry_policy||{},null,2)),el("h2","模型标记的规则补充步骤（非视频观测）"),el("pre",JSON.stringify(graph.rule_only_occurrences||[],null,2)));
 selection.append(el("h2","模型对靠近出现次数与抓取门控的核对"),el("pre",JSON.stringify(graph.approach_review||[],null,2)));
 selection.append(el("h2","模型的语义节点合并说明"),el("pre",JSON.stringify(graph.merge_review||[],null,2)),el("h2","模型归纳的候选实现方式"),el("pre",JSON.stringify(graph.functional_realizations||[],null,2)));
 selection.append(el("h2","模型保留的证据缺口"),el("pre",JSON.stringify(graph.limitations||[],null,2)));

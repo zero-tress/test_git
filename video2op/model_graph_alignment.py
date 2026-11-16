@@ -15,10 +15,28 @@ from .skill_clips import save, sha256
 PROMPT = Path(__file__).parent / "prompts/cross_video_graph_alignment.system.md"
 
 
-def validate_alignment(graph, instance, cases, evidence):
+def read_requirements(root):
+    file = Path(root) / "graph_requirements.json"
+    return json.loads(file.read_text()) if file.exists() else {}
+
+
+def requirements_hash(root):
+    file = Path(root) / "graph_requirements.json"
+    return sha256(file) if file.exists() else None
+
+
+def alignment_is_current(record, root):
+    return (
+        record.get("graph_stage") == "semantic_merged"
+        and record.get("alignment_prompt_sha256") == sha256(PROMPT)
+        and record.get("alignment_requirements_sha256") == requirements_hash(root)
+    )
+
+
+def validate_alignment(graph, instance, cases, evidence, requirements=None):
     from .model_merged_graph import validate_graph
 
-    validate_graph(graph, cases, evidence)
+    validate_graph(graph, cases, evidence, requirements)
     for key in [
         "source_decisions",
         "contrastive_examples",
@@ -49,6 +67,7 @@ def align(root, record, cases, evidence, digest):
     canonical = root / "success_process_model/result.json"
     if canonical.exists():
         from .model_merged_graph import archive_model_record
+
         archive_model_record(canonical.parent, canonical)
     folder = root / "semantic_alignment_model"
     instance_key = hashlib.sha256(json.dumps(record, ensure_ascii=False, sort_keys=True).encode()).hexdigest()
@@ -56,8 +75,10 @@ def align(root, record, cases, evidence, digest):
     save(instance_path, record)
     save(root / "instance_graph_model/result.json", record)
     system = PROMPT.read_text()
+    requirements = read_requirements(root)
     packet = {
         "source_instance_graph": record["response"],
+        "user_graph_requirements": requirements,
         "previous_success_graph_candidate": None,
         "required_source_video_approach_counts": {
             r["case_id"]: len(r["occurrences"]) for r in record["response"]["approach_review"]
@@ -110,7 +131,7 @@ def align(root, record, cases, evidence, digest):
             max_tokens=10000,
             attempts=2,
             timeout=500,
-            validator=lambda x: validate_alignment(x, record["response"], cases, evidence),
+            validator=lambda x: validate_alignment(x, record["response"], cases, evidence, requirements),
         )
     except Exception as exc:
         save(
@@ -130,6 +151,7 @@ def align(root, record, cases, evidence, digest):
         "input_fingerprint": digest,
         "graph_stage": "semantic_merged",
         "alignment_prompt_sha256": sha256(PROMPT),
+        "alignment_requirements_sha256": requirements_hash(root),
         "model_stats": client.stats,
         "instance_model_stats": record["model_stats"],
         "instance_record": str(instance_path.relative_to(root)),

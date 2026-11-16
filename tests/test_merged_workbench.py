@@ -540,3 +540,59 @@ def test_cached_instance_graph_runs_alignment_without_reopening_video(tmp_path, 
     monkeypatch.setattr(mg, "VLMClient", forbidden)
     assert mg.analyze(tmp_path, allow_model_service=True)["graph_stage"] == "semantic_merged"
     assert len(calls) == 1
+
+
+ENTRY_REQUIREMENT = {
+    "entry_policy": {
+        "start_successor_role": "approach_target",
+        "start_successor_count": 1,
+        "allow_direct_preparation": False,
+    }
+}
+
+
+def test_grasp_task_entry_accepts_only_one_approach(approach_graph):
+    approach_graph["entry_policy"] = deepcopy(ENTRY_REQUIREMENT["entry_policy"])
+    mg.validate_entry_policy(approach_graph, ENTRY_REQUIREMENT)
+
+
+def test_grasp_task_entry_rejects_start_to_preparation(approach_graph):
+    approach_graph["entry_policy"] = deepcopy(ENTRY_REQUIREMENT["entry_policy"])
+    approach_graph["edges"][0]["to"] = "prepare"
+    with pytest.raises(ValueError, match="START may only lead to approach"):
+        mg.validate_entry_policy(approach_graph, ENTRY_REQUIREMENT)
+
+
+def test_grasp_task_entry_rejects_extra_preparation_fork(approach_graph):
+    approach_graph["entry_policy"] = deepcopy(ENTRY_REQUIREMENT["entry_policy"])
+    approach_graph["edges"].append(
+        {"id": "badfork", "from": approach_graph["start_node_id"], "to": "prepare", "source_case_ids": ["alpha"]}
+    )
+    with pytest.raises(ValueError, match="exactly one successor"):
+        mg.validate_entry_policy(approach_graph, ENTRY_REQUIREMENT)
+
+
+def test_entry_requirement_does_not_change_unscoped_tasks(graph):
+    mg.validate_entry_policy(graph, {})
+    assert "entry_policy" not in graph
+
+
+def test_rules_file_invalidates_only_alignment_cache(tmp_path):
+    from video2op import model_graph_alignment as alignment
+    from video2op.skill_clips import save, sha256
+
+    record = {
+        "graph_stage": "semantic_merged",
+        "alignment_prompt_sha256": sha256(alignment.PROMPT),
+        "alignment_requirements_sha256": None,
+    }
+    assert alignment.alignment_is_current(record, tmp_path)
+    save(tmp_path / "graph_requirements.json", ENTRY_REQUIREMENT)
+    assert not alignment.alignment_is_current(record, tmp_path)
+    record["alignment_requirements_sha256"] = alignment.requirements_hash(tmp_path)
+    assert alignment.alignment_is_current(record, tmp_path)
+    save(
+        tmp_path / "graph_requirements.json",
+        {"entry_policy": {**ENTRY_REQUIREMENT["entry_policy"], "start_successor_count": 2}},
+    )
+    assert not alignment.alignment_is_current(record, tmp_path)

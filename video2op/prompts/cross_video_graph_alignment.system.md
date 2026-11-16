@@ -19,3 +19,18 @@
 7. 原始observed失败仍在独立样本池；模型对必要性的candidate/unknown不升级为证明。
 
 重点完成实际语义节点合并，而不是输出实例并列图后在merge_review中说“位置不同所以全部分开”。本轮共同目标和局部语义已在输入中确定，可以参数化；同一来源的重复出现次数由拓扑保留。merge_review说明合并映射和状态区分。只返回严格JSON，不要Markdown。
+
+
+## 本批次用户入口要求，优先于旧图与实例观察的直接入口
+当user_graph_requirements有entry_policy时，完整照抄到输出根entry_policy。
+本次拿笔任务明确要求：开始只能有一条出边，且唯一后继是approach_target（靠近目标）。绝不保留开始→移动障碍物/清障/其他准备的边。准备必须位于第一次靠近后的抓取条件不成立分支；准备完成后再次靠近，再检查条件，成立才抓取。合并兼容的清障实例，避免入口另画一条清障路径。结束前仍无门控。
+
+区分“用户要求的学习任务流程”与“视频逐帧事件回放”。不能因为旧模型记录某个视频先移物，就把START→移物放回学习图；也不能为满足新流程而伪造该视频已经观察到首次靠近。
+原来的逐来源approach_review.occurrences只记录视频实际观察到的靠近，出现次数必须保持不变，节点引用可以映射到新的初始/准备后阶段。source_decisions等观测判断保持原样。
+如果按用户入口规则需要在某来源路径增加未观测到的初始靠近，由你在图中保留该步骤并单独新增根rule_only_occurrences：
+[{"case_id":"该来源ID","node_id":"初始靠近节点ID","grasp_gate_id":"紧随门控ID","basis":"user_requirement","observed":false,"evidence_refs":[]}]
+同一node的sources里给该来源一项：
+{"case_id":"来源ID","start_sec":null,"end_sec":null,"evidence_refs":[],"basis":"user_requirement","observed":false}
+该来源path增加path_kind="policy_constrained_success_projection"。不要把它放入approach_review的观察次数中；不得给规则步骤捏造视频时间、帧或成功证据。共享靠近节点仍可由其他来源真实观测支持。
+如旧来源观察到的靠近发生在移物之后，将那次真实观察映射到准备后的靠近节点；用户入口要求补充的初始靠近单独标注，不交换或改写原视频时间。T/F边是通行规则，门控证据不足仍U。
+所有新增节点、边、路径、七元组与映射都由你决定并输出。宿主仅检查入口规则与来源标记，不会手动移动任何业务节点。
