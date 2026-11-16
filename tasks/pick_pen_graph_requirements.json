@@ -5,5 +5,16 @@
     "start_successor_role": "approach_target",
     "start_successor_count": 1,
     "allow_direct_preparation": false
+  },
+  "semantic_merge_policy": {
+    "operation_role": "preparation",
+    "node_count": 1,
+    "object_differences_in_realizations": true
+  },
+  "presentation_policy": {
+    "show_source_labels": false,
+    "false_branch_lane": "upper",
+    "node_labels": "semantic_action_only",
+    "single_case_visual_style": true
   }
 }

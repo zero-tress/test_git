@@ -5,7 +5,6 @@ from __future__ import annotations
 import hashlib
 import json
 import os
-import subprocess
 import xml.etree.ElementTree as ET
 from copy import deepcopy
 from pathlib import Path
@@ -69,88 +68,9 @@ def _sources(root, rows, cases, label, key):
 
 
 def _svg(graph, root):
-    if not graph["nodes"]:
-        return (
-            '<svg xmlns="'
-            + SVG_NS
-            + '" viewBox="0 0 1000 240"><rect width="1000" height="240" fill="white"/><text x="50" y="100" font-size="26">当前没有模型判定可纳入的成功流程</text></svg>'
-        )
-    dot = [
-        "digraph G {",
-        'graph [rankdir=LR,bgcolor="white",pad=.3,nodesep=.65,ranksep=.85,splines=polyline];',
-        'node [fontname="Droid Sans Fallback",fontsize=16,margin=".20,.13",color="#7897b5",penwidth=1.8,style="rounded,filled",fillcolor="#f8fbff",shape=box];',
-        'edge [fontname="Droid Sans Fallback",fontsize=11,color="#6b87a1",arrowsize=.8,penwidth=1.7];',
-    ]
-    for i, node in enumerate(graph["nodes"]):
-        kind = node["kind"]
-        label = node["label"]
-        if kind == "gate":
-            label += "\n" + node["truth"] + " · 门控"
-        elif kind == "operation":
-            label += "\n来源 " + "/".join(node["source_case_ids"])
-        shape = "diamond" if kind == "gate" else "ellipse" if kind == "terminal" else "box"
-        color = "#fff7df" if kind == "gate" else "#eef3f8" if kind == "terminal" else "#ffffff"
-        attrs = {
-            "id": "node-ui-" + str(i),
-            "label": label,
-            "shape": shape,
-            "fillcolor": color,
-            "URL": "workbench.html#node=" + node["id"],
-        }
-        dot.append(
-            json.dumps(node["id"], ensure_ascii=False)
-            + " ["
-            + ",".join(k + "=" + json.dumps(v, ensure_ascii=False) for k, v in attrs.items())
-            + "];"
-        )
-    for i, edge in enumerate(graph["edges"]):
-        attrs = {"id": "edge-ui-" + str(i)}
-        if edge.get("label"):
-            attrs["label"] = edge["label"]
-        dot.append(
-            json.dumps(edge["from"], ensure_ascii=False)
-            + " -> "
-            + json.dumps(edge["to"], ensure_ascii=False)
-            + " ["
-            + ",".join(k + "=" + json.dumps(v, ensure_ascii=False) for k, v in attrs.items())
-            + "];"
-        )
-    dot.append("}")
-    qa = root / "_verification"
-    qa.mkdir(exist_ok=True)
-    source = qa / "model_success_graph.dot"
-    source.write_text("\n".join(dot))
-    conf = qa / "model_graph_fonts.conf"
-    conf.write_text(
-        "<fontconfig><dir>/usr/share/fonts/truetype</dir><cachedir>"
-        + str(qa / "fontcache")
-        + "</cachedir></fontconfig>"
-    )
-    run = subprocess.run(
-        ["dot", "-Tsvg", str(source)],
-        env={**os.environ, "FONTCONFIG_FILE": str(conf)},
-        capture_output=True,
-        text=True,
-        timeout=60,
-    )
-    if run.returncode:
-        raise RuntimeError(run.stderr)
-    svg = ET.fromstring(run.stdout)
-    svg.set("role", "img")
-    svg.set("aria-label", graph["title"])
-    for i, node in enumerate(graph["nodes"]):
-        group = next(e for e in svg.iter() if e.get("id") == "node-ui-" + str(i))
-        group.set("data-node-id", node["id"])
-        group.set("data-cases", " ".join(node["source_case_ids"]))
-        group.set("tabindex", "0")
-    for i, edge in enumerate(graph["edges"]):
-        group = next(e for e in svg.iter() if e.get("id") == "edge-ui-" + str(i))
-        group.set("data-edge-id", edge["id"])
-        group.set("data-cases", " ".join(edge["source_case_ids"]))
-    style = ET.Element("{" + SVG_NS + "}style")
-    style.text = '.node{cursor:pointer}.node text{font-family:"Microsoft YaHei","Droid Sans Fallback",sans-serif;fill:#18334f}.muted{opacity:.13}.active.node polygon,.active.node path,.active.node ellipse{stroke:#176db1;stroke-width:3}.active.edge path{stroke:#176db1;stroke-width:3}.active.edge polygon{fill:#176db1;stroke:#176db1}.node:focus{outline:none}.node:focus polygon,.node:focus path,.node:focus ellipse{stroke:#176db1;stroke-width:3}'
-    svg.insert(0, style)
-    return ET.tostring(svg, encoding="unicode")
+    from .cross_video_render import svg
+
+    return svg(graph)
 
 
 def export(root):
@@ -210,12 +130,9 @@ def export(root):
     )
     drawing = _svg(business, root)
     (root / "operations.svg").write_text(drawing)
-    template = (Path(__file__).parent / "templates/merged_workbench.html").read_text()
-    (root / "workbench.html").write_text(
-        template.replace("__GRAPH_SVG__", drawing).replace(
-            "__GRAPH_JSON__", json.dumps(view, ensure_ascii=False).replace("<", "\\u003c")
-        )
-    )
+    from .cross_video_workbench import render
+
+    (root / "workbench.html").write_text(render(view, drawing))
     for folder, relative in [(root / "learning_tracks/same_goal_graphs", "../.."), (root / "跨视频模型分析", "..")]:
         folder.mkdir(parents=True, exist_ok=True)
         (folder / "operations.svg").write_text(drawing)

@@ -33,7 +33,7 @@ def alignment_is_current(record, root):
     )
 
 
-def validate_alignment(graph, instance, cases, evidence, requirements=None):
+def validate_alignment(graph, instance, cases, evidence, requirements=None, previous=None):
     from .model_merged_graph import validate_graph
 
     validate_graph(graph, cases, evidence, requirements)
@@ -56,7 +56,32 @@ def validate_alignment(graph, instance, cases, evidence, requirements=None):
     participants = {cid for n in grasp for cid in n["source_case_ids"]}
     if len(participants) > 1 and not any(len(n["source_case_ids"]) > 1 for n in grasp):
         raise ValueError("Same-goal grasp instances must share a parameterized semantic node")
+    validate_semantic_merge_policy(graph, instance, previous, requirements)
     return graph
+
+
+def validate_semantic_merge_policy(graph, instance, previous, requirements):
+    merge_policy = (requirements or {}).get("semantic_merge_policy")
+    if merge_policy and graph["nodes"]:
+        role = merge_policy["operation_role"]
+        nodes = [n for n in graph["nodes"] if n.get("action_role") == role]
+        if len(nodes) != merge_policy["node_count"]:
+            raise ValueError(
+                "User semantic merge policy requires one shared preparation node, not per-video duplicates"
+            )
+        required = {
+            cid
+            for source in [instance, previous or {}]
+            for n in source.get("nodes", [])
+            if n.get("action_role") == role
+            for cid in n["source_case_ids"]
+        }
+        supported = {cid for n in nodes for cid in n["source_case_ids"]}
+        if not required <= supported:
+            raise ValueError("Shared preparation must retain all model-observed source support")
+        for n in graph["nodes"]:
+            if not isinstance(n.get("display_label"), str) or not n["display_label"].strip():
+                raise ValueError("Model must supply source-free semantic display_label")
 
 
 def align(root, record, cases, evidence, digest):
@@ -131,7 +156,14 @@ def align(root, record, cases, evidence, digest):
             max_tokens=10000,
             attempts=2,
             timeout=500,
-            validator=lambda x: validate_alignment(x, record["response"], cases, evidence, requirements),
+            validator=lambda x: validate_alignment(
+                x,
+                record["response"],
+                cases,
+                evidence,
+                requirements,
+                (packet.get("previous_success_graph_candidate") or {}).get("response"),
+            ),
         )
     except Exception as exc:
         save(

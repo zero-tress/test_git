@@ -126,6 +126,33 @@ def verify(root):
         svg = ET.parse(path).getroot()
         if {n.get("data-node-id") for n in svg.iter() if n.get("data-node-id")} != {n["id"] for n in graph["nodes"]}:
             errors.append("SVG/model node mismatch")
+    from video2op.workbench import CSS, JS
+
+    main_page = (root / "workbench.html").read_text()
+    native_style_reused = CSS in main_page and JS in main_page
+    if not native_style_reused:
+        errors.append("Cross-video workbench must reuse the single-case CSS and JS")
+    plot = ET.parse(root / "operations.svg").getroot()
+    visible_text = [t.text or "" for t in plot.iter() if t.tag.endswith("}text")]
+    if any("来源" in t for t in visible_text):
+        errors.append("Source annotations remain on the diagram")
+    centers = {
+        e.get("data-node-id"): (float(e.get("data-center-x")), float(e.get("data-center-y")))
+        for e in plot.iter()
+        if e.get("data-node-id")
+    }
+    for e in graph["edges"]:
+        if e.get("gate_outcome") == "F" and centers[e["to"]][1] >= centers[e["from"]][1]:
+            errors.append("Unsatisfied condition branch must go upward")
+    displayed_by_node = {
+        e.get("data-node-id"): "".join(t.text or "" for t in e.iter() if t.tag.endswith("}text"))
+        for e in plot.iter()
+        if e.get("data-node-id")
+    }
+    for node in graph["nodes"]:
+        expected = "".join(node.get("display_label", node["label"]).splitlines())
+        if displayed_by_node.get(node["id"]) != expected:
+            errors.append("Diagram changed a model-provided semantic display label")
     js = root / "_verification/merged_workbench_scripts.js"
     js.parent.mkdir(exist_ok=True)
     js.write_text("\n".join("function block" + str(i) + "(){\n" + s + "\n}" for i, s in enumerate(scripts)))
@@ -141,6 +168,10 @@ def verify(root):
         "source_videos_unchanged": len(cases),
         "source_paths": len(graph["paths"]),
         "nodes": len(graph["nodes"]),
+        "visible_source_annotations": any("来源" in t for t in visible_text),
+        "single_preparation_nodes": sum(n.get("action_role") == "preparation" for n in graph["nodes"]),
+        "false_branch_rendering": "upper",
+        "shared_single_case_workbench_style": native_style_reused,
         "start_successors": [
             n["label"]
             for n in graph["nodes"]
