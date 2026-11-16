@@ -15,7 +15,7 @@ from .llm import VLMClient
 from .skill_clips import save, sha256
 
 FIELDS = ("X", "O", "C_pre", "C_const", "E", "C_post", "R")
-SCHEMA = "model_success_graph.v2"
+SCHEMA = "model_success_graph.v3"
 PROMPT = Path(__file__).parent / "prompts/cross_video_success_graph.system.md"
 
 
@@ -30,6 +30,85 @@ def validate_seven_tuple(value):
         "unknown_condition",
     } <= set(evaluator):
         raise ValueError("Seven-tuple E must define evaluation criteria, not an action label")
+
+
+APPROACH_POLICY = {
+    "preserve_approach": True,
+    "distinct_state_occurrences": True,
+    "gate_before_grasp": True,
+    "no_grasp_on_false": True,
+}
+
+
+def validate_approach_coverage(graph, evidence):
+    """Check model-declared motion roles and topology without interpreting video/labels."""
+    if graph.get("approach_policy") != APPROACH_POLICY:
+        raise ValueError("Keep the user approach preservation policy exactly")
+    nodes = {n["id"]: n for n in graph["nodes"]}
+    edges = {(e["from"], e["to"]): e for e in graph["edges"]}
+    paths = {p["case_id"]: p["node_ids"] for p in graph["paths"]}
+    reviews = graph.get("approach_review", [])
+    if len(reviews) != len(paths) or {r.get("case_id") for r in reviews} != set(paths):
+        raise ValueError("Approach review must cover every selected source exactly once")
+    for n in nodes.values():
+        if n["kind"] == "operation" and n.get("action_role") not in {
+            "approach_target",
+            "grasp_target",
+            "preparation",
+            "other",
+        }:
+            raise ValueError("Model must declare each operation action_role")
+        if n.get("action_role") == "approach_target":
+            if not isinstance(n.get("state_context"), str) or not n["state_context"].strip():
+                raise ValueError("Each approach occurrence needs model-authored state_context")
+            outgoing = [nodes[b] for a, b in edges if a == n["id"]]
+            if not outgoing or any(x.get("gate_role") != "grasp_precondition" for x in outgoing):
+                raise ValueError("Approach must lead to a grasp-precondition gate")
+    for (a, b), edge in edges.items():
+        source, target = nodes[a], nodes[b]
+        if source.get("gate_role") == "grasp_precondition":
+            if edge.get("gate_outcome") not in {"T", "F", "U"}:
+                raise ValueError("Grasp-precondition branch needs gate_outcome T/F/U")
+        if target.get("action_role") == "grasp_target":
+            if source.get("gate_role") != "grasp_precondition" or edge.get("gate_outcome") != "T":
+                raise ValueError("Grasp requires the T branch of a grasp-precondition gate")
+    for review in reviews:
+        walk = paths[review["case_id"]]
+        expected = [i for i in walk if nodes[i].get("action_role") == "approach_target"]
+        rows = review.get("occurrences", [])
+        if review.get("status") not in {"observed", "uncertain", "not_observed"}:
+            raise ValueError("Approach review needs observed/uncertain/not_observed status")
+        if [r.get("node_id") for r in rows] != expected:
+            raise ValueError("Approach occurrence coverage/order differs from source path")
+        if review["status"] == "observed" and not expected:
+            raise ValueError("Observed approach cannot disappear from the main graph")
+        if review["status"] == "not_observed" and expected:
+            raise ValueError("Do not invent an observed approach")
+        for row in rows:
+            i = walk.index(row["node_id"])
+            if i + 1 >= len(walk) or row.get("grasp_gate_id") != walk[i + 1]:
+                raise ValueError("Each approach occurrence must reference its following gate")
+            if not set(row.get("evidence_refs", [])) <= set(evidence):
+                raise ValueError("Approach review must cite allowed evidence")
+        for index, node_id in enumerate(walk):
+            if nodes[node_id].get("action_role") == "grasp_target":
+                if index < 2 or nodes[walk[index - 2]].get("action_role") != "approach_target":
+                    raise ValueError("Do not omit approach immediately before the grasp gate")
+            if index + 1 < len(walk):
+                edge = edges[node_id, walk[index + 1]]
+                if nodes[node_id].get("gate_role") == "grasp_precondition" and edge.get("gate_outcome") == "F":
+                    next_grasp = next(
+                        (
+                            j
+                            for j in range(index + 1, len(walk))
+                            if nodes[walk[j]].get("action_role") == "grasp_target"
+                        ),
+                        None,
+                    )
+                    if next_grasp is not None and not any(
+                        nodes[i].get("action_role") == "approach_target" for i in walk[index + 1 : next_grasp]
+                    ):
+                        raise ValueError("A false grasp condition requires a new approach occurrence before grasp")
 
 
 def validate_graph(graph, cases, evidence):
@@ -139,6 +218,7 @@ def validate_graph(graph, cases, evidence):
     if not selected:
         if nodes or edges or paths or graph.get("start_node_id") is not None or graph.get("end_node_id") is not None:
             raise ValueError("No eligible success: do not invent a learned graph")
+        validate_approach_coverage(graph, evidence)
         return graph
     ids = [n.get("id") for n in nodes]
     if not nodes or any(not isinstance(i, str) or not i for i in ids) or len(ids) != len(set(ids)):
@@ -235,6 +315,7 @@ def validate_graph(graph, cases, evidence):
                 if cid is None or cid in by_pair[node, target]["source_case_ids"]:
                     yield from walks(target, path, cid)
 
+    validate_approach_coverage(graph, evidence)
     list(walks(start, ()))
     for p in paths:
         if set(walks(start, (), p["case_id"])) != {tuple(p["node_ids"])}:
@@ -280,6 +361,12 @@ def prepare(root):
         "end_policy": {"gate_before_end": False, "completion_validation": False},
         "excluded_inputs": "No agent-authored graph, manual visual annotations, or hardcoded case-specific gate/tuple values are supplied.",
     }
+    repair_path = root / "success_process_model/repair_candidate.json"
+    if repair_path.exists():
+        repair = json.loads(repair_path.read_text())
+        if repair.get("analysis_origin") != "deployed_model_failed_draft":
+            raise ValueError("Graph repair candidate must originate from a deployed-model draft")
+        packet["prior_model_graph_draft"] = repair
     system = PROMPT.read_text()
     digest = hashlib.sha256(
         json.dumps(
@@ -297,6 +384,20 @@ def prepare(root):
     return root, packet, system, cases, evidence, frames, Path(inputs["joint_video"]), digest
 
 
+def archive_model_record(folder, file):
+    """Keep the last valid inputs, never replace them with a later failed request."""
+    previous = json.loads(file.read_text())
+    history = folder / "history" / sha256(file)[:16]
+    if not (history / "result.json").exists():
+        save(history / "result.json", previous)
+    input_file = folder / "inputs.json"
+    if input_file.exists() and not (history / "inputs.json").exists():
+        inputs = json.loads(input_file.read_text())
+        if inputs.get("input_fingerprint") == previous.get("input_fingerprint"):
+            save(history / "inputs.json", inputs)
+    return history
+
+
 def analyze(root, *, allow_model_service=False, force=False):
     if not allow_model_service:
         raise PermissionError("Model service access must be explicitly enabled for this invocation")
@@ -310,17 +411,25 @@ def analyze(root, *, allow_model_service=False, force=False):
         current = json.loads(file.read_text())
         if current.get("input_fingerprint") == digest and current.get("model") == config.MODEL:
             validate_graph(current["response"], cases, evidence)
-            return current
+            from .model_graph_alignment import PROMPT as alignment_prompt
+            from .model_graph_alignment import align
+
+            if current.get("graph_stage") == "semantic_merged" and current.get("alignment_prompt_sha256") == sha256(
+                alignment_prompt
+            ):
+                return current
+            if current.get("graph_stage") == "semantic_merged":
+                original = root / current["instance_record"]
+                if sha256(original) != current["instance_record_sha256"]:
+                    raise ValueError("Source instance model record changed")
+                current = json.loads(original.read_text())
+            return align(root, current, cases, evidence, digest)
     client = VLMClient(folder / "cache" / hashlib.sha256(config.MODEL.encode()).hexdigest()[:12], use_cache=not force)
     client.session.trust_env = False
     post = client.session.post
     client.session.post = lambda *a, **kw: post(*a, **{**kw, "allow_redirects": False})
     if file.exists():
-        previous = json.loads(file.read_text())
-        history = folder / "history" / sha256(file)[:16]
-        save(history / "result.json", previous)
-        if (folder / "inputs.json").exists():
-            save(history / "inputs.json", json.loads((folder / "inputs.json").read_text()))
+        archive_model_record(folder, file)
     save(
         folder / "inputs.json",
         {
@@ -335,7 +444,7 @@ def analyze(root, *, allow_model_service=False, force=False):
     )
     try:
         response = client.ask(
-            stage="cross_video_success_graph_v2",
+            stage="cross_video_success_graph_v3",
             system=system,
             user_text=json.dumps(packet, ensure_ascii=False),
             video=video,
@@ -365,8 +474,9 @@ def analyze(root, *, allow_model_service=False, force=False):
         "model_stats": client.stats,
         "human_verified": False,
     }
-    save(file, record)
-    return record
+    from .model_graph_alignment import align
+
+    return align(root, record, cases, evidence, digest)
 
 
 def load_model_graph(root):
@@ -378,4 +488,12 @@ def load_model_graph(root):
     if record.get("analysis_origin") != "deployed_model" or record.get("input_fingerprint") != digest:
         raise ValueError("Model graph is stale or not model-authored; rerun its model stage")
     validate_graph(record["response"], cases, evidence)
+    from .model_graph_alignment import PROMPT as alignment_prompt
+
+    if record.get("graph_stage") != "semantic_merged" or record.get("alignment_prompt_sha256") != sha256(
+        alignment_prompt
+    ):
+        raise ValueError("Run deployed-model semantic alignment before rendering; no host merge fallback")
+    if sha256(root / record["instance_record"]) != record["instance_record_sha256"]:
+        raise ValueError("Source instance model record changed")
     return record, cases, evidence

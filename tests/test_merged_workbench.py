@@ -30,6 +30,8 @@ def graph():
         },
         "end_policy": {"gate_before_end": False, "completion_validation": False},
         "execution_enabled": False,
+        "approach_policy": deepcopy(mg.APPROACH_POLICY),
+        "approach_review": [{"case_id": "alpha", "status": "not_observed", "occurrences": []}],
         "source_decisions": [
             {
                 "case_id": "alpha",
@@ -69,6 +71,7 @@ def graph():
                 "id": "unfamiliar_action",
                 "kind": "operation",
                 "label": "模型新技能XYZ",
+                "action_role": "other",
                 "observed_outcome": "success",
                 "seven_tuple": {
                     **{k: ["模型字段" + k] for k in mg.FIELDS},
@@ -129,7 +132,7 @@ def test_only_whole_task_successes_enter_main_graph(graph, cases):
 
 def test_failed_task_can_still_have_local_positive(graph, cases):
     graph["source_decisions"][0].update(whole_task_outcome="failure", included=False)
-    graph.update(nodes=[], edges=[], paths=[], start_node_id=None, end_node_id=None)
+    graph.update(nodes=[], edges=[], paths=[], start_node_id=None, end_node_id=None, approach_review=[])
     graph["contrastive_examples"] = [
         {
             "id": "local",
@@ -330,3 +333,210 @@ def test_keep_does_not_imply_proven_necessity(graph, cases):
     graph["simplifications"][0].update(decision="keep", necessity_status="candidate")
     mg.validate_graph(graph, cases, {"frame": {}})
     assert graph["simplifications"][0]["necessity_status"] == "candidate"
+
+
+@pytest.fixture
+def approach_graph(graph):
+    """Two successful approach occurrences separated by a false guard and preparation."""
+    model_op = deepcopy(graph["nodes"][2])
+    model_gate = deepcopy(graph["nodes"][1])
+
+    def operation(node_id, role, context=None):
+        n = deepcopy(model_op)
+        n.update(id=node_id, action_role=role, label="任意模型标签" + node_id)
+        if context is not None:
+            n["state_context"] = context
+        return n
+
+    def gate(node_id):
+        n = deepcopy(model_gate)
+        n.update(id=node_id, gate_role="grasp_precondition")
+        return n
+
+    nodes = [
+        graph["nodes"][0],
+        operation("motion_a", "approach_target", "initial_scene"),
+        gate("guard_a"),
+        operation("prepare", "preparation"),
+        operation("motion_b", "approach_target", "after_scene_change"),
+        gate("guard_b"),
+        operation("target_action", "grasp_target"),
+        graph["nodes"][-1],
+    ]
+    walk = [n["id"] for n in nodes]
+    graph["nodes"] = nodes
+    graph["edges"] = [
+        {
+            "id": str(i),
+            "from": a,
+            "to": b,
+            "source_case_ids": ["alpha"],
+            **({"gate_outcome": "F"} if a == "guard_a" else {"gate_outcome": "T"} if a == "guard_b" else {}),
+        }
+        for i, (a, b) in enumerate(zip(walk, walk[1:], strict=False))
+    ]
+    graph["paths"] = [{"case_id": "alpha", "node_ids": walk}]
+    graph["approach_review"] = [
+        {
+            "case_id": "alpha",
+            "status": "observed",
+            "reason": "synthetic model declaration",
+            "occurrences": [
+                {"node_id": "motion_a", "grasp_gate_id": "guard_a", "evidence_refs": ["frame"]},
+                {"node_id": "motion_b", "grasp_gate_id": "guard_b", "evidence_refs": ["frame"]},
+            ],
+        }
+    ]
+    return graph
+
+
+def test_repeated_approaches_survive_with_different_state_contexts(approach_graph, cases):
+    original = deepcopy(approach_graph)
+    mg.validate_graph(approach_graph, cases, {"frame": {}})
+    assert approach_graph == original
+    motions = [n for n in approach_graph["nodes"] if n.get("action_role") == "approach_target"]
+    assert len(motions) == 2 and len({n["id"] for n in motions}) == 2
+    assert len({n["state_context"] for n in motions}) == 2
+    assert all(n["truth"] == "U" for n in approach_graph["nodes"] if n["kind"] == "gate")
+
+
+def test_approach_inventory_cannot_omit_first_occurrence(approach_graph, cases):
+    approach_graph["approach_review"][0]["occurrences"].pop(0)
+    with pytest.raises(ValueError, match="coverage/order"):
+        mg.validate_graph(approach_graph, cases, {"frame": {}})
+
+
+def test_grasp_must_use_true_precondition_branch(approach_graph, cases):
+    edge = next(e for e in approach_graph["edges"] if e["from"] == "guard_b")
+    edge["gate_outcome"] = "F"
+    with pytest.raises(ValueError, match="Grasp requires the T branch"):
+        mg.validate_graph(approach_graph, cases, {"frame": {}})
+
+
+def test_approach_cannot_be_hidden_inside_grasp(approach_graph, cases):
+    next(n for n in approach_graph["nodes"] if n["id"] == "motion_b")["action_role"] = "other"
+    approach_graph["approach_review"][0]["occurrences"].pop()
+    with pytest.raises(ValueError, match="approach"):
+        mg.validate_graph(approach_graph, cases, {"frame": {}})
+
+
+def test_each_approach_needs_its_own_following_grasp_gate(approach_graph, cases):
+    approach_graph["approach_review"][0]["occurrences"][1]["grasp_gate_id"] = "guard_a"
+    with pytest.raises(ValueError, match="following gate"):
+        mg.validate_graph(approach_graph, cases, {"frame": {}})
+
+
+def test_later_exports_cannot_drop_approach_policy(approach_graph, cases):
+    del approach_graph["approach_policy"]
+    with pytest.raises(ValueError, match="approach preservation policy"):
+        mg.validate_graph(approach_graph, cases, {"frame": {}})
+
+
+def test_repair_context_uses_only_unchanged_deployed_model_draft(tmp_path):
+    from video2op.skill_clips import save, sha256
+
+    source = tmp_path / "synthetic.mp4"
+    source.write_bytes(b"synthetic test bytes, not a real video")
+    old = tmp_path / "跨视频模型分析"
+    save(old / "result.json", {"response": {}, "model": "deployed-test"})
+    save(
+        old / "inputs.json",
+        {
+            "packet": {
+                "task": "synthetic task",
+                "video_mapping": [
+                    {"case_id": "alpha", "source": str(source), "sha256": sha256(source), "source_duration": 10}
+                ],
+            },
+            "frames": [],
+            "joint_video": str(source),
+        },
+    )
+    candidate = {
+        "analysis_origin": "deployed_model_failed_draft",
+        "model": "deployed-test",
+        "response": {"opaque": "keep unchanged"},
+        "validation_errors": ["synthetic contract failure"],
+    }
+    save(tmp_path / "success_process_model/repair_candidate.json", candidate)
+    prepared = mg.prepare(tmp_path)
+    assert prepared[1]["prior_model_graph_draft"] == candidate
+    first = prepared[-1]
+    candidate["response"]["opaque"] = "another model value"
+    save(tmp_path / "success_process_model/repair_candidate.json", candidate)
+    assert mg.prepare(tmp_path)[-1] != first
+    candidate["analysis_origin"] = "agent_authored"
+    save(tmp_path / "success_process_model/repair_candidate.json", candidate)
+    with pytest.raises(ValueError, match="deployed-model draft"):
+        mg.prepare(tmp_path)
+
+
+def test_failed_request_cannot_replace_valid_historical_inputs(tmp_path):
+    from video2op.skill_clips import save
+
+    result = tmp_path / "result.json"
+    save(result, {"input_fingerprint": "valid", "response": {"model": "payload"}})
+    save(tmp_path / "inputs.json", {"input_fingerprint": "valid", "prompt": "valid prompt"})
+    history = mg.archive_model_record(tmp_path, result)
+    save(tmp_path / "inputs.json", {"input_fingerprint": "failed", "prompt": "later failed request"})
+    mg.archive_model_record(tmp_path, result)
+    assert json.loads((history / "inputs.json").read_text())["input_fingerprint"] == "valid"
+
+
+def test_alignment_preserves_original_task_judgments(graph, cases):
+    from video2op.model_graph_alignment import validate_alignment
+
+    output = deepcopy(graph)
+    output["source_decisions"][0]["reason"] = "changed by a later stage"
+    with pytest.raises(ValueError, match="instance judgments unchanged"):
+        validate_alignment(output, graph, cases, {"frame": {}})
+
+
+def test_alignment_preserves_each_source_approach_count(approach_graph, cases):
+    from video2op.model_graph_alignment import validate_alignment
+
+    output = deepcopy(approach_graph)
+    keep = {"arbitrary_begin", "motion_b", "guard_b", "target_action", "arbitrary_end"}
+    output["nodes"] = [n for n in output["nodes"] if n["id"] in keep]
+    walk = ["arbitrary_begin", "motion_b", "guard_b", "target_action", "arbitrary_end"]
+    output["paths"][0]["node_ids"] = walk
+    output["edges"] = [
+        {
+            "id": str(i),
+            "from": a,
+            "to": b,
+            "source_case_ids": ["alpha"],
+            **({"gate_outcome": "T"} if a == "guard_b" else {}),
+        }
+        for i, (a, b) in enumerate(zip(walk, walk[1:], strict=False))
+    ]
+    output["approach_review"][0]["occurrences"].pop(0)
+    with pytest.raises(ValueError, match="approach occurrence count"):
+        validate_alignment(output, approach_graph, cases, {"frame": {}})
+
+
+def test_cached_instance_graph_runs_alignment_without_reopening_video(tmp_path, graph, cases, monkeypatch):
+    from video2op import model_graph_alignment as alignment
+    from video2op.skill_clips import save
+
+    record = {"response": graph, "model": "deployed-test", "input_fingerprint": "digest"}
+    save(tmp_path / "success_process_model/result.json", record)
+    monkeypatch.setattr(mg.config, "BASE_URL", "http://127.0.0.1:8032")
+    monkeypatch.setattr(mg.config, "MODEL", "deployed-test")
+    monkeypatch.setattr(
+        mg, "prepare", lambda _: (tmp_path, {}, "prompt", cases, {"frame": {}}, [], tmp_path / "v.mp4", "digest")
+    )
+    calls = []
+
+    def normalize(*args):
+        calls.append(args)
+        return {"graph_stage": "semantic_merged"}
+
+    monkeypatch.setattr(alignment, "align", normalize)
+
+    def forbidden(*a, **kw):
+        raise AssertionError("Reopened the video model stage")
+
+    monkeypatch.setattr(mg, "VLMClient", forbidden)
+    assert mg.analyze(tmp_path, allow_model_service=True)["graph_stage"] == "semantic_merged"
+    assert len(calls) == 1

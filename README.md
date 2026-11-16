@@ -181,3 +181,5 @@ conda run -n study python -B tools/build_reanalysis_sixteen.py --run output/runs
 [意图拿笔工作台](output/意图拿笔/workbench.html) · [操作图SVG](output/意图拿笔/operations.svg) · [实现与运行说明](docs/reports/成功流程归纳与模型合并图_20261116.md)
 
 本批次对抓取1、2、4进行成功流程筛选与语义支路合并，失败尝试保留为抓取反例。新增两阶段学习由现有8032部署模型给出节点、条件、七元组和正反例判断；宿主校验、裁剪、保存与绘图。结束前没有门控。模型不返回有效结果时停止，不以代理分析或固定动作图补全。
+
+本批次补充：[靠近步骤与抓取前门控保留](docs/reports/靠近步骤与抓取前门控保留_20261116.md)。合并图按状态保留靠近的不同出现次数，抓取只能通过前置条件成立分支。

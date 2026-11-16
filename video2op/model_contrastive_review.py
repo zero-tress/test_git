@@ -10,7 +10,7 @@ from urllib.parse import urlparse
 
 from . import config
 from .llm import VLMClient
-from .model_merged_graph import load_model_graph, prepare, validate_seven_tuple
+from .model_merged_graph import archive_model_record, load_model_graph, prepare, validate_seven_tuple
 from .skill_clips import save, sha256
 
 PROMPT = Path(__file__).parent / "prompts/cross_video_contrastive_review.system.md"
@@ -152,11 +152,7 @@ def analyze(root, *, allow_model_service=False, force=False):
     post = client.session.post
     client.session.post = lambda *a, **kw: post(*a, **{**kw, "allow_redirects": False})
     if file.exists():
-        previous = json.loads(file.read_text())
-        history = folder / "history" / sha256(file)[:16]
-        save(history / "result.json", previous)
-        if (folder / "inputs.json").exists():
-            save(history / "inputs.json", json.loads((folder / "inputs.json").read_text()))
+        archive_model_record(folder, file)
     save(
         folder / "inputs.json",
         {

@@ -87,8 +87,7 @@ def verify(root):
                 and (
                     s.get("start_sec") is None
                     or e.get("core_start_sec") is None
-                    or (e["core_start_sec"] <= s["end_sec"]
-                    and e["core_end_sec"] >= s["start_sec"])
+                    or (e["core_start_sec"] <= s["end_sec"] and e["core_end_sec"] >= s["start_sec"])
                 )
                 for e in review["response"]["examples"]
             ):
@@ -142,6 +141,9 @@ def verify(root):
         "source_videos_unchanged": len(cases),
         "source_paths": len(graph["paths"]),
         "nodes": len(graph["nodes"]),
+        "approach_nodes": sum(n.get("action_role") == "approach_target" for n in graph["nodes"]),
+        "pregrasp_gates": sum(n.get("gate_role") == "grasp_precondition" for n in graph["nodes"]),
+        "approach_source_reviews": len(graph["approach_review"]),
         "intermediate_gates": sum(n["kind"] == "gate" for n in graph["nodes"]),
         "gate_before_end": False,
         "completion_validation": False,
