@@ -210,11 +210,14 @@ def build(bundle: dict) -> dict:
         if reached:
             dependencies.remove(edge)
     # Omit incidental cross-actor demonstration ordering.
+    from .temporal_learning import has_path
+
     edges = [{"from": a, "to": b, "relation": "sequence", "basis": "required_dependency",
               "note": "语义前置条件与单主体动作顺序"} for a, b in sorted(dependencies)]
     edges += [{"from": a, "to": b, "relation": "parallel", "basis": "semantic_independence",
                "mutual": True, "note": "臂靠近与手打开可在语义层并行；设备互斥由执行映射处理"}
-              for a, b in sorted(parallels)]
+              for a, b in sorted(parallels)
+              if not has_path(edges, a, b) and not has_path(edges, b, a)]
     edges += persistent
     ids = {n["id"] for n in nodes}
     remaining = set(ids)
