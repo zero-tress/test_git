@@ -35,7 +35,7 @@ conda run -n study python -B tools/learn_semantic_graph.py \
 
 ## 单视频
 原有 operations.svg、workbench.html、result.json、skill_instances.json 和视频切片保留。
-新增 G_case.json / G_case.svg，表示“语义技能实例 → 来源操作子图”。G_case.svg 沿用 operations.svg 的图形语言：横向推进的圆形技能节点、前置条件门控菱形、实线/虚线关系、悬停完整详情与底部图例；每个节点下方直接展开七元组面板 X · O · C_pre · C_const · E（完成/过程/适用）· C_post · R；图底部为每个 R 画出操作节点的实现子图，maintain_until 用绿色虚线“保持→”表示，parallel 用“∥”标注。条件真值未知时门控连线保持虚线。
+新增 G_case.json / G_case.svg，表示“语义技能实例 → 来源操作子图”。G_case.svg 沿用 operations.svg 的图形语言：横向推进的圆形技能节点、前置条件门控菱形、实线/虚线关系、悬停完整详情与底部图例；每个节点下方直接展开七元组面板 X · O · C_pre · C_const · E（完成/过程/适用）· C_post · R；图底部为实现子图，按 operations.svg 的车道布局绘制：操作圆节点沿主轴推进，sequence 实线；技能之间隔着被排除步骤（如状态已满足的“打开”）时用虚线箭头并标注“经未显示的中间步骤”；maintain_until 用绿色虚线绕行下方车道进入后序节点，标“保持”；parallel 用同列车道上下堆叠并标“∥”。分层用整张操作图计算，避免把隔着中间步骤的两个操作误画成并行。条件真值未知时门控连线保持虚线。
 
 时序契约：relations 支持 sequence/parallel/alternation/branch/synchronization/maintain_until，其中 maintain_until 表示前段效果保持到后段开始，不参与前置环检测。操作层的非 sequence 关系必须向上映射：跨技能时给出同类型技能关系；属于同一实现时在该技能实现子图保留；无法映射的逐条写入 unmapped_relations 并说明理由。被观察到却未进入任何 R 的操作必须列入 excluded_operations 并说明（already_satisfied 与 inferred 自动豁免）。
 

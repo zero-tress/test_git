@@ -527,18 +527,111 @@ def _node_title(node):
     return "\n".join(lines)
 
 
+def _precedence_layers(ids, relations, kinds=("sequence", "branch")):
+    """Topological layering over precedence relations; parallel keeps both in place."""
+    layer = {ref: 0 for ref in ids}
+    pairs = [(rel["from"], rel["to"]) for rel in relations if rel.get("relation") in kinds]
+    for _ in range(len(ids) + 1):
+        moved = False
+        for left, right in pairs:
+            if left in layer and right in layer and layer[right] < layer[left] + 1:
+                layer[right] = layer[left] + 1
+                moved = True
+        if not moved:
+            break
+    return layer
+
+
+def _sequence_reachable(edges, source, target):
+    """True when a recorded chain of observed sequence edges connects the two."""
+    adjacency = {}
+    for edge in edges:
+        if edge.get("relation") == "sequence":
+            adjacency.setdefault(edge.get("from"), set()).add(edge.get("to"))
+    seen, stack = set(), [source]
+    while stack:
+        current = stack.pop()
+        for nxt in adjacency.get(current, ()):
+            if nxt == target:
+                return True
+            if nxt not in seen:
+                seen.add(nxt)
+                stack.append(nxt)
+    return False
+
+
+def _operation_flow(node, operations):
+    """One skill's full implementation: operations layered by observed sequence edges.
+
+    Realizations of the same skill share one flow so that a hold spanning two
+    realizations still shows up, exactly as the operations view draws it.
+    """
+    known = {n.get("id"): n for n in _items((operations or {}).get("nodes") or [])}
+    ordered, owner = [], {}
+    for realization in node.get("R") or []:
+        for ref in realization.get("operation_refs") or []:
+            if ref in known and ref not in owner:
+                owner[ref] = realization.get("id")
+                ordered.append(ref)
+    all_edges = [e for e in _items((operations or {}).get("edges") or [])
+                 if e.get("from") in known and e.get("to") in known]
+    edges = [e for e in all_edges if e.get("from") in owner and e.get("to") in owner]
+    # 分层用整张操作图：技能之间可能隔着被排除的节点（例如状态已满足的“打开”），
+    # 只看技能内部会把这些步骤误判成并行。
+    seq = [(e["from"], e["to"]) for e in all_edges if e.get("relation") == "sequence"]
+    layer = {ref: 0 for ref in known}
+    for _ in range(len(known) + 1):
+        moved = False
+        for left, right in seq:
+            if layer[right] < layer[left] + 1:
+                layer[right] = layer[left] + 1
+                moved = True
+        if not moved:
+            break
+    # 真正的并行（平行的两个操作）保持同列；其余按全局层次排序后压成紧凑列。
+    levels = sorted({layer[ref] for ref in ordered})
+    compact = {level: index for index, level in enumerate(levels)}
+    columns = {}
+    for ref in ordered:
+        columns.setdefault(compact[layer[ref]], []).append(ref)
+    return ordered, owner, edges, columns
+
+
+def _skill_layers(nodes, relations):
+    ids = [node["id"] for node in nodes]
+    layer = _precedence_layers(ids, relations)
+    columns = {}
+    for ref in ids:
+        columns.setdefault(layer[ref], []).append(ref)
+    return columns
+
+
 def svg(graph, name="", operations=None):
     """Operations-style flow with one visible seven-tuple panel per model skill."""
     nodes = graph.get("nodes") or []
     relations = graph.get("relations") or []
     observations = graph.get("condition_observations") or []
     task = graph.get("task_outcome") or {}
-    column, margin, axis, radius = 400, 90, 252, 72
+    column, margin, radius = 400, 90, 72
+    lane_height = radius * 2 + 46
     panel_width, label_width = 366, 62
     value_width = panel_width - label_width - 24
     row_size, line_height = 13.5, 18
-    content_width = max(len(nodes), 1) * column
+
+    # 技能按前置关系分层；同层技能上下堆叠成车道（与 operations.svg 一致）。
+    columns = _skill_layers(nodes, relations) if nodes else {}
+    lanes = max((len(refs) for refs in columns.values()), default=1)
+    ncols = max(columns) + 1 if columns else 1
+    content_width = max(ncols, 1) * column
     width = max(1180, margin * 2 + content_width)
+    axis = 252 + (lanes - 1) * lane_height
+    left = (width - content_width) / 2
+    centers = {}
+    for col, refs in columns.items():
+        for index, ref in enumerate(refs):
+            centers[ref] = (left + column / 2 + col * column,
+                            axis - (lanes - 1 - index) * lane_height)
+    stroke_of = {"observed": "#2363a0", "candidate": "#c88328", "not_executed": "#9aa7b6"}
 
     def row_height(text, max_lines):
         visible, _ = _limited_lines(text, row_size, value_width, max_lines)
@@ -547,16 +640,17 @@ def svg(graph, name="", operations=None):
     def panel_height(node):
         return 58 + sum(row_height(text, limit) + 9 for _, text, _, limit in _panel_rows(node, operations)) + 8
 
+    def flow_height(node):
+        _, _, _, flow_columns = _operation_flow(node, operations)
+        rows = max((len(refs) for refs in flow_columns.values()), default=1)
+        return 62 + rows * 62 + 40
+
     panel_h = max((panel_height(node) for node in nodes), default=120)
     panel_y = axis + radius + 52
-    sub_rows = sum(len(node.get("R") or []) for node in nodes)
     sub_y = panel_y + panel_h + 40
-    sub_h = 52 + max(sub_rows, 1) * 74 + 10
+    sub_h = 64 + sum(flow_height(node) for node in nodes) + 12
     legend_y = sub_y + sub_h + 30
     height = legend_y + 210
-    left = (width - content_width) / 2
-    centers = {node["id"]: (left + column / 2 + index * column, axis) for index, node in enumerate(nodes)}
-    stroke_of = {"observed": "#2363a0", "candidate": "#c88328", "not_executed": "#9aa7b6"}
 
     parts = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" font-family="\'Noto Sans CJK SC\',\'Microsoft YaHei\',sans-serif" role="img">',
              '<title>单视频特例知识 G_case</title>',
@@ -589,61 +683,100 @@ def svg(graph, name="", operations=None):
 
     by_pair = {(rel.get("from"), rel.get("to")): rel for rel in relations}
 
-    # ---- 相邻技能：门控菱形（下游 C_pre）或直接箭头 ----
-    for index in range(len(nodes) - 1):
-        left, right = nodes[index], nodes[index + 1]
-        xa, _ = centers[left["id"]]
-        xb, _ = centers[right["id"]]
-        rel = by_pair.get((left["id"], right["id"]))
-        gated = bool(right.get("C_pre")) and rel is not None and rel.get("relation") == "sequence"
-        if gated:
-            gx = (xa + xb) / 2
-            states = [item for item in observations
-                      if item.get("skill_id") == right["id"] and item.get("kind") == "C_pre"]
-            truths = {item.get("truth") for item in states}
-            confirmed = bool(truths) and truths == {"T"}
-            color = "#1a1a1a" if confirmed else "#966a12"
-            dash = "" if confirmed else ' stroke-dasharray="12 10"'
-            parts.append(f'<path d="M {xa + radius} {axis} L {gx - 58} {axis}" fill="none" stroke="{color}" stroke-width="3"{dash} marker-end="url(#gs-{"edge" if confirmed else "pending"})"/>')
-            parts.append(f'<path d="M {gx + 58} {axis} L {xb - radius} {axis}" fill="none" stroke="{color}" stroke-width="3"{dash} marker-end="url(#gs-{"edge" if confirmed else "pending"})"/>')
-            note = [f'门控 {_circled(index + 1)} · 进入「{right.get("name")}」的 C_pre 候选（模型判断，非人工验收）']
-            for text in right.get("C_pre") or []:
-                truth = next((item.get("truth") for item in states if item.get("text") == text), "U")
-                note.append(f'· [{truth}] {text}')
-            note.append("U 既不能当 T 放行，也不能当 F 判死；条件真值见 condition_observations。")
-            parts.append(f'<g class="gs-gate" data-gate="{html.escape(str(right["id"]), quote=True)}">'
-                         f'<title>{html.escape(chr(10).join(note))}</title>')
-            parts.append(f'<path d="M {gx},{axis - 46} L {gx + 58},{axis} L {gx},{axis + 46} L {gx - 58},{axis} Z" '
-                         f'fill="#eff9f5" stroke="#159474" stroke-width="3.2"/>')
-            parts.append(f'<text x="{gx}" y="{axis}" dominant-baseline="central" font-size="16" font-weight="650" '
-                         f'fill="#176650" text-anchor="middle">门控 {_circled(index + 1)}</text>')
-            parts.append('</g>')
-        else:
-            observed = bool(rel) and rel.get("status") == "observed"
-            color = "#1a1a1a" if observed else "#966a12"
-            dash = "" if observed else ' stroke-dasharray="12 10"'
-            parts.append(f'<path d="M {xa + radius} {axis} L {xb - radius} {axis}" fill="none" stroke="{color}" '
-                         f'stroke-width="3"{dash} marker-end="url(#gs-{"edge" if observed else "pending"})"/>')
-            text = (rel.get("relation") if rel else "未声明关系")
-            if rel and rel.get("guard"):
-                text += f' · guard={rel.get("guard")}'
-            label((xa + xb) / 2, axis - 26, text, size=13, max_width=column - radius * 2, count=1,
-                  fill="#52637a", anchor="middle")
+    # ---- 技能间时序：主轴推进、并行同列堆叠、保持绕行下方车道 ----
+    ordered_cols = sorted(columns.items())
+    by_pair = {(rel.get("from"), rel.get("to")): rel for rel in relations}
+    hold_y = axis + radius + 26
 
-    # ---- 跨列关系：上方弧线，保留来源语义 ----
-    adjacent = {(nodes[index]["id"], nodes[index + 1]["id"]) for index in range(len(nodes) - 1)}
+    def draw_edge(left, right, rel, dash_default=''):
+        xa, ya = centers[left]
+        xb, yb = centers[right]
+        observed = bool(rel) and rel.get("status") == "observed"
+        color = "#1a1a1a" if observed else "#966a12"
+        dash = dash_default or ("" if observed else ' stroke-dasharray="12 10"')
+        marker = "gs-edge" if observed else "gs-pending"
+        if abs(ya - yb) < 1 and xb > xa + radius:
+            parts.append(f'<path d="M {xa + radius} {ya} L {xb - radius} {yb}" fill="none" stroke="{color}" '
+                         f'stroke-width="3"{dash} marker-end="url(#{marker})"/>')
+        elif xb > xa:
+            mid = (xa + xb) / 2
+            parts.append(f'<path d="M {xa + radius} {ya} L {mid} {ya} L {mid} {yb} L {xb - radius} {yb}" '
+                         f'fill="none" stroke="{color}" stroke-width="3"{dash} marker-end="url(#{marker})"/>')
+        else:
+            parts.append(f'<path d="M {xa + radius} {ya} L {xb - radius} {yb}" fill="none" stroke="{color}" '
+                         f'stroke-width="3"{dash} marker-end="url(#{marker})"/>')
+
+    for col, refs in ordered_cols:
+        if col + 1 in columns:
+            for left in refs:
+                for right in columns[col + 1]:
+                    rel = by_pair.get((left, right))
+                    if rel is None or rel.get("relation") != "sequence":
+                        continue
+                    gated = bool(next((n for n in nodes if n["id"] == right), {}).get("C_pre"))
+                    if gated:
+                        xa, ya = centers[left]
+                        xb, yb = centers[right]
+                        gx = (xa + xb) / 2
+                        states = [item for item in observations
+                                  if item.get("skill_id") == right and item.get("kind") == "C_pre"]
+                        truths = {item.get("truth") for item in states}
+                        confirmed = bool(truths) and truths == {"T"}
+                        color = "#1a1a1a" if confirmed else "#966a12"
+                        dash = "" if confirmed else ' stroke-dasharray="12 10"'
+                        marker = "gs-edge" if confirmed else "gs-pending"
+                        gy = ya
+                        parts.append(f'<path d="M {xa + radius} {gy} L {gx - 58} {gy}" fill="none" '
+                                     f'stroke="{color}" stroke-width="3"{dash} marker-end="url(#{marker})"/>')
+                        parts.append(f'<path d="M {gx + 58} {gy} L {xb - radius} {gy}" fill="none" '
+                                     f'stroke="{color}" stroke-width="3"{dash} marker-end="url(#{marker})"/>')
+                        note = [f'门控 {_circled(col + 1)} · 进入「{next(n for n in nodes if n["id"] == right)["name"]}」'
+                                f'的 C_pre 候选（模型判断，非人工验收）']
+                        for text in next(n for n in nodes if n["id"] == right).get("C_pre") or []:
+                            truth = next((item.get("truth") for item in states if item.get("text") == text), "U")
+                            note.append(f'· [{truth}] {text}')
+                        note.append("U 既不能当 T 放行，也不能当 F 判死；条件真值见 condition_observations。")
+                        parts.append(f'<g class="gs-gate" data-gate="{html.escape(str(right), quote=True)}">'
+                                     f'<title>{html.escape(chr(10).join(note))}</title>')
+                        parts.append(f'<path d="M {gx},{gy - 46} L {gx + 58},{gy} L {gx},{gy + 46} L {gx - 58},{gy} Z" '
+                                     f'fill="#eff9f5" stroke="#159474" stroke-width="3.2"/>')
+                        parts.append(f'<text x="{gx}" y="{gy}" dominant-baseline="central" font-size="16" '
+                                     f'font-weight="650" fill="#176650" text-anchor="middle">门控 {_circled(col + 1)}</text>')
+                        parts.append('</g>')
+                    else:
+                        draw_edge(left, right, rel)
+                continue
+
+    # 跨列或并行关系：上方弧线保留类型；maintain_until 走下方车道进入目标底部
+    col_of = {ref: col for col, refs in columns.items() for ref in refs}
+    adjacent = {(left, right) for left, right in by_pair
+                if abs(col_of.get(left, 0) - col_of.get(right, 0)) == 1}
+    hold_rows = 0
     for order, rel in enumerate(relations):
-        if (rel.get("from"), rel.get("to")) in adjacent:
+        left, right = rel.get("from"), rel.get("to")
+        if left not in centers or right not in centers:
             continue
-        if rel.get("from") not in centers or rel.get("to") not in centers:
+        if rel.get("relation") == "maintain_until":
+            xa, ya = centers[left]
+            xb, yb = centers[right]
+            lane = hold_y + hold_rows * 22
+            parts.append(f'<g class="gs-hold"><title>{html.escape(str(rel.get("reason") or "持续保持"))}</title>'
+                         f'<path d="M {xa} {ya + radius} V {lane} H {xb} V {yb + radius}" fill="none" '
+                         f'stroke="#2f9e6f" stroke-width="2.6" stroke-dasharray="11 8" '
+                         f'marker-end="url(#gs-edge)"/></g>')
+            parts.append(f'<text x="{(xa + xb) / 2}" y="{lane + 16}" font-size="12" fill="#2f9e6f" '
+                         f'text-anchor="middle">保持 →</text>')
+            hold_rows += 1
             continue
-        xa, _ = centers[rel["from"]]
-        xb, _ = centers[rel["to"]]
-        top = axis - radius - 34 - (order % 2) * 22
+        if (left, right) in adjacent or (right, left) in adjacent:
+            continue
+        xa, ya = centers[left]
+        xb, yb = centers[right]
+        top = min(ya, yb) - radius - 30 - (order % 2) * 22
         observed = rel.get("status") == "observed"
         color = "#1a1a1a" if observed else "#966a12"
         dash = "" if observed else ' stroke-dasharray="12 10"'
-        parts.append(f'<path d="M {xa} {axis - radius} C {xa} {top} {xb} {top} {xb} {axis - radius}" '
+        parts.append(f'<path d="M {xa} {ya - radius} C {xa} {top} {xb} {top} {xb} {yb - radius}" '
                      f'fill="none" stroke="{color}" stroke-width="2.6"{dash} '
                      f'marker-end="url(#gs-{"edge" if observed else "pending"})"/>')
         label((xa + xb) / 2, top - 10, rel.get("relation") or "", size=12,
@@ -693,72 +826,118 @@ def svg(graph, name="", operations=None):
             parts.append('</g>')
             cursor += row_height(text, limit) + 9
 
-    # ---- 实现子图：每个 R 的操作节点与模型观察到的偏序 ----
+    # ---- 实现子图：按 operations.svg 的车道布局画每个技能的操作流 ----
     parts.append(f'<rect x="{margin}" y="{sub_y}" width="{width - margin * 2}" height="{sub_h}" rx="18" '
                  f'fill="#fbfcfe" stroke="#e0e7ef"/>')
-    label(margin + 24, sub_y + 30, "实现子图：每个 R 的操作节点与模型观察到的偏序（不是执行程序）",
+    label(margin + 24, sub_y + 30,
+          "实现子图：操作节点、门控式先后与保持约束（按 operations.svg 车道布局；不是执行程序）",
           size=17, max_width=width - margin * 2 - 48, count=1, fill="#173754", weight="700")
-    op_marks = {"parallel": ("∥", "#b26a00", "5 4"), "maintain_until": ("保持→", "#2f9e6f", "8 5"),
-                "alternation": ("⇄", "#b26a00", "5 4"), "branch": ("⇂", "#966a12", "4 3"),
-                "synchronization": ("⇉", "#2f9e6f", "3 3")}
-    cursor_row = sub_y + 46
+    op_r, op_lane = 26, 62
+    realization_colors = ["#6a4a86", "#2f7fa8", "#b26a00", "#a23b62", "#3b7a57"]
+    color_of_r = {}
     for node in nodes:
-        for realization in node.get("R") or []:
-            order = _operation_order(realization, operations)
-            parts.append(f'<text x="{margin + 24}" y="{cursor_row + 18}" font-size="13" font-weight="700" '
+        for index, realization in enumerate(node.get("R") or []):
+            color_of_r[realization.get("id")] = realization_colors[index % len(realization_colors)]
+    cursor_row = sub_y + 56
+    for node in nodes:
+        ordered, owner, flow_edges, flow_columns = _operation_flow(node, operations)
+        lanes_here = max((len(refs) for refs in flow_columns.values()), default=1)
+        if not ordered:
+            parts.append(f'<text x="{margin + 24}" y="{cursor_row + 14}" font-size="13" font-weight="700" '
                          f'fill="#6a4a86">{html.escape(str(node.get("id")) + " " + str(node.get("name")))}</text>')
-            parts.append(f'<text x="{margin + 24}" y="{cursor_row + 34}" font-size="11.5" fill="#7a869a">'
-                         f'{html.escape(str(realization.get("id")) + " · " + str(realization.get("name")))}</text>')
-            if not order:
-                parts.append(f'<text x="{margin + 290}" y="{cursor_row + 24}" font-size="12" fill="#9aa7b6">'
-                             f'没有可追溯的操作节点</text>')
-                cursor_row += 74
-                continue
-            step = min(158.0, max(98.0, (width - margin * 2 - 320) / max(len(order), 1)))
-            node_w, node_h = min(122.0, step - 26), 32
-            xs = {}
-            for index, op_id in enumerate(order):
-                x0 = margin + 290 + index * step
-                xs[op_id] = (x0, x0 + node_w)
-                op = _operation_node(operations, op_id)
+            parts.append(f'<text x="{margin + 340}" y="{cursor_row + 14}" font-size="12" fill="#9aa7b6">'
+                         f'没有可追溯的操作节点</text>')
+            cursor_row += 100
+            continue
+        spine_y = cursor_row + 62 + (lanes_here - 1) * op_lane
+        parts.append(f'<text x="{margin + 24}" y="{cursor_row + 8}" font-size="13" font-weight="700" '
+                     f'fill="#6a4a86">{html.escape(str(node.get("id")) + " " + str(node.get("name")))}</text>')
+        for index, realization in enumerate(node.get("R") or []):
+            c = color_of_r.get(realization.get("id"), "#7a869a")
+            parts.append(f'<text x="{margin + 24 + index * 168}" y="{cursor_row + 26}" font-size="10.5" '
+                         f'fill="{c}">{html.escape(str(realization.get("id")) + " " + str(realization.get("name") or ""))}</text>')
+        columns_here = max(flow_columns) + 1 if flow_columns else 1
+        step = min(210.0, max(96.0, (width - margin * 2 - 250) / max(columns_here, 1)))
+        pos_of = {}
+        for col, refs in sorted(flow_columns.items()):
+            for index, ref in enumerate(refs):
+                cx = margin + 200 + col * step + op_r
+                cy = spine_y - (lanes_here - 1 - index) * op_lane if len(refs) > 1 else spine_y
+                pos_of[ref] = (cx, cy)
+                op = _operation_node(operations, ref)
+                color = color_of_r.get(owner.get(ref), "#6a4a86")
                 suffix = "（已满足）" if op.get("already_satisfied") else ("（推断）" if op.get("inferred") else "")
-                parts.append(f'<g class="gs-op" data-op="{html.escape(str(op_id), quote=True)}">')
-                parts.append(f'<rect x="{x0}" y="{cursor_row + 6}" width="{node_w}" height="{node_h}" rx="8" '
-                             f'fill="#ffffff" stroke="#8f7fb0" stroke-width="1.6"/>')
-                label_text = str(op.get("name") or op_id) + suffix
-                lines, _ = _limited_lines(label_text, 11.5, node_w - 12, 2)
-                parts.append(f'<title>{html.escape(str(op_id) + " " + label_text)}</title>')
+                parts.append(f'<g class="gs-op" data-op="{html.escape(str(ref), quote=True)}">')
+                parts.append(f'<circle cx="{cx}" cy="{cy}" r="{op_r}" fill="#ffffff" stroke="{color}" '
+                             f'stroke-width="2.4"/>')
+                label_text = str(op.get("name") or ref) + suffix
+                lines, _ = _limited_lines(label_text, 10.5, op_r * 1.55, 2)
+                parts.append(f'<title>{html.escape(str(ref) + " " + label_text + " · " + str(owner.get(ref)))}</title>')
                 for li, line in enumerate(lines):
-                    ty = cursor_row + 6 + node_h / 2 + (li - (len(lines) - 1) / 2) * 13 + 4
-                    parts.append(f'<text x="{x0 + node_w / 2}" y="{ty}" font-size="11.5" fill="#3a3350" '
+                    ty = cy + (li - (len(lines) - 1) / 2) * 12 + 3.6
+                    parts.append(f'<text x="{cx}" y="{ty}" font-size="10.5" fill="#2f2a3f" '
                                  f'text-anchor="middle">{html.escape(line)}</text>')
                 parts.append('</g>')
-            for edge in _items((operations or {}).get("edges") or []):
-                left, right = edge.get("from"), edge.get("to")
-                if left not in xs or right not in xs:
-                    continue
-                kind = edge.get("relation")
-                if kind == "sequence":
-                    if xs[right][0] < xs[left][1]:
+        hold_lane = spine_y + (lanes_here - 1) * op_lane + op_r + 26
+        shown = sorted(flow_columns.items())
+        explicit = {(edge.get("from"), edge.get("to")) for edge in flow_edges}
+        chain_edges = []
+        for (_, left_refs), (_, right_refs) in zip(shown, shown[1:], strict=False):
+            for left in left_refs:
+                for right in right_refs:
+                    if (left, right) in explicit:
                         continue
-                    y = cursor_row + 6 + node_h / 2
-                    parts.append(f'<path d="M {xs[left][1]} {y} L {xs[right][0]} {y}" fill="none" '
-                                 f'stroke="#5b6b80" stroke-width="1.8" marker-end="url(#gs-edge)"/>')
+                    if _sequence_reachable(_items((operations or {}).get("edges") or []), left, right):
+                        chain_edges.append({"from": left, "to": right, "relation": "chain"})
+        for edge in flow_edges + chain_edges:
+            left, right = edge.get("from"), edge.get("to")
+            if left not in pos_of or right not in pos_of:
+                continue
+            kind = edge.get("relation")
+            xa, ya = pos_of[left]
+            xb, yb = pos_of[right]
+            if kind in {"sequence", "chain"}:
+                if xb <= xa + op_r:
                     continue
-                mark = op_marks.get(kind)
-                if not mark:
-                    continue
-                symbol, color, dash = mark
-                x1 = (xs[left][0] + xs[left][1]) / 2
-                x2 = (xs[right][0] + xs[right][1]) / 2
-                if abs(x2 - x1) < 2:
-                    continue
-                top = cursor_row - 8
-                parts.append(f'<path d="M {x1} {cursor_row + 6} C {x1} {top} {x2} {top} {x2} {cursor_row + 6}" '
-                             f'fill="none" stroke="{color}" stroke-width="1.8" stroke-dasharray="{dash}"/>')
-                parts.append(f'<text x="{(x1 + x2) / 2}" y="{top - 2}" font-size="10.5" fill="{color}" '
-                             f'text-anchor="middle">{html.escape(symbol)}</text>')
-            cursor_row += 74
+                dashed = ' stroke-dasharray="5 5"' if kind == "chain" else ""
+                if abs(ya - yb) < 1:
+                    parts.append(f'<path d="M {xa + op_r} {ya} L {xb - op_r} {yb}" fill="none" '
+                                 f'stroke="#5b6b80" stroke-width="1.9"{dashed} marker-end="url(#gs-edge)"/>')
+                else:
+                    mid = (xa + xb) / 2
+                    parts.append(f'<path d="M {xa + op_r} {ya} L {mid} {ya} L {mid} {yb} '
+                                 f'L {xb - op_r} {yb}" fill="none" stroke="#5b6b80" stroke-width="1.9"{dashed} '
+                                 f'marker-end="url(#gs-edge)"/>')
+                if kind == "chain":
+                    parts.append(f'<text x="{(xa + xb) / 2}" y="{min(ya, yb) - op_r + 4}" font-size="9.5" '
+                                 f'fill="#9aa7b6" text-anchor="middle">经未显示的中间步骤</text>')
+                continue
+            if kind == "maintain_until":
+                parts.append(f'<g class="gs-hold"><title>{html.escape(str(kind) + "：" + str(left) + " 保持到 " + str(right))}</title>'
+                             f'<path d="M {xa} {ya + op_r} V {hold_lane} H {xb} V {yb + op_r}" fill="none" '
+                             f'stroke="#2f9e6f" stroke-width="2.1" stroke-dasharray="8 6" '
+                             f'marker-end="url(#gs-edge)"/></g>')
+                parts.append(f'<text x="{(xa + xb) / 2}" y="{hold_lane + 14}" font-size="10" fill="#2f9e6f" '
+                             f'text-anchor="middle">保持</text>')
+                continue
+            if kind == "parallel":
+                vertical = abs(xa - xb) < 1
+                if vertical:
+                    parts.append(f'<path d="M {xa} {ya + op_r} L {xb} {yb - op_r}" fill="none" stroke="#b26a00" '
+                                 f'stroke-width="1.8" stroke-dasharray="5 4"/>')
+                    parts.append(f'<text x="{xa + 10}" y="{(ya + yb) / 2 + 4}" font-size="10.5" fill="#b26a00">∥</text>')
+                else:
+                    parts.append(f'<path d="M {xa} {ya - op_r} C {xa} {ya - op_r - 26} {xb} {yb - op_r - 26} '
+                                 f'{xb} {yb - op_r}" fill="none" stroke="#b26a00" stroke-width="1.8" '
+                                 f'stroke-dasharray="5 4"/>')
+                    parts.append(f'<text x="{(xa + xb) / 2}" y="{ya - op_r - 30}" font-size="10.5" '
+                                 f'fill="#b26a00" text-anchor="middle">∥</text>')
+                continue
+            mark = {"alternation": "⇄", "branch": "⇂", "synchronization": "⇉"}.get(kind)
+            if mark:
+                parts.append(f'<text x="{(xa + xb) / 2}" y="{min(ya, yb) - op_r - 8}" font-size="10.5" '
+                             f'fill="#966a12" text-anchor="middle">{html.escape(mark)}</text>')
+        cursor_row += 62 + lanes_here * op_lane + 40
     if not nodes:
         parts.append(f'<text x="{margin + 26}" y="{sub_y + 74}" font-size="13" fill="#7a869a">'
                      f'没有语义技能，因此没有实现子图。</text>')
@@ -769,11 +948,11 @@ def svg(graph, name="", operations=None):
     legend_left = [
         "圆：单个语义技能实例（模型判断，非人工语义验收）",
         "菱形：下游技能的 C_pre 进入条件候选；条件未知时连线为虚线",
-        "实线：已观察先后；虚线或橙色：候选/推断关系",
+        "实线＝已观察先后；橙色虚线＝候选/推断；绿色虚线“保持”＝效果持续到后序开始",
     ]
     legend_right = [
         "面板：每个技能完整七元组 X · O · C_pre · C_const · E · C_post · R",
-        "E 拆为完成判据、过程约束、实现适用性；R 保留操作与原子动作引用",
+        "实现子图：同列车道上下堆叠＝并行，∥ 标注；保持约束绕行下方车道进入后序",
         "局部结果与任务结果分开；控制器与检测器仍未绑定（unbound）",
     ]
     for index, text in enumerate(legend_left):

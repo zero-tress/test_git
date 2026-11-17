@@ -193,7 +193,7 @@ conda run -n study python -B tools/build_reanalysis_sixteen.py --run output/runs
 
 本轮入口：[意图拿笔2](output/意图拿笔2/index.html)。3 段视频得到 5 个语义技能、10 个实例、7 条语义关系，0 个未分配实例；验收记录在 `output/意图拿笔2/_verification/verify_20261117.json`。
 
-单视频保留 operations.svg / workbench.html，新增 Qwen 生成的 G_case.json 与 G_case.svg。G_case.svg 沿用 operations.svg 的图形语言：圆形技能节点、前置条件门控菱形、实线/虚线关系、悬停详情与图例；每个节点下方直接展开 `X · O · C_pre · C_const · E · C_post · R` 七元组，E 拆为完成判据、过程约束与实现适用性，R 保留操作与原子动作引用；图底部为每个 R 画出操作节点的实现子图，`maintain_until` 以绿色虚线“保持→”标出。
+单视频保留 operations.svg / workbench.html，新增 Qwen 生成的 G_case.json 与 G_case.svg。G_case.svg 沿用 operations.svg 的图形语言：圆形技能节点、前置条件门控菱形、实线/虚线关系、悬停详情与图例；每个节点下方直接展开 `X · O · C_pre · C_const · E · C_post · R` 七元组，E 拆为完成判据、过程约束与实现适用性，R 保留操作与原子动作引用；图底部按 operations.svg 的车道布局画出实现子图：操作圆节点沿主轴推进，保持约束以绿色虚线绕行下方车道，并行用上下堆叠与“∥”标注，隔着被排除步骤的先后用虚线并注明。
 
 时序不再降维成一条顺序链。本轮的机制约定：
 - `relations` 新增 `maintain_until`（前段效果持续到后段开始），不参与前置环检测；

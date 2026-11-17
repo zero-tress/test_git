@@ -6,6 +6,7 @@ from copy import deepcopy
 import pytest
 
 from video2op.case_graph import _svg_text_lines, _svg_text_width, export, learn, svg, validate
+from video2op.case_graph import _operation_flow as case_graph_flow
 
 
 def fixture():
@@ -278,3 +279,29 @@ def test_svg_shows_operation_subgraph_with_hold_and_parallel_marks():
     assert "实现子图" in rendered
     assert "保持→" in rendered
     assert 'class="gs-op"' in rendered
+
+
+def test_flow_layers_follow_global_sequence_not_just_skill_members():
+    """隔着被排除步骤的两个操作不能因为缺直接边就被误画成并行。"""
+    bundle, graph = ordered_fixture()
+    bundle["operations"]["nodes"].append({"id": "step_6", "name": "中继", "atomic_refs": [],
+                                          "already_satisfied": True})
+    bundle["operations"]["edges"].extend([
+        {"from": "step_3", "to": "step_6", "relation": "sequence"},
+        {"from": "step_6", "to": "step_4", "relation": "sequence"},
+    ])
+    graph["excluded_operations"] = [{"operation_ref": "step_6", "reason": "状态已满足的中继步骤"}]
+    assert validate(graph, bundle)["structure_valid"]
+    node = graph["nodes"][1]
+    _, _, _, columns = case_graph_flow(node, bundle["operations"])
+    assert [refs for _, refs in sorted(columns.items())] == [["step_2"], ["step_3"]]
+
+
+def test_hold_lane_and_parallel_marks_are_rendered():
+    bundle, graph = ordered_fixture()
+    rendered = svg(graph, name="样例", operations=bundle["operations"])
+    ET.fromstring(rendered)
+    assert "保持" in rendered
+    assert "gs-hold" in rendered
+    assert "∥" in rendered or "平行" in rendered
+    assert "经未显示的中间步骤" in rendered or "step_2" in rendered
