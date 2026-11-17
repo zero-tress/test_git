@@ -99,6 +99,10 @@ def test_nonexecution_is_censored_and_has_no_observed_realization():
     n = graph["nodes"][0]
     n.update(status="not_executed", outcome="not_executed", evidence_refs=[], R=[])
     graph["condition_observations"] = []
+    # 未执行尝试仍必须交代其动作归属，不能从实现里消失而不说明。
+    with pytest.raises(ValueError, match="missing from every skill realization"):
+        validate(graph, bundle)
+    graph["excluded_operations"] = [{"operation_ref": "step_1", "reason": "该动作属于未执行的局部尝试"}]
     assert validate(graph, bundle)["structure_valid"]
     n["outcome"] = "failure"
     with pytest.raises(ValueError):
@@ -161,3 +165,116 @@ def test_gcase_svg_uses_operations_style_with_visible_seven_tuple():
     titles = [node.find("{http://www.w3.org/2000/svg}title").text for node in
               ET.fromstring(rendered).findall(".//{http://www.w3.org/2000/svg}g[@class='gs-node']")]
     assert any("C_pre 进入条件：目标可接近" in title and "E 完成：持有目标" in title for title in titles)
+
+
+def ordered_fixture():
+    """Three skills over five observed steps, with one internal parallel and one hold."""
+    bundle = {
+        "pipeline": {"model": "qwen3.8-27b", "base_url": "http://127.0.0.1:8032"},
+        "source_video_sha256": "abc123",
+        "intents": {"intents": [{"id": "task", "statement": "取目标", "confidence": 0.7}]},
+        "atomic": {"atomic_actions": [
+            {"id": i, "inferred": False, "start": i - 1, "end": i} for i in range(1, 6)
+        ]},
+        "operations": {
+            "nodes": [
+                {"id": "step_1", "name": "靠近", "atomic_refs": [1]},
+                {"id": "step_2", "name": "抓取", "atomic_refs": [2]},
+                {"id": "step_3", "name": "移动", "atomic_refs": [3]},
+                {"id": "step_4", "name": "释放", "atomic_refs": [4]},
+                {"id": "step_5", "name": "打开", "atomic_refs": [5]},
+            ],
+            "edges": [
+                {"from": "step_1", "to": "step_2", "relation": "sequence"},
+                {"from": "step_2", "to": "step_3", "relation": "sequence"},
+                {"from": "step_3", "to": "step_4", "relation": "sequence"},
+                {"from": "step_1", "to": "step_5", "relation": "parallel"},
+                {"from": "step_2", "to": "step_4", "relation": "maintain_until"},
+            ],
+        },
+    }
+
+    def node(sid, name, ops, atoms):
+        return {"id": sid, "name": name, "purpose": f"{name}的目的",
+                "expected_effects": ["效果"], "status": "observed",
+                "X": {"role": "左手"}, "O": {"target": "笔"},
+                "C_pre": [], "C_const": [], "C_post": ["效果"],
+                "E": {"completion": [], "process_constraint": [],
+                      "implementation_applicability": ["适用"], "binding_status": "unbound",
+                      "detector_ref": None, "controller_ref": None},
+                "R": [{"id": f"R_{sid}", "name": f"{name}实现", "operation_refs": ops,
+                       "atomic_refs": atoms, "status": "observed"}],
+                "outcome": "success", "evidence_refs": atoms, "intent_refs": ["task"]}
+
+    graph = {"schema_version": "case_graph.v1",
+             "nodes": [node("S1", "靠近", ["step_1", "step_5"], [1, 5]),
+                       node("S2", "持笔", ["step_2", "step_3"], [2, 3]),
+                       node("S3", "释放", ["step_4"], [4])],
+             "relations": [
+                 {"from": "S1", "to": "S2", "relation": "sequence", "basis": "observed_order",
+                  "source_refs": [1, 2], "status": "observed", "reason": "先靠近后抓取"},
+                 {"from": "S2", "to": "S3", "relation": "sequence", "basis": "observed_order",
+                  "source_refs": [2, 4], "status": "observed", "reason": "抓取后释放"},
+                 {"from": "S2", "to": "S3", "relation": "maintain_until", "basis": "observed_order",
+                  "source_refs": [2, 4], "status": "observed", "reason": "握持保持到释放开始"},
+             ],
+             "task_outcome": {"value": "success", "evidence_refs": [2, 3, 4], "reason": "目标被取走"},
+             "condition_observations": [], "unresolved": []}
+    return bundle, graph
+
+
+def test_operation_relations_cannot_be_silently_dropped():
+    bundle, graph = ordered_fixture()
+    graph["relations"] = [row for row in graph["relations"] if row["relation"] != "maintain_until"]
+    with pytest.raises(ValueError, match="maintain_until"):
+        validate(graph, bundle)
+
+
+def test_unmapped_relation_needs_a_reason_and_is_then_accepted():
+    bundle, graph = ordered_fixture()
+    graph["relations"] = [row for row in graph["relations"] if row["relation"] != "maintain_until"]
+    graph["unmapped_relations"] = [{"operation_from": "step_2", "operation_to": "step_4",
+                                    "relation": "maintain_until"}]
+    with pytest.raises(ValueError, match="unmapped operation relation"):
+        validate(graph, bundle)
+    graph["unmapped_relations"][0]["reason"] = "握持属于该实现内部约束，已在 C_const 记录"
+    assert validate(graph, bundle)["structure_valid"]
+
+
+def test_internal_parallel_is_kept_without_forcing_a_skill_relation():
+    bundle, graph = ordered_fixture()
+    result = validate(graph, bundle)
+    assert result["structure_valid"]
+    assert any(row["relation"] == "maintain_until" for row in result["mapped_operation_relations"])
+
+
+def test_maintain_until_is_a_hold_not_a_precedence_cycle():
+    bundle, graph = ordered_fixture()
+    graph["relations"].append({"from": "S3", "to": "S2", "relation": "maintain_until",
+                               "basis": "observed_order", "source_refs": [2, 4],
+                               "status": "observed", "reason": "反向保持不构成前置环"})
+    assert validate(graph, bundle)["structure_valid"]
+    graph["relations"][2]["reason"] = ""
+    with pytest.raises(ValueError, match="maintain_until"):
+        validate(graph, bundle)
+
+
+def test_observed_operation_must_be_traced_or_excluded():
+    bundle, graph = ordered_fixture()
+    graph["nodes"][2]["R"] = []
+    graph["nodes"][2].update(status="not_executed", outcome="not_executed", evidence_refs=[])
+    graph["relations"] = [row for row in graph["relations"] if "S3" not in (row["from"], row["to"])]
+    graph["task_outcome"]["evidence_refs"] = [2, 3]
+    with pytest.raises(ValueError, match="missing from every skill realization"):
+        validate(graph, bundle)
+    graph["excluded_operations"] = [{"operation_ref": "step_4", "reason": "释放未被观察到"}]
+    assert validate(graph, bundle)["structure_valid"] is True
+
+
+def test_svg_shows_operation_subgraph_with_hold_and_parallel_marks():
+    bundle, graph = ordered_fixture()
+    rendered = svg(graph, name="样例", operations=bundle["operations"])
+    ET.fromstring(rendered)
+    assert "实现子图" in rendered
+    assert "保持→" in rendered
+    assert 'class="gs-op"' in rendered

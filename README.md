@@ -191,10 +191,17 @@ conda run -n study python -B tools/build_reanalysis_sixteen.py --run output/runs
 
 ## 第1—7步：特例知识与两层语义操作图（2026-11-17）
 
-本轮入口：[意图拿笔2](output/意图拿笔2/index.html)。3 段视频得到 4 个语义技能、8 个实例、5 条语义关系，0 个未分配实例；验收记录在 `output/意图拿笔2/_verification/verify_20261117.json`。
+本轮入口：[意图拿笔2](output/意图拿笔2/index.html)。3 段视频得到 5 个语义技能、10 个实例、7 条语义关系，0 个未分配实例；验收记录在 `output/意图拿笔2/_verification/verify_20261117.json`。
 
-单视频保留 operations.svg / workbench.html，新增 Qwen 生成的 G_case.json 与 G_case.svg。G_case.svg 沿用 operations.svg 的图形语言：圆形技能节点、前置条件门控菱形、实线/虚线关系、悬停详情与图例；每个节点下方直接展开 `X · O · C_pre · C_const · E · C_post · R` 七元组，E 拆为完成判据、过程约束与实现适用性，R 保留操作与原子动作引用。
+单视频保留 operations.svg / workbench.html，新增 Qwen 生成的 G_case.json 与 G_case.svg。G_case.svg 沿用 operations.svg 的图形语言：圆形技能节点、前置条件门控菱形、实线/虚线关系、悬停详情与图例；每个节点下方直接展开 `X · O · C_pre · C_const · E · C_post · R` 七元组，E 拆为完成判据、过程约束与实现适用性，R 保留操作与原子动作引用；图底部为每个 R 画出操作节点的实现子图，`maintain_until` 以绿色虚线“保持→”标出。
 
-跨视频依次学习正反例条件、语义规则，再做支路和功能合并。s12 的宿主一致性校验本轮做了三处收敛修正：跨视频规则允许引用归属其他技能的同动作实例（要求成员有交集，并在 validation 记录覆盖率）；无法归类的实例必须显式列入 `unassigned_members` 并说明理由，不再静默丢弃或整批失败；契约清单前置到模型输入，并给出每条实例的名称、局部结果与实现引用。提示词更新后可用 `--resume --refresh-prompts` 续跑，已完成实例只重导出本地视图，不重复调用模型。
+时序不再降维成一条顺序链。本轮的机制约定：
+- `relations` 新增 `maintain_until`（前段效果持续到后段开始），不参与前置环检测；
+- 操作层的 `parallel`/`maintain_until`/`alternation`/`branch`/`synchronization` 必须向上映射：跨技能则给出同类型技能关系，属于同一实现则在该技能的实现子图保留，实在无法映射则逐条写入 `unmapped_relations` 并说明；
+- 任何被模型观察到、却未进入任何 R 的操作必须列入 `excluded_operations` 并说明理由（状态已满足与推断操作自动豁免），避免“靠近”这类必要步骤从实现里消失。
+
+因果次序也写进了提示词与校验：手必须抵达目标附近才能抓取。若靠近与抓取是两个可分辨的原子动作段，必须把“靠近”建成独立技能并给出 observed_order 前置；遮挡时清障必须先于靠近与抓取；没有靠近动作证据时不得虚构。
+
+跨视频依次学习正反例条件、语义规则，再做支路和功能合并。s12 的宿主一致性校验本轮做了四处收敛修正：跨视频规则允许引用归属其他技能的同动作实例（要求成员有交集，并在 validation 记录覆盖率）；无法归类的实例必须显式列入 `unassigned_members` 并说明理由；同一动作同时服务两个目的时，用 `shared_members` + `shared_reason` 声明共享；契约清单前置到模型输入，并给出每条实例的名称、局部结果与实现引用。提示词更新后可用 `--resume --refresh-prompts` 续跑，已完成实例可用 `--refresh-case-graph` 只重跑 s09 语义层，不重跑抽样与意图阶段。
 
 模型客户端固定到8032的qwen3.8-27b，失败不生成替代结论。运行及数据契约见 [视频学习第1—7步](docs/video_learning_stage1_7.md)。完整入口为 tools/learn_video_knowledge.py，旧结果及别名保留。

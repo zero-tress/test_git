@@ -31,6 +31,8 @@ def main(argv=None):
     parser.add_argument("--resume", action="store_true", help="仅续跑输入及来源hash一致的本批次")
     parser.add_argument("--refresh-prompts", action="store_true",
                         help="提示词更新后允许续跑；已完成实例只重新导出本地视图，不重复调用模型")
+    parser.add_argument("--refresh-case-graph", action="store_true",
+                        help="仅用已保存的视频观察重新学习 s09 G_case（不重跑抽样/意图/动作阶段），随后重跑跨视频")
     args = parser.parse_args(argv)
     if not args.allow_8032:
         parser.error("模型访问需要 --allow-8032")
@@ -76,7 +78,7 @@ def main(argv=None):
         inputs = []
         for row, video in zip(manifest["cases"], videos, strict=True):
             source = config.OUTPUT_DIR / (video.stem + "_semantic_v3") / "result.json"
-            if args.resume and row["status"] == "complete":
+            if args.resume and row["status"] == "complete" and not args.refresh_case_graph:
                 if (not source.is_file()
                         or hashlib.sha256(source.read_bytes()).hexdigest() != row.get("result_sha256")):
                     raise RuntimeError("已完成实例被修改，不能静默续跑")
@@ -86,6 +88,29 @@ def main(argv=None):
                 if bundle.get("case_graph"):
                     case_graph.export(bundle, source.parent)
                 inputs.append(str(source))
+                continue
+            if args.resume and row["status"] == "complete" and args.refresh_case_graph:
+                if not source.is_file():
+                    raise RuntimeError("缺少已保存的 result.json，无法只重跑 G_case")
+                from video2op import case_graph
+                from video2op.llm import VLMClient
+                bundle = json.loads(source.read_text(encoding="utf-8"))
+                if not bundle.get("observed_operation_graph"):
+                    raise RuntimeError("缺少冻结观察分支，不能只重跑 G_case")
+                client = VLMClient(source.parent / "cache", base_url=config.BASE_URL, model=config.MODEL)
+                try:
+                    row["status"] = "running"
+                    save(output / "run_manifest.json", manifest)
+                    bundle["case_graph"] = case_graph.learn(client, bundle)
+                    bundle.setdefault("pipeline", {})["llm_stats"] = client.stats
+                    case_graph.export(bundle, source.parent)
+                    save(source, bundle)
+                finally:
+                    client.session.close()
+                row.update(status="complete", result=str(source),
+                           result_sha256=hashlib.sha256(source.read_bytes()).hexdigest())
+                inputs.append(str(source))
+                save(output / "run_manifest.json", manifest)
                 continue
             row["status"] = "running"
             save(output / "run_manifest.json", manifest)
@@ -109,6 +134,8 @@ def main(argv=None):
             cross_args.append("--resume")
         if args.refresh_prompts:
             cross_args.append("--refresh-prompts")
+        if args.refresh_case_graph:
+            cross_args.append("--refresh-sources")
         code = module.main(cross_args)
         if code:
             raise RuntimeError(f"跨视频学习失败，退出码 {code}")

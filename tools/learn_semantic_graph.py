@@ -29,6 +29,8 @@ def main(argv=None):
     parser.add_argument("--resume", action="store_true", help="Reuse only matching interrupted request caches")
     parser.add_argument("--refresh-prompts", action="store_true",
                         help="允许提示词指纹变化后续跑；各阶段缓存仍按内容寻址校验")
+    parser.add_argument("--refresh-sources", action="store_true",
+                        help="同一批视频重新学习后允许续跑；源路径与视频hash必须不变，只接受结果hash更新")
     args = parser.parse_args(argv)
     if not args.allow_8032:
         parser.error("--allow-8032 required: all semantic learning uses the deployed model")
@@ -45,9 +47,19 @@ def main(argv=None):
         if not saved.is_file():
             parser.error("resume refused: run manifest missing")
         previous = json.loads(saved.read_text())
-        for key in ("model", "base_url", "sources"):
+        for key in ("model", "base_url"):
             if previous.get(key) != manifest[key]:
                 parser.error(f"resume refused: {key} changed; choose a new directory")
+        if previous.get("sources") != manifest["sources"]:
+            before = [(row.get("source"), row.get("video_uid")) for row in previous.get("sources") or []]
+            now = [(row.get("source"), row.get("video_uid")) for row in manifest["sources"]]
+            if before != now:
+                parser.error("resume refused: source files or videos changed; choose a new directory")
+            if not args.refresh_sources:
+                parser.error("resume refused: source result hashes changed; pass --refresh-sources "
+                             "after re-learning the same videos in this batch")
+            manifest["previous_sources"] = previous["sources"]
+            manifest["source_refresh"] = "same videos re-learned; result hashes updated"
         if previous.get("prompt_fingerprint") != manifest["prompt_fingerprint"]:
             if not args.refresh_prompts:
                 parser.error("resume refused: prompt fingerprint changed; pass --refresh-prompts "
