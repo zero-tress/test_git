@@ -208,6 +208,7 @@ def build(bundle: dict) -> dict:
         pred("任务条件待确认")
         gaps.append({"reason": "任务条件未确认"})
     intents = (bundle.get("intents") or {}).get("intents") or []
+    from .intent_hierarchy import export_hierarchy
     return {"schema_version": "1.0", "graph_id": str((bundle.get("meta") or {}).get("name") or "video_learning"),
             "task_intent": (intents[0].get("statement") if intents else None) or "视频示范任务（意图待确认）",
             "layer": "semantic", "source": "teach", "start_node": "START", "end_node": "END",
@@ -217,6 +218,7 @@ def build(bundle: dict) -> dict:
                 "final_to_export": dict(idmap),
                 "learning_alignment": deepcopy(bundle.get("learning_alignment") or {}),
                 "intent_hypotheses": deepcopy((bundle.get("intents") or {}).get("intents") or []),
+                "intent_hierarchy": export_hierarchy(bundle, idmap),
                 "intent_alignment": deepcopy(bundle.get("intent_alignment") or {}),
                 "temporal_knowledge": deepcopy(bundle.get("temporal_knowledge") or {}),
                 "semantic_scope": deepcopy(bundle.get("semantic_scope") or {}),
@@ -272,6 +274,8 @@ def export(bundle: dict, out: Path, *, export_clips: bool = True, clip_padding: 
     attach_classified_clips(out)
     from .semantic_interface import export as export_interface
     export_interface(bundle, out)
+    from .case_graph import export as export_case_graph
+    export_case_graph(bundle, out)
 
 
 def render(bundle: dict, out: Path) -> None:
@@ -284,6 +288,12 @@ def render(bundle: dict, out: Path) -> None:
     page = workbench.render(data)
     from .case_outputs import clip_panel
     panel = clip_panel(out)
+    if bundle.get("case_graph") is not None:
+        panel += ('<section style="margin:24px;padding:20px;border:1px solid #71977b;border-radius:12px">'
+                  '<h2>单视频特例知识 G_case</h2>'
+                  '<p><a href="G_case.svg" target="_blank">查看语义技能与实现子图</a> · '
+                  '<a href="G_case.json" target="_blank">查看特例知识及证据引用</a></p>'
+                  '<p>技能解释由8032 Qwen3.8-27B生成；原操作图与视频证据继续保留。</p></section>')
     page = page.replace("</body>", panel+"</body>") if "</body>" in page else page+panel
     (out / "workbench.html").write_text(page, encoding="utf-8")
 

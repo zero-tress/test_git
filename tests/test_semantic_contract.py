@@ -1,11 +1,10 @@
 """Regression cases from the operation-graph review, independent of a model server."""
 from copy import deepcopy
+
 import pytest
 
-from video2op import operations, program, reasoning
 from video2op.pipeline import build_legacy_execution_graph as build_operation_graph
-from video2op.stages import s02c_task, s02b_merge, s02b_atomic
-from video2op.stages.common import atomic_table
+from video2op.stages import s02b_atomic, s02b_merge, s02c_task
 
 
 def action(i, before=None, after=None, inferred=False, start=0, end=1):
@@ -163,10 +162,11 @@ def test_unsupported_overlapping_dependency_remains_overlap_not_sequence():
     assert not b["program"]["operations"][1]["start_guard"]["dependencies"]
 
 
-def test_task_prompt_receives_intent_and_evidence_provenance():
+def test_task_prompt_excludes_intent_and_retains_evidence_provenance():
     class Client:
         def ask(self, **kwargs):
-            assert "清除遮挡以取物" in kwargs["user_text"]
+            assert "清除遮挡以取物" not in kwargs["user_text"]
+            assert "独立观察分支" in kwargs["user_text"]
             assert "inferred（待核实）" in kwargs["user_text"]
             assert "after=inherit" in kwargs["user_text"]
             return {"task_nodes": []}

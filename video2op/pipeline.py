@@ -311,6 +311,20 @@ def run_case(video: Path, force: bool = False, verbose: bool = True, description
 
     from .media_quality import annotate as annotate_media
     annotate_media(ctx)
+    # Freeze only the independent observation branch before intent alignment or
+    # s02c logical projections. Inferred/missing actions are never observation facts.
+    from copy import deepcopy
+    actual = [deepcopy(a) for a in ctx["atomic"]["atomic_actions"] if not a.get("inferred")]
+    actual_ids = {a["id"] for a in actual}
+    ctx["observed_operation_graph"] = {
+        "schema_version": "observed_operation_graph.v1",
+        "origin": "s02b_atomic_and_local_review_before_intent_alignment",
+        "nodes": actual,
+        "relations": [deepcopy(r) for r in ctx.get("relations", [])
+                      if r["from"] in actual_ids and r["to"] in actual_ids],
+        "policy": "Observed model records; excludes inferred actions and later logical projections.",
+    }
+    _dump(stages_dir / "s02_observed_operation_graph.json", ctx["observed_operation_graph"])
     stage("s02c_task", lambda: s02c_task.run(client, ctx), "task_nodes", {"task_nodes": []})
     stage("s02d_link", lambda: s02d_link.run(client, ctx), "link", {"links": [], "missing_actions": []})
 
@@ -348,6 +362,7 @@ def run_case(video: Path, force: bool = False, verbose: bool = True, description
         "sampling": ctx.get("sampling") or {},
         "local_review": ctx.get("local_review") or {},
         "atomic": ctx.get("atomic") or {},
+        "observed_operation_graph": ctx.get("observed_operation_graph") or {},
         "relations": ctx.get("relations") or [],
         "task_nodes": ctx.get("task_nodes") or {"task_nodes": []},
         "link": ctx.get("link") or {},
@@ -406,6 +421,9 @@ def run_case(video: Path, force: bool = False, verbose: bool = True, description
     t_render = time.time()
     from .knowledge import video_identity
     bundle["source_video_sha256"], _ = video_identity(bundle)
+    from . import case_graph
+    stage("s09_case_graph", lambda: case_graph.learn(client, bundle), "case_graph", {})
+    bundle["case_graph"] = ctx["case_graph"]
     semantic.export(bundle, out_dir, export_clips=export_clips, clip_padding=clip_padding)
     semantic.render(bundle, out_dir)
 
@@ -425,7 +443,7 @@ def run_case(video: Path, force: bool = False, verbose: bool = True, description
                   f"U {stats.get('U', 0)} · F {stats.get('F', 0)}）· "
                   f"待确认条件 {stats.get('unresolved', 0)} 条")
         print(f"  产物：{out_dir}/result.json · operations.svg（语义七元组）· workbench.html（可交互工作台）· "
-              f"skill_instances.json · clip/sequence.json"
+              f"skill_instances.json · clip/sequence.json · G_case.json · G_case.svg"
               f"（用时 {bundle['pipeline']['wall_seconds']}s）")
     return bundle
 

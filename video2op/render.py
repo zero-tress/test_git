@@ -1453,7 +1453,7 @@ def gate_svg(bundle: dict, wrap_width: float | None = None, *,
     svg.append(f'<text x="{lx}" y="{note_y}" font-size="17" fill="#516277">{esc(note1)}</text>')
     svg.append(f'<text x="{lx}" y="{note_y + 30}" font-size="17" fill="#516277">{esc(note2)}</text>')
     svg.append("</svg>")
-    return "\n".join(svg)
+    return intent_scores_svg("\n".join(svg), bundle)
 
 
 def _gs_gate_lines(g: dict, limit: int = 2) -> list[str]:
@@ -1952,6 +1952,129 @@ def nodes_html(bundle: dict) -> str:
     return "\n".join(blocks)
 
 
+
+def _confidence_pair(item):
+    before = item.get("confidence_before_sync", item.get("confidence"))
+    after = item.get("confidence_after_sync")
+    if after is None and "confidence_before_sync" in item:
+        after = item.get("confidence")
+    def fmt(value, missing):
+        return missing if value is None else f"{value:.2f}"
+    return fmt(before, "未记录") + " → " + fmt(after, "待校验")
+
+
+def _intent_rows(bundle):
+    hierarchy = (bundle.get("semantic_graph") or {}).get("x-meta", {}).get("intent_hierarchy") or {}
+    tasks = hierarchy.get("tasks") or (bundle.get("intents") or {}).get("intents") or []
+    for task in tasks:
+        yield 0, task
+        for child in task.get("subtasks") or []:
+            yield 1, child
+
+
+def _intent_mapping(item, bundle):
+    mapping = item.get("operation_mapping") or {}
+    graph = bundle.get("semantic_graph") or {}
+    nodes = graph.get("nodes") or {}
+    refs = mapping.get("node_refs") or []
+    evidence = graph.get("evidence") or {}
+    names = []
+    for ref in refs:
+        item = evidence.get(ref) or {}
+        note = "（推断目标）" if item.get("inferred") else ("（状态目标）" if item and not item.get("atomic_refs") else "")
+        names.append(ref + " " + str(nodes.get(ref, {}).get("name", "")) + note)
+    if names:
+        return "对应操作：" + "、".join(names)
+    refs = mapping.get("atomic_refs") or []
+    return ("原子操作：" + "、".join(map(str, refs))) if refs else "对应操作：尚未观察或未建立映射"
+
+
+def intent_hierarchy_html(bundle: dict) -> str:
+    """Shared by standalone reports and the interactive semantic workbench."""
+    rows = list(_intent_rows(bundle))
+    if not rows:
+        return ""
+    statuses = {"observed": "已观察相关操作", "partially_observed": "部分观察",
+                "not_observed": "未观察", "not_applicable": "无需执行", "unknown": "待确认"}
+    out = ['<section id="intent-hierarchy" style="margin:20px;padding:20px;border:1px solid #b8c9df;'
+           'border-radius:12px;background:#f8fbff;color:#18314b">'
+           '<h2>任务意图与置信度</h2><p>分数：初始 → 同步因果校验后。各子任务可以同时成立，分数独立评估。</p>']
+    for depth, item in rows:
+        kind = "子任务" if depth else "总任务"
+        optional = " · 可选" if item.get("optional") else ""
+        mapping = item.get("operation_mapping") or {}
+        status = statuses.get(mapping.get("status") or item.get("observation_status"), "待校验")
+        out.append(f'<div style="margin:12px 0 12px {depth * 24}px;padding:12px;border-left:3px solid #3f7fd0">'
+                   f'<b>{kind} · {esc(item.get("statement"))}</b>{optional}'
+                   f'<div>置信度 <strong>{esc(_confidence_pair(item))}</strong> · {status}</div>')
+        if depth:
+            out.append('<div>' + esc(_intent_mapping(item, bundle)) + '</div>')
+        reason = item.get("sync_reason") or item.get("uncertainty")
+        if reason:
+            out.append('<p>' + esc(reason) + '</p>')
+        checks = item.get("sync_checks") or []
+        if checks:
+            out.append('<details><summary>三项因果校验依据</summary><ul>')
+            labels = {"explains_graph": "意图能否解释操作图", "achieves_intent": "操作图能否实现意图",
+                      "state_consistency": "前后状态变化是否一致"}
+            verdicts = {"yes": "是", "partial": "部分", "no": "否", "unknown": "未知"}
+            for check in checks:
+                label = labels.get(check.get("check"), check.get("question", "校验"))
+                refs = "、".join(map(str, check.get("evidence_refs") or [])) or "无"
+                out.append(f'<li>{esc(label)}：{esc(verdicts.get(check.get("verdict"), "未知"))}；'
+                           f'{esc(check.get("reason"))}（动作证据：{esc(refs)}）</li>')
+            out.append('</ul></details>')
+        out.append('</div>')
+    return "".join(out) + '</section>'
+
+
+def intent_scores_svg(svg: str, bundle: dict) -> str:
+    """Add a growing, wrapped intent panel without moving existing graph coordinates."""
+    import re
+    import unicodedata
+    rows = list(_intent_rows(bundle))
+    if not rows:
+        return svg
+    match = re.search(r'<svg[^>]*viewBox="([0-9. ]+)"', svg)
+    if not match:
+        return svg
+    x, y, width, height = map(float, match.group(1).split())
+    panel_width = max(width, 1000)
+    max_units = max(40, int((min(panel_width, 1550) - 100) / 9))
+    lines = [(0, "任务意图与置信度｜初始 → 同步因果校验后", True)]
+    for depth, item in rows:
+        prefix = "子任务" if depth else "总任务"
+        text = prefix + "：" + str(item.get("statement") or "") + ("（可选）" if item.get("optional") else "")
+        text += "    置信度 " + _confidence_pair(item)
+        status = (item.get("operation_mapping") or {}).get("status") or item.get("observation_status")
+        text += {"not_observed": " · 未观察", "not_applicable": " · 无需执行",
+                 "partially_observed": " · 部分观察", "unknown": " · 待确认"}.get(status, "")
+        for content in ([text, _intent_mapping(item, bundle)] if depth else [text]):
+            line, units = "", 0
+            for char in content:
+                size = 2 if unicodedata.east_asian_width(char) in {"W", "F"} else 1
+                if units + size > max_units:
+                    lines.append((depth, line, False))
+                    line, units = "", 0
+                line += char
+                units += size
+            lines.append((depth, line, False))
+    panel_height = 64 + 30 * len(lines)
+    new_height = height + panel_height + 20
+    opening_end = svg.index(">")
+    opening, body = svg[:opening_end], svg[opening_end:]
+    opening = re.sub(r'width="[^"]+"', f'width="{panel_width:g}"', opening, count=1)
+    opening = re.sub(r'height="[^"]+"', f'height="{new_height:g}"', opening, count=1)
+    opening = re.sub(r'viewBox="[^"]+"', f'viewBox="{x:g} {y:g} {panel_width:g} {new_height:g}"', opening, count=1)
+    panel = [f'<g id="intent-confidence-panel"><rect x="20" y="{height + 10:g}" '
+             f'width="{min(panel_width - 40, 1550):g}" height="{panel_height:g}" rx="12" fill="#f8fbff" stroke="#b8c9df"/>']
+    for index, (depth, line, title) in enumerate(lines):
+        panel.append(f'<text x="{40 + depth * 24}" y="{height + 44 + index * 30:g}" '
+                     f'font-size="{20 if title else 17}" fill="#18314b" '
+                     f'font-weight="{700 if title or not depth else 400}">{esc(line)}</text>')
+    panel.append('</g>')
+    return opening + body.rsplit("</svg>", 1)[0] + "".join(panel) + "</svg>"
+
 def sync_html(bundle: dict) -> str:
     sync = bundle.get("sync", {})
     if not sync:
@@ -1977,7 +2100,7 @@ def sync_html(bundle: dict) -> str:
         items = rev.get(key) or []
         if items:
             rev_html += f"<h4>{title}</h4><ul>" + "".join(f"<li>{esc(i)}</li>" for i in items) + "</ul>"
-    return delta + "".join(rows) + rev_html
+    return intent_hierarchy_html(bundle) + delta + "".join(rows) + rev_html
 
 
 def conditions_html(bundle: dict) -> str:
@@ -2251,7 +2374,7 @@ def render_report(bundle: dict, out_dir: Path) -> Path:
                          if isinstance(e, dict))
         intent_html += f"""<div class='card'>
 <h3>{esc(it.get('id'))} · {esc(it.get('statement'))}
- <span class='pill' style='background:#3f7fd0'>置信度 {esc(it.get('confidence'))}</span>
+ <span class='pill' style='background:#3f7fd0'>置信度 {esc(_confidence_pair(it))}</span>
  <span class='muted'>{esc(it.get('intent_type'))}</span></h3>
 <table class='kv'>
 <tr><th>为何是这个意图</th><td>{ev}</td></tr>

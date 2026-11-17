@@ -64,9 +64,18 @@ def validate(payload: object, ctx: dict) -> None:
         refs = s.get("atomic_refs")
         if not isinstance(refs, list) or not refs or any(r not in actions for r in refs):
             raise ValidationFailure("subtask must reference existing atomic actions")
-        if s.get("goal_key") in {"grasp_object", "acquire_object", "relocate_object", "place_object"} and any(
-                actions[r].get("object") and actions[r]["object"] != s.get("target") for r in refs):
-            raise ValidationFailure("single-target subtask includes another object; split its preparation scope")
+        context_refs = s.get("context_atomic_refs", [])
+        if (not isinstance(context_refs, list) or any(r not in actions for r in context_refs)
+                or set(context_refs) & set(refs)):
+            raise ValidationFailure(f"{s['id']}: context_atomic_refs must be existing actions disjoint from atomic_refs")
+        if s.get("goal_key") in {"grasp_object", "acquire_object", "relocate_object", "place_object"}:
+            mismatches = [{"atomic_ref": r, "object": actions[r]["object"]} for r in refs
+                          if actions[r].get("object") and actions[r]["object"] != s.get("target")]
+            if mismatches:
+                raise ValidationFailure(
+                    f"{s['id']}: target={s.get('target')}; single-target subtask includes another object in atomic_refs: "
+                    f"{json.dumps(mismatches, ensure_ascii=False)}. "
+                    "请由模型重新划分：本目标动作留atomic_refs；其他对象/位置的上下文动作保留context_atomic_refs或独立子任务；不可用上下文动作证明目标成功。")
         if s.get("target") not in labels:
             raise ValidationFailure("subtask target must be an observed local object")
         if s.get("outcome", "unknown") not in {"success", "failure", "not_executed", "unknown"}:
@@ -197,6 +206,9 @@ outcome_evidence和condition_observations.evidence只填写evidence_catalog中�
 例如["a3_world_after_0"]。不要手写quote或field，程序会从原观察恢复真实字段和原文。
 objects.label、aliases和subtasks.target只能逐字选取allowed_object_labels，未参与动作的桌面区域仅可写destination，不注册为操作对象。
 条件状态必须被对应状态直接支持，“放在桌面”不证明“可达”，“后来抓到了”不证明片段开始时已经可达。
+单目标grasp_object/acquire_object/relocate_object/place_object的atomic_refs只含object与target逐字相同的目标动作（无object者可按证据保留）。
+靠近容器、移动其他物体等上下文动作可以在context_atomic_refs数组引用，或者另建子任务；不把它们混进目标atomic_refs。
+context_atomic_refs只保留来源上下文，不是目标动作、目标成功证据或必要因果条件，且不得与atomic_refs重叠。所有上下文动作必须引用已存在id。
 """
     result = client.ask(stage="s08_scope", system=system, user_text=user,
                         max_tokens=6000, validator=lambda p: expand_evidence(p, ctx))

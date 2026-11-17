@@ -19,6 +19,7 @@ import time
 from collections.abc import Callable
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
 
 import requests
 
@@ -115,17 +116,35 @@ def extract_json(text: str) -> Any:
     raise LLMError(f"JSON 解析失败：{errors[-1] if errors else '未知'}", [text[:800]])
 
 
+def require_deployed_model(base_url: str, model: str) -> None:
+    """All analysis stays on the project's existing Qwen3.8-27B service."""
+    try:
+        endpoint = urlsplit(base_url)
+        allowed = (endpoint.scheme == "http"
+                   and endpoint.hostname in {"127.0.0.1", "localhost", "::1"}
+                   and endpoint.port == 8032
+                   and endpoint.path in {"", "/"}
+                   and not endpoint.query and not endpoint.fragment
+                   and endpoint.username is None and endpoint.password is None)
+    except (TypeError, ValueError):
+        allowed = False
+    if not allowed or model != "qwen3.8-27b":
+        raise ValueError("视频学习仅允许现有 http://127.0.0.1:8032 的 qwen3.8-27b；禁止替代模型或分析回退")
+
+
 class VLMClient:
     """Content-addressed cache, complete JSON, bounded retries and per-attempt metrics."""
 
     def __init__(self, cache_dir: Path, base_url: str | None = None,
                  model: str | None = None, use_cache: bool = True):
-        self.cache_dir = Path(cache_dir)
-        self.cache_dir.mkdir(parents=True, exist_ok=True)
         self.base_url = (base_url or config.BASE_URL).rstrip("/")
         self.model = model or config.MODEL
+        require_deployed_model(self.base_url, self.model)
+        self.cache_dir = Path(cache_dir)
+        self.cache_dir.mkdir(parents=True, exist_ok=True)
         self.use_cache = use_cache
         self.session = requests.Session()
+        self.session.trust_env = False
         self.stats = {"calls": 0, "cache_hits": 0, "failures": 0, "seconds": 0.0,
                       "attempts": []}
 
@@ -147,6 +166,7 @@ class VLMClient:
             validator: Callable[[Any], None] | None = None,
             temperature: float | None = None, max_tokens: int | None = None,
             attempts: int | None = None, timeout: float | None = None) -> Any:
+        require_deployed_model(self.base_url, self.model)
         temperature = config.TEMPERATURE if temperature is None else temperature
         attempts = attempts or config.MAX_ATTEMPTS
         has_video = video is not None or bool(images)
@@ -177,6 +197,9 @@ class VLMClient:
                 cached = json.loads(cache_path.read_text(encoding="utf-8"))
                 if cached.get("complete") is not True:
                     raise ValueError("legacy cache has no completeness marker")
+                if (cached.get("model"), cached.get("endpoint"),
+                        cached.get("request_fingerprint")) != (self.model, self.base_url, key):
+                    raise ValueError("cache has no matching deployed-model provenance")
                 if validator is not None:
                     validator(cached["result"])
                 self.stats["cache_hits"] += 1
@@ -199,6 +222,43 @@ class VLMClient:
         content_parts.append({"type": "text", "text": user_text})
         messages = [{"role": "system", "content": system},
                     {"role": "user", "content": content_parts if has_video else user_text}]
+        # Resume repair from rejected responses with the exact same base input.
+        # They remain unaccepted drafts: only a fresh, validated model response
+        # can become the result.
+        prior_errors, repair_records, previous_draft = [], [], None
+        for failure in sorted((self.cache_dir / "failures").glob(f"{key}_*.json"))[-3:]:
+            try:
+                record = json.loads(failure.read_text(encoding="utf-8"))
+                if (record.get("model"), record.get("endpoint"),
+                        record.get("request_fingerprint")) != (self.model, self.base_url, key):
+                    continue
+                draft = record.get("raw_response")
+                if not isinstance(draft, str) or not draft:
+                    continue
+                previous_draft = draft
+                repair_records.append(failure.name)
+                try:
+                    cleaned = strip_thinking(draft)
+                    fenced = _FENCE_RE.search(cleaned)
+                    candidate = json.loads(fenced.group(1) if fenced else cleaned)
+                    if validator is not None:
+                        validator(candidate)
+                    prior_errors.append("历史草稿尚未被模型确认；请重新输出完整结果")
+                except (ValueError, KeyError, TypeError) as exc:
+                    prior_errors.append(f"{type(exc).__name__}: {exc}")
+            except (ValueError, KeyError, TypeError):
+                continue
+
+        def repair_feedback(issues, draft):
+            feedback = ("此前输出未通过校验，请完整重新输出，同时修正以下全部问题"
+                        "（不得重新引入已指出的问题）：\n"
+                        + "\n".join(dict.fromkeys(issues))[:4000])
+            if isinstance(draft, str) and len(draft) <= 50000:
+                feedback += "\n以下是尚未通过校验的上次模型草稿，仅供修改，不是已确认事实：\n" + draft
+            return feedback
+
+        if prior_errors:
+            messages.append({"role": "user", "content": repair_feedback(prior_errors, previous_draft)})
         raw_outputs, errors = [], []
         for attempt in range(attempts):
             payload = {"model": self.model, "messages": messages,
@@ -209,10 +269,12 @@ class VLMClient:
                       "max_tokens": budget, "input_chars": len(system) + len(user_text)}
             t0 = time.perf_counter()
             self.stats["calls"] += 1
+            content = None
             try:
                 r = self.session.post(f"{self.base_url}/v1/chat/completions",
                                       json=payload,
-                                      timeout=(config.REQUEST_CONNECT_TIMEOUT, timeout))
+                                      timeout=(config.REQUEST_CONNECT_TIMEOUT, timeout),
+                                      allow_redirects=False)
                 if r.status_code != 200:
                     raise LLMError(f"HTTP {r.status_code}")
                 response = r.json()
@@ -238,6 +300,9 @@ class VLMClient:
                 dt = time.perf_counter() - t0
                 cache_path.write_text(json.dumps(
                     {"stage": stage, "result": result, "complete": True,
+                     "model": self.model, "endpoint": self.base_url,
+                     "request_fingerprint": key, "raw_response": content,
+                     "prior_repair_records": repair_records, "repair_errors": prior_errors + errors,
                      "seconds": round(dt, 3), "attempt": attempt + 1,
                      "usage": metric["usage"], "output_chars": len(content)},
                     ensure_ascii=False, indent=2), encoding="utf-8")
@@ -247,10 +312,17 @@ class VLMClient:
                 message = f"{type(exc).__name__}: {exc}"
                 errors.append(message)
                 metric.update({"status": "error", "error": message[:300]})
+                failure_dir = self.cache_dir / "failures"
+                failure_dir.mkdir(exist_ok=True)
+                (failure_dir / f"{key}_{time.time_ns()}_{attempt + 1}.json").write_text(
+                    json.dumps({"stage": stage, "model": self.model, "endpoint": self.base_url,
+                                "request_fingerprint": key, "attempt": attempt + 1,
+                                "error": message, "raw_response": content, "complete": False},
+                               ensure_ascii=False, indent=2), encoding="utf-8")
                 print(f"    [!] {stage} {message[:120]}")
                 # Feed validation failures back, rather than repeating an identical request.
                 messages = [*messages[:2], {"role": "user", "content":
-                    "上次输出未通过校验，请完整重新输出并修正：" + message[:500]}]
+                    repair_feedback(prior_errors + errors, content)}]
                 if isinstance(exc, requests.exceptions.ConnectionError):
                     break  # unavailable endpoint: do not wait through three identical failures
             finally:

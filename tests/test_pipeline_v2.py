@@ -66,10 +66,19 @@ def test_complete_offline_pipeline_exports_overall_motion_and_timing(tmp_path, m
     ]
     for stage, payload in replacements:
         monkeypatch.setattr(stage, "run", lambda *a, value=payload: value)
+    # Synthetic model contract only; this fixture does not analyze a real video.
+    def model_stub(self, **kwargs):
+        assert kwargs["stage"] == "s09_case_graph"
+        payload = {"schema_version": "case_graph.v1", "nodes": [], "relations": [],
+                   "task_outcome": {"value": "unknown", "evidence_refs": []},
+                   "condition_observations": [], "unresolved": ["Synthetic observation fixture"]}
+        kwargs["validator"](payload)
+        return payload
+    monkeypatch.setattr(pipeline.VLMClient, "ask", model_stub)
     bundle = pipeline.run_case(video, verbose=False)
     out = config.OUTPUT_DIR / "sample_semantic_v3"
     for name in ("result.json", "operations.svg", "workbench.html",
-                 "skill_instances.json", "clip/sequence.json", "performance.json"):
+                 "skill_instances.json", "clip/sequence.json", "performance.json", "G_case.json", "G_case.svg"):
         assert (out / name).is_file(), name
     assert not any((out / name).exists() for name in ("report.html", "semantic_graph.yaml", "action_catalog.json"))
     assert __import__("json").loads((out / "program.json").read_text())["status"] == "unbound"
@@ -77,6 +86,9 @@ def test_complete_offline_pipeline_exports_overall_motion_and_timing(tmp_path, m
     assert (old / "result.json").read_text() == "original"
     stored = json.loads((out / "result.json").read_text())
     performance = json.loads((out / "performance.json").read_text())
+    assert stored["case_graph"]["task_outcome"]["value"] == "unknown"
+    assert stored["case_graph"]["provenance"]["observation_independence"] == "frozen_pre_sync"
+    assert stored["observed_operation_graph"]["nodes"]
     assert stored["pipeline"] == performance
     assert "render_export" in performance["stage_seconds"]
     assert performance["wall_seconds"] >= performance["stage_seconds"]["render_export"]

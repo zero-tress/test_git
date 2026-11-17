@@ -129,6 +129,7 @@ def side_verify(case_dir: Path) -> dict:
 
 
 def build(case_dir: Path, *, bundle: dict | None = None) -> dict:
+    from .render import intent_hierarchy_html
     if bundle is None:
         bundle = json.loads((case_dir / "result.json").read_text(encoding="utf-8"))
     contract = bundle.get("contract") or {}
@@ -345,6 +346,7 @@ def build(case_dir: Path, *, bundle: dict | None = None) -> dict:
                         for it in intent_items), "") or ""
     return {
         "case": case_dir.name,
+        "intent_hierarchy_html": intent_hierarchy_html(bundle),
         "media_review": media_review,
         "learning_layer": bundle.get("learning_layer"),
         "task_intent": (sg.get("task_intent") or "") or task_intent,
@@ -1134,6 +1136,7 @@ def render_semantic(data: dict) -> str:
 <div class="sub">任务意图：{e(data["task_intent"])} ｜ 点击操作节点展开七元组</div>
 <div class="chips"><span class="chip">{len(data["nodes"])} 个语义操作</span>
 <span class="chip">校验：{e(data["validation"].get("summary"))}</span></div></header>
+{data.get("intent_hierarchy_html", "")}
 <div id="app"><div id="graphPane"><div id="figure">{data["main_svg"]}</div>
 <div class="figcap">圆为操作、菱形为条件门控，沿用原操作图形式。
 图上只显示动作；点击节点在右侧查看七元组，点击菱形查看条件与证据，Esc 取消选择。

@@ -14,8 +14,22 @@ def apply_intent_updates(bundle: dict) -> None:
     rows = sync.get("intent_updates") or []
     for index, item in enumerate(intents, 1):
         item.setdefault("id", f"intent_{index}")
-    by_id = {i["id"]: i for i in intents}
-    if not rows and len(intents) == 1 and sync.get("intent_confidence_after") is not None:
+    from .intent_hierarchy import items, validate_updates
+    children = [s for task in intents for s in task.get("subtasks") or []]
+    if children and sync:
+        try:
+            # Sync reviewed source nodes before deterministic splitting/merging.
+            source = bundle.get("task_nodes_source") or bundle.get("task_nodes") or {}
+            validate_updates(sync, bundle.get("intents") or {}, source.get("task_nodes") or [],
+                             (bundle.get("atomic") or {}).get("atomic_actions") or [])
+        except (ValueError, KeyError, TypeError) as exc:
+            bundle["intent_alignment"] = {"updated_ids": [], "retained_ids": [i["id"] for i in items(bundle["intents"])],
+                                         "issues": [{"reason": "invalid_hierarchical_sync", "detail": str(exc)}],
+                                         "graph_revisions": deepcopy(sync.get("revisions") or {})}
+            return
+    by_id = {i["id"]: i for i in items({"intents": intents})}
+    rows = list(rows) + list(sync.get("subtask_updates") or [])
+    if not children and not rows and len(intents) == 1 and sync.get("intent_confidence_after") is not None:
         rows = [{"intent_id": intents[0]["id"], "confidence": sync["intent_confidence_after"],
                  "reason": sync.get("confidence_rationale", ""), "basis": "legacy_single_candidate"}]
     applied, issues = [], []
@@ -38,13 +52,17 @@ def apply_intent_updates(bundle: dict) -> None:
         item = by_id[key]
         item.setdefault("confidence_before_sync", item.get("confidence"))
         item["confidence"] = confidence
+        item["confidence_after_sync"] = confidence
+        item["sync_checks"] = deepcopy(row.get("checks") or [])
+        if "status" in row:
+            item["observation_status"] = row["status"]
         item["sync_reason"] = row.get("reason", "")
         item["confidence_kind"] = "model_assessment_not_calibrated_probability"
         applied.append(key)
     # Keep all hypotheses, including low-confidence / contradicted candidates.
     intents.sort(key=lambda x: (-float(x.get("confidence", 0)), x["id"]))
     bundle["intent_alignment"] = {
-        "updated_ids": applied, "retained_ids": [x["id"] for x in intents], "issues": issues,
+        "updated_ids": applied, "retained_ids": [x["id"] for x in items({"intents": intents})], "issues": issues,
         "graph_revisions": deepcopy(sync.get("revisions") or {}),
         "revision_policy": "Suggestions require evidence-grounded scope; no fabricated actions.",
     }

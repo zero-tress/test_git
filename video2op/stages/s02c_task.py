@@ -16,7 +16,6 @@ from .common import (
     atomic_table,
     expand_parts,
     fill,
-    intents_table,
     load_prompt,
     normalize_part,
     parts_functions,
@@ -126,7 +125,7 @@ def run(client: VLMClient, ctx: dict) -> dict:
         DURATION=f"{meta['duration']:.1f}",
         VIEWPOINT=viewpoint.get("label_cn", "未知"),
         SCENE=viewpoint.get("scene", ""),
-        INTENTS=intents_table((ctx.get("intents") or {}).get("intents") or []),
+        INTENTS="本阶段是独立观察分支，不提供任务意图。仅按原子动作证据聚合，推断项必须标明。",
         ATOMIC_TABLE=atomic_table(atomic["atomic_actions"]),
         PART_FUNCTIONS=parts_functions(),
     )

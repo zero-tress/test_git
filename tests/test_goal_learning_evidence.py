@@ -149,7 +149,19 @@ def test_full_pipeline_with_scope_stage_offline(tmp_path, monkeypatch):
         (pipeline.s08_scope, {"objects": [], "subtasks": []})]
     for stage, payload in replacements:
         monkeypatch.setattr(stage, "run", lambda *args, value=payload: deepcopy(value))
+    # Synthetic model contract only; this fixture does not analyze a real video.
+    def model_stub(self, **kwargs):
+        assert kwargs["stage"] == "s09_case_graph"
+        payload = {"schema_version": "case_graph.v1", "nodes": [], "relations": [],
+                   "task_outcome": {"value": "unknown", "evidence_refs": []},
+                   "condition_observations": [], "unresolved": ["Synthetic observation fixture"]}
+        kwargs["validator"](payload)
+        return payload
+    monkeypatch.setattr(pipeline.VLMClient, "ask", model_stub)
     result = pipeline.run_case(video, verbose=False)
     assert result["validation"]["passed"]
     assert result["intents"]["intents"][0]["confidence"] == 0.6
     assert (tmp_path/"out/v_semantic_v3/stages/s08_scope.json").exists()
+    assert (tmp_path/"out/v_semantic_v3/G_case.json").is_file()
+    assert (tmp_path/"out/v_semantic_v3/G_case.svg").is_file()
+    assert result["case_graph"]["provenance"]["observation_independence"] == "frozen_pre_sync"

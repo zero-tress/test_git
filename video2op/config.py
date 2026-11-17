@@ -60,9 +60,9 @@ FORBIDDEN_PARAM_PATTERNS = [
 
 # 精简输出而不跳过分析阶段；预算是上限，不是期望输出长度。
 STAGE_MAX_TOKENS = {
-    "s01_viewpoint": 1024, "s02a_intent": 2048,
+    "s01_viewpoint": 1024, "s02a_intent": 4096,
     "s02b_atomic": 12000, "s02c_task": 8000, "s02d_link": 6000,
-    "s03_sync": 3072, "s04_conditions": 10000, "s05_rules": 6000,
+    "s03_sync": 8192, "s04_conditions": 10000, "s05_rules": 6000,
     "s07_purify": 4096,
 }
 CACHE_VERSION = "operation-v2"
