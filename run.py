@@ -11,6 +11,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -18,7 +19,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from video2op.llm import LLMError
-from video2op.pipeline import run_all, run_case
+from video2op.single_video.pipeline import run_all, run_case
 
 
 def export_clips(bundles, padding):
@@ -36,6 +37,7 @@ def main() -> int:
     ap.add_argument("--force", action="store_true", help="忽略模型缓存重新分析")
     ap.add_argument("--output-root", type=Path, help="另存本次运行产物的目录")
     ap.add_argument("--description", type=Path, help="UTF-8文字背景文件；与视频观察证据分开")
+    ap.add_argument("--graph-requirements", type=Path, help="显式任务政策；未指定时使用通用视频契约")
     ap.add_argument("--export-clips", action="store_true", help="兼容旧参数；单视频clip目录默认生成")
     ap.add_argument("--no-clips", action="store_true", help="只生成clip时间索引，不导出MP4")
     ap.add_argument("--clip-padding", type=float, default=.25, help="片段前后保留上下文秒数")
@@ -44,6 +46,10 @@ def main() -> int:
     if not math.isfinite(args.clip_padding) or args.clip_padding < 0:
         ap.error("--clip-padding必须为非负有限数值")
     description = args.description.read_text(encoding="utf-8") if args.description else None
+    requirements = json.loads(args.graph_requirements.read_text(encoding="utf-8")) if args.graph_requirements else None
+    if requirements is not None and not isinstance(requirements, dict):
+        ap.error("graph requirements must be a JSON object")
+    policy_kwargs = {"graph_requirements": requirements} if requirements is not None else {}
     from video2op import config
     config.OUTPUT_DIR = (args.output_root.resolve() if args.output_root else
                          config.ROOT / "output" / "runs" / datetime.now().strftime("%Y%m%d_%H%M%S_%f"))
@@ -52,10 +58,10 @@ def main() -> int:
 
     try:
         if args.target == "all":
-            results = run_all(force=args.force, export_clips=not args.no_clips, clip_padding=args.clip_padding, **({"description": description} if description is not None else {}))
+            results = run_all(force=args.force, export_clips=not args.no_clips, clip_padding=args.clip_padding, **policy_kwargs, **({"description": description} if description is not None else {}))
             failed = [r for r in results if r.get("errors") or not r.get("validation", {}).get("passed")]
             return 1 if failed or any(r.get("clip_export", {}).get("status") == "needs_review" for r in results) else 0
-        bundle = run_case(Path(args.target), force=args.force, export_clips=not args.no_clips, clip_padding=args.clip_padding, **({"description": description} if description is not None else {}))
+        bundle = run_case(Path(args.target), force=args.force, export_clips=not args.no_clips, clip_padding=args.clip_padding, **policy_kwargs, **({"description": description} if description is not None else {}))
         if not bundle.get("validation", {}).get("passed"):
             print("提示：校验未全部通过，详见产物的 validation 与 needs_review 字段")
         return 1 if bundle.get("errors") or not bundle.get("validation", {}).get("passed") or bundle.get("clip_export", {}).get("status") == "needs_review" else 0

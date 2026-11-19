@@ -7,9 +7,9 @@ from test_arm_hand_scope import example
 from test_cross_video_generalization import instance, knowledge
 
 from video2op import semantic
-from video2op.case_outputs import chronology, export_case_clips, export_metadata, plan_clips, safe_name
+from video2op.single_video.case_outputs import chronology, export_case_clips, export_metadata, plan_clips, safe_name
 from video2op.cross_video_delivery import export as export_cross
-from video2op.pipeline import build_learning_graph
+from video2op.single_video.pipeline import build_learning_graph
 from video2op.skill_library import FIELDS, build, load
 
 
@@ -86,7 +86,7 @@ def test_state_only_or_inferred_opening_has_no_fabricated_clip():
 
 
 def test_clip_filename_and_manifest_are_stable_and_keep_source_time(tmp_path, monkeypatch):
-    from video2op import case_outputs
+    from video2op.single_video import case_outputs
     b = case()
     source = tmp_path/"原视频.mp4"
     source.write_bytes(b"source evidence")

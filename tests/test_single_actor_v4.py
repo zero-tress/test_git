@@ -8,8 +8,8 @@ import yaml
 from test_arm_hand_scope import action, example
 
 from video2op import semantic
-from video2op.pipeline import build_learning_graph
-from video2op.stages import s02c_task
+from video2op.single_video.pipeline import build_learning_graph
+from video2op.single_video.stages import s02c_task
 
 
 def graph():

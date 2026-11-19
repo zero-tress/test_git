@@ -3,8 +3,8 @@ from copy import deepcopy
 
 import pytest
 
-from video2op.pipeline import build_legacy_execution_graph as build_operation_graph
-from video2op.stages import s02b_atomic, s02b_merge, s02c_task
+from video2op.single_video.pipeline import build_legacy_execution_graph as build_operation_graph
+from video2op.single_video.stages import s02b_atomic, s02b_merge, s02c_task
 
 
 def action(i, before=None, after=None, inferred=False, start=0, end=1):

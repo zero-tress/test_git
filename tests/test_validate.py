@@ -9,8 +9,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from video2op.pipeline import set_by_path
-from video2op.stages import s06_validate as v
+from video2op.single_video.pipeline import set_by_path
+from video2op.single_video.stages import s06_validate as v
 
 
 def _bundle(actions=None, intents=None, nodes=None):

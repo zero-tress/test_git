@@ -2,7 +2,8 @@ import json
 
 import pytest
 
-from video2op import config, media, pipeline
+from video2op import config, media
+from video2op.single_video import pipeline
 
 
 def patch_media(tmp_path, monkeypatch):
@@ -67,14 +68,22 @@ def test_complete_offline_pipeline_exports_overall_motion_and_timing(tmp_path, m
     for stage, payload in replacements:
         monkeypatch.setattr(stage, "run", lambda *a, value=payload: value)
     # Synthetic model contract only; this fixture does not analyze a real video.
+    operations = []
     def model_stub(self, **kwargs):
+        if kwargs["stage"] == "s09_scope_roles":
+            from test_case_graph import scope_stub
+            result = scope_stub(kwargs, "independent")
+            operations.extend(ref for group in result["groups"] for ref in group["operation_refs"])
+            return result
         assert kwargs["stage"] == "s09_case_graph"
-        payload = {"schema_version": "case_graph.v1", "nodes": [], "relations": [],
+        payload = {"schema_version": "case_graph.v1", "contract_version": "video_learning.logic.v2", "nodes": [], "relations": [],
                    "task_outcome": {"value": "unknown", "evidence_refs": []},
                    "condition_observations": [], "unresolved": ["Synthetic observation fixture"]}
+        payload["excluded_operations"] = [{"operation_ref": ref, "reason": "Synthetic display fixture"} for ref in operations]
         kwargs["validator"](payload)
         return payload
     monkeypatch.setattr(pipeline.VLMClient, "ask", model_stub)
+    monkeypatch.setattr(media, "make_clip", lambda source, *a, **kw: source)
     bundle = pipeline.run_case(video, verbose=False)
     out = config.OUTPUT_DIR / "sample_semantic_v3"
     for name in ("result.json", "operations.svg", "workbench.html",

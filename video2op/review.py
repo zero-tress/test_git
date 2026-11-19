@@ -3,7 +3,7 @@ from copy import deepcopy
 from .task_observations import OUTCOMES
 
 def validate_reviewed(rows, instances):
-    from .stages.s08_scope import _evidence
+    from .single_video.stages.s08_scope import _evidence
     by_id = {i["instance_id"]: i for i in instances}
     result = []
     seen = {}

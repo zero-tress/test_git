@@ -16,7 +16,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from video2op import operations, program, render
-from video2op.stages import s06_validate
+from video2op.single_video.stages import s06_validate
 
 
 def _act(i: int, part: str, action: str, start: float, end: float,

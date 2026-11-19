@@ -14,8 +14,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from video2op import config, semantic
 from video2op.intent_hierarchy import validate_intents
 from video2op.llm import VLMClient
-from video2op.pipeline import build_learning_graph
-from video2op.stages import s02a_intent, s03_sync
+from video2op.single_video.pipeline import build_learning_graph
+from video2op.single_video.stages import s02a_intent, s03_sync
 
 
 def main():

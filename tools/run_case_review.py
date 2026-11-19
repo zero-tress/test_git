@@ -8,7 +8,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from video2op import config
-from video2op.pipeline import run_case
+from video2op.single_video.pipeline import run_case
 
 video, destination = Path(sys.argv[1]), Path(sys.argv[2])
 destination.mkdir(parents=True, exist_ok=True)

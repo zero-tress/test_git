@@ -8,7 +8,7 @@ from copy import deepcopy
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from video2op import config, media
 from video2op.llm import VLMClient
-from video2op.stages import s02a_intent, s03_sync, s05_rules
+from video2op.single_video.stages import s02a_intent, s03_sync, s05_rules
 from video2op.learning_alignment import apply_intent_updates
 
 ROOT = Path(__file__).resolve().parents[1]

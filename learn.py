@@ -9,8 +9,8 @@ from pathlib import Path
 from video2op import semantic
 from video2op.knowledge import aggregate, extract, render, video_identity
 from video2op.llm import VLMClient
-from video2op.pipeline import build_learning_graph
-from video2op.stages import s08_scope
+from video2op.single_video.pipeline import build_learning_graph
+from video2op.single_video.stages import s08_scope
 
 
 def load_reviewed(path: Path | None, cases: list[dict]) -> list[dict]:
@@ -138,7 +138,7 @@ def main(argv=None) -> int:
                 u["original_analysis_source"] = u.get("analysis_source", u["source"])
                 u["analysis_source"] = str(destination / "result.json")
         track_inputs.append(split(b, str(destination / "result.json"), learning_case, b.get("learning_goal")))
-        from video2op.case_outputs import attach_classified_clips
+        from video2op.single_video.case_outputs import attach_classified_clips
         from video2op.skill_clips import save
 
         final_tracks = track_inputs[-1]

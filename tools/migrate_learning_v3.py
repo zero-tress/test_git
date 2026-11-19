@@ -8,7 +8,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from video2op import semantic
-from video2op.pipeline import build_learning_graph
+from video2op.single_video.pipeline import build_learning_graph
 
 
 def main():

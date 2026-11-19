@@ -9,8 +9,8 @@ from test_operation_v2 import Response
 
 from video2op import config, local_review, media, sampling, workbench
 from video2op.llm import VLMClient
-from video2op.pipeline import build_learning_graph
-from video2op.stages import s02b_atomic
+from video2op.single_video.pipeline import build_learning_graph
+from video2op.single_video.stages import s02b_atomic
 
 
 @pytest.fixture

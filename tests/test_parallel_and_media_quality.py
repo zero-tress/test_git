@@ -3,7 +3,8 @@ from types import SimpleNamespace
 
 from test_goal_effect_learning import scoped_case
 
-from video2op import evidence, knowledge, media_quality, pipeline
+from video2op import evidence, knowledge, media_quality
+from video2op.single_video import pipeline
 from video2op.llm import VLMClient
 
 

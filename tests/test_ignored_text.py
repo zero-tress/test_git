@@ -19,8 +19,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from video2op import ignored_parts
-from video2op.pipeline import build_legacy_execution_graph as build_operation_graph
-from video2op.stages import s06_validate
+from video2op.single_video.pipeline import build_legacy_execution_graph as build_operation_graph
+from video2op.single_video.stages import s06_validate
 from video2op.vocab import BODY_PARTS, IGNORED_PARTS, IGNORED_TEXT_WORDS
 
 

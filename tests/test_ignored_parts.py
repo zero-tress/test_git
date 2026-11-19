@@ -14,7 +14,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from video2op.stages import s02a_intent, s02b_atomic, s02b_merge, s02c_task, s02d_link, s02e_prior
+from video2op.single_video.stages import s02a_intent, s02b_atomic, s02b_merge, s02c_task, s02d_link, s02e_prior
 
 
 def test_s02b_drops_head_actions():

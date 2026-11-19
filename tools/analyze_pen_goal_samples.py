@@ -9,7 +9,7 @@ from urllib.parse import urlparse
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from video2op import config
 from video2op.llm import VLMClient
-from video2op.pipeline import run_case
+from video2op.single_video.pipeline import run_case
 from video2op.skill_clips import save
 
 

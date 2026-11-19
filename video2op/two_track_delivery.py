@@ -96,7 +96,7 @@ def attach_guards(knowledge, guards):
 
 def export_pool_clips(knowledge, out, enabled=True):
     """One source instance is one trial, even when several contexts are exported."""
-    from .case_outputs import analysis_stamp, safe_name
+    from .single_video.case_outputs import analysis_stamp, safe_name
 
     out = Path(out)
     manifest_path = out / "clip_index.json"

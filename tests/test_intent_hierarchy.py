@@ -7,7 +7,7 @@ import pytest
 from video2op.intent_hierarchy import CHECK_KEYS, export_hierarchy, validate_intents, validate_updates
 from video2op.learning_alignment import apply_intent_updates
 from video2op.render import intent_hierarchy_html, intent_scores_svg
-from video2op.stages import s02a_intent, s03_sync
+from video2op.single_video.stages import s02a_intent, s03_sync
 
 
 def case():

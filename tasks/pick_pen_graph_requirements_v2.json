@@ -1,0 +1,35 @@
+{
+  "scope": "拿起笔任务：单视频线性链 + 跨视频条件分支合并",
+  "origin": "explicit_user_requirement",
+  "task_policy": {
+    "goal_effect": "目标笔被持有并离开原支撑",
+    "note": "三个视频说的都是抓起红笔。目标效果达成后出现的释放/放置不属于本任务范围，不得建成技能。",
+    "forbidden_roles": ["release", "place"],
+    "forbidden_reason": "目标笔被持有并离开原支撑即任务结束；其后的释放或放置超出本任务范围"
+  },
+  "single_video": {
+    "chain": "linear",
+    "start_role": "approach",
+    "add_approach_when_unobserved": true,
+    "note": "单个视频只画它自己发生的动作：有则画，无则不画。不画没发生的条件分支；分支留给跨视频归纳。"
+  },
+  "cross_video": {
+    "entry_role": "approach",
+    "share_nodes_across_videos": true,
+    "keep_same_video_occurrences_distinct": true,
+    "branch_policy": {
+      "mode": "clearance_when_grasp_condition_fails",
+      "condition_gate_before": "grasp",
+      "prepare_branch": "clearance",
+      "reapproach_after_prepare": true,
+      "recheck_after_reapproach": true,
+      "allow_precedence_rewrite": true
+    }
+  },
+  "presentation_policy": {
+    "show_source_labels": false,
+    "false_branch_lane": "upper",
+    "node_labels": "semantic_action_only",
+    "show_seven_tuple": true
+  }
+}

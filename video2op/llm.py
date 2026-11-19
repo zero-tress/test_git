@@ -188,6 +188,8 @@ class VLMClient:
             data = path.read_bytes()
             label = (f'源视频帧 {image["frame_id"]}；全局时间 {image["timestamp"]:.6f}s。'
                      '选帧阶段不证明接触或动作；请读取画面。')
+            if image.get("sample_id"):
+                label += f' 样本 {image["sample_id"]}；上下文 {image.get("context_phase", "unknown")}。'
             vid_id += "#" + hashlib.sha256(data + label.encode()).hexdigest()
             image_inputs.append((data, label, "image/png" if path.suffix.lower() == ".png" else "image/jpeg"))
         key = self._fingerprint(stage, system, user_text, vid_id, temperature, budget)
@@ -266,7 +268,9 @@ class VLMClient:
                        "max_tokens": budget,
                        "chat_template_kwargs": {"enable_thinking": False}}
             metric = {"stage": stage, "attempt": attempt + 1, "cache_hit": False,
-                      "max_tokens": budget, "input_chars": len(system) + len(user_text)}
+                      "max_tokens": budget, "input_chars": len(system) + len(user_text),
+                      "video_bytes": len(video_bytes or b""), "image_count": len(image_inputs),
+                      "media_fingerprint": vid_id}
             t0 = time.perf_counter()
             self.stats["calls"] += 1
             content = None
@@ -300,6 +304,8 @@ class VLMClient:
                 dt = time.perf_counter() - t0
                 cache_path.write_text(json.dumps(
                     {"stage": stage, "result": result, "complete": True,
+                     "video_bytes": len(video_bytes or b""), "image_count": len(image_inputs),
+                     "media_fingerprint": vid_id,
                      "model": self.model, "endpoint": self.base_url,
                      "request_fingerprint": key, "raw_response": content,
                      "prior_repair_records": repair_records, "repair_errors": prior_errors + errors,

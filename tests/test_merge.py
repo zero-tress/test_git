@@ -9,7 +9,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from video2op.stages import s02b_merge as m
+from video2op.single_video.stages import s02b_merge as m
 
 
 def _win(index: int, start: float, dur: float, actions: list[dict], rels: list[dict] | None = None):

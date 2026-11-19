@@ -5,9 +5,9 @@ from test_arm_hand_scope import action, example
 from test_goal_effect_learning import observation, scope_context, scoped_case
 
 from video2op import condition_induction, knowledge, semantic
-from video2op.pipeline import build_learning_graph
-from video2op.stages import s08_scope
-from video2op.stages.common import ValidationFailure
+from video2op.single_video.pipeline import build_learning_graph
+from video2op.single_video.stages import s08_scope
+from video2op.single_video.stages.common import ValidationFailure
 
 
 def test_catalog_restores_exact_source_fields_without_copying_model_prose():
@@ -128,7 +128,8 @@ def test_export_declares_source_final_and_export_namespaces():
 
 
 def test_full_pipeline_with_scope_stage_offline(tmp_path, monkeypatch):
-    from video2op import config, media, pipeline
+    from video2op import config, media
+    from video2op.single_video import pipeline
     b = example()
     video = tmp_path / "v.mp4"
     video.write_bytes(b"fixture")
@@ -150,14 +151,22 @@ def test_full_pipeline_with_scope_stage_offline(tmp_path, monkeypatch):
     for stage, payload in replacements:
         monkeypatch.setattr(stage, "run", lambda *args, value=payload: deepcopy(value))
     # Synthetic model contract only; this fixture does not analyze a real video.
+    operations = []
     def model_stub(self, **kwargs):
+        if kwargs["stage"] == "s09_scope_roles":
+            from test_case_graph import scope_stub
+            result = scope_stub(kwargs, "independent")
+            operations.extend(ref for group in result["groups"] for ref in group["operation_refs"])
+            return result
         assert kwargs["stage"] == "s09_case_graph"
-        payload = {"schema_version": "case_graph.v1", "nodes": [], "relations": [],
+        payload = {"schema_version": "case_graph.v1", "contract_version": "video_learning.logic.v2", "nodes": [], "relations": [],
                    "task_outcome": {"value": "unknown", "evidence_refs": []},
                    "condition_observations": [], "unresolved": ["Synthetic observation fixture"]}
+        payload["excluded_operations"] = [{"operation_ref": ref, "reason": "Synthetic display fixture"} for ref in operations]
         kwargs["validator"](payload)
         return payload
     monkeypatch.setattr(pipeline.VLMClient, "ask", model_stub)
+    monkeypatch.setattr(media, "make_clip", lambda source, *a, **kw: source)
     result = pipeline.run_case(video, verbose=False)
     assert result["validation"]["passed"]
     assert result["intents"]["intents"][0]["confidence"] == 0.6

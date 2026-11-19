@@ -8,7 +8,7 @@ from pathlib import Path
 
 from . import config, grasp_preparation, media, sampling, semantic
 from .evidence import observed_state
-from .stages import s02b_atomic, s02b_merge
+from .single_video.stages import s02b_atomic, s02b_merge
 
 SYSTEM = """你是局部视频证据复查员。只报告实际可见的信息，不按任务常识补造动作。
 视频片段时间从0开始；图片标签给出源视频全局时间，不可混用。

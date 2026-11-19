@@ -150,7 +150,7 @@ def test_reference_does_not_upgrade_every_semantic_effect():
     assert k["validation"]["verification_basis"]["unverified_instances"]
 
 def test_description_is_background_with_explicit_provenance(monkeypatch,tmp_path):
-    from video2op.stages import s02a_intent
+    from video2op.single_video.stages import s02a_intent
     monkeypatch.setattr(s02a_intent.media,"make_clip",lambda *a,**k:tmp_path/"video.mp4")
     captured=[]
     class Client:

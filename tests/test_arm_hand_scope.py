@@ -5,8 +5,8 @@ from copy import deepcopy
 import pytest
 
 from video2op import arm_hand, semantic
-from video2op.pipeline import build_learning_graph
-from video2op.stages import s02b_atomic
+from video2op.single_video.pipeline import build_learning_graph
+from video2op.single_video.stages import s02b_atomic
 
 
 def action(i, executor, name, start, end, obj="杯子", after="", before="", inferred=False):

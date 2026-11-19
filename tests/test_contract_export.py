@@ -3,8 +3,8 @@
 这些用例都是确定性的（不调用模型），覆盖的是"图学出来了，但执行层能不能接住"这一段。
 """
 from video2op import contract, expand, predicates
-from video2op.pipeline import build_legacy_execution_graph as build_operation_graph
-from video2op.stages import s06_validate
+from video2op.single_video.pipeline import build_legacy_execution_graph as build_operation_graph
+from video2op.single_video.stages import s06_validate
 from video2op.vocab import constraint_kind, hold_category, is_self_hold
 
 

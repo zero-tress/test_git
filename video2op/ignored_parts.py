@@ -27,7 +27,7 @@ purge() 在 build_operation_graph() 入口调用一次：在线流水线与离�
 
 from __future__ import annotations
 
-from .stages.common import normalize_part
+from .single_video.stages.common import normalize_part
 from .vocab import IGNORED_PARTS, IGNORED_TEXT_WORDS
 
 _SENT_END = "，。；：！？\n"     # 分句边界（顿号不算：它连接的是并列词，不是分句）

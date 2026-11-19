@@ -151,7 +151,7 @@ def export_clips(bundle, out, enabled=True):
     import json
     from pathlib import Path
 
-    from .case_outputs import analysis_stamp, safe_name
+    from .single_video.case_outputs import analysis_stamp, safe_name
     from .skill_clips import cut, save, sha256
 
     out = Path(out)

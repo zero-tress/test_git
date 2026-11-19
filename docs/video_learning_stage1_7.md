@@ -1,5 +1,7 @@
 # 第1—7步视频知识学习
 
+> 本文记录 2026-11-17 的版本。2026-11-18 的逻辑契约、媒体对比、成功流程筛选和续跑规则见 [v2 使用说明](video_learning_logic_v2.md)。历史结果不会因源码更新自动升级。
+
 本轮入口为 /home/wj/codex-workspace/videostudy_operation/output/意图拿笔2/index.html。
 旧 output/抓取2_semantic_v3 和 output/意图拿笔 保留；新批次不替换已有别名。
 

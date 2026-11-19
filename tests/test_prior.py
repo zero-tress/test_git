@@ -9,7 +9,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from video2op.stages import s02e_prior as p
+from video2op.single_video.stages import s02e_prior as p
 
 
 def _walk_actions():

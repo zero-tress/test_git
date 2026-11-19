@@ -71,10 +71,10 @@ def main():
     ("⑦",["类型与引用一致性","前后置条件衔接校验","时序一致性校验","因果合理性","来源与置信记录","知识库固化与版本检索"],[1,1,1,0,1,1]),
     ("A",["Skill Tuple七字段","实现方式集合R","公共及分支语义约束","评价规则Evaluator","时序知识与来源"],[1,1,0,1,0])]
     evidence_by_box = {
-        "①": ["run.py", "video2op/stages/s02a_intent.py", str(out.relative_to(ROOT)/"model_validation/results.json")],
-        "②a": ["video2op/stages/s03_sync.py", "video2op/learning_alignment.py", str(out.relative_to(ROOT)/"model_validation/results.json")],
+        "①": ["run.py", "video2op/single_video/stages/s02a_intent.py", str(out.relative_to(ROOT)/"model_validation/results.json")],
+        "②a": ["video2op/single_video/stages/s03_sync.py", "video2op/learning_alignment.py", str(out.relative_to(ROOT)/"model_validation/results.json")],
         "②b": ["video2op/semantic.py", str(out.relative_to(ROOT)/"knowledge_all_16/cases"), str(out.relative_to(ROOT)/"knowledge_development/knowledge.json")],
-        "③": ["video2op/stages/s03_sync.py", "video2op/semantic_checks.py", str(out.relative_to(ROOT)/"delivery_validation.json")],
+        "③": ["video2op/single_video/stages/s03_sync.py", "video2op/semantic_checks.py", str(out.relative_to(ROOT)/"delivery_validation.json")],
         "④": ["video2op/task_observations.py", "video2op/condition_induction.py", str(out.relative_to(ROOT)/"knowledge_development/effective_conditions.json")],
         "⑤": ["video2op/temporal_learning.py", str(out.relative_to(ROOT)/"knowledge_development/constraints.json"), str(out.relative_to(ROOT)/"knowledge_development/evaluators.json")],
         "⑥": ["video2op/holdout.py", str(out.relative_to(ROOT)/"holdout_evaluation.json"), str(out.relative_to(ROOT)/"cluster_comparison.json")],

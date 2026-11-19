@@ -9,8 +9,8 @@ import requests
 from video2op import config, media
 from video2op.abstraction import validate_semantics
 from video2op.llm import LLMError, VLMClient
-from video2op.pipeline import build_legacy_execution_graph as build_operation_graph
-from video2op.stages import s02b_atomic, s02e_prior, s04_conditions
+from video2op.single_video.pipeline import build_legacy_execution_graph as build_operation_graph
+from video2op.single_video.stages import s02b_atomic, s02e_prior, s04_conditions
 
 
 def action(i, executor, name, start=0, end=1, **kw):

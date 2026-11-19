@@ -8,7 +8,7 @@ from test_arm_hand_scope import example
 from test_single_actor_v4 import graph
 
 from video2op import semantic
-from video2op.pipeline import build_learning_graph
+from video2op.single_video.pipeline import build_learning_graph
 
 
 @pytest.mark.parametrize("overlapping_observation", [False, True])

@@ -5,8 +5,17 @@ from copy import deepcopy
 
 import pytest
 
-from video2op.case_graph import _svg_text_lines, _svg_text_width, export, learn, svg, validate
-from video2op.case_graph import _operation_flow as case_graph_flow
+from video2op.single_video.case_graph import export, learn, svg, validate
+from video2op.presentation.case_graph_render import _svg_text_lines, _svg_text_width
+from video2op.presentation.case_graph_render import _operation_flow as case_graph_flow
+
+
+def scope_stub(request, scope="goal"):
+    operations = json.loads(request["user_text"])["observed_operations"]
+    result = {"groups": [{"operation_refs": [op["id"]], "scope": scope,
+                          "reason": "Synthetic scope test", "downstream_refs": []} for op in operations]}
+    request["validator"](result)
+    return result
 
 
 def fixture():
@@ -112,10 +121,17 @@ def test_nonexecution_is_censored_and_has_no_observed_realization():
 
 def test_legacy_observation_independence_is_explicit_and_model_semantics_are_unchanged():
     bundle, graph = fixture()
+    graph["contract_version"] = "video_learning.logic.v2"
+    for node in graph["nodes"]:
+        node.update(attempt_id=node["id"], actual_postconditions=["synthetic observed result"])
+        for r in node["R"]:
+            r.update(completeness="complete", effect_evidence_refs=r["atomic_refs"])
     class Client:
         model = "qwen3.8-27b"
         base_url = "http://127.0.0.1:8032"
         def ask(self, **kwargs):
+            if kwargs["stage"] == "s09_scope_roles":
+                return scope_stub(kwargs)
             assert kwargs["stage"] == "s09_case_graph"
             kwargs["validator"](graph)
             return deepcopy(graph)
@@ -277,8 +293,10 @@ def test_svg_shows_operation_subgraph_with_hold_and_parallel_marks():
     rendered = svg(graph, name="样例", operations=bundle["operations"])
     ET.fromstring(rendered)
     assert "实现子图" in rendered
-    assert "保持→" in rendered
+    assert 'class="gs-hold"' in rendered
     assert 'class="gs-op"' in rendered
+    # 图上不再出现“保持”字样：持续关系只用线与悬停说明表达
+    assert "保持" not in rendered
 
 
 def test_flow_layers_follow_global_sequence_not_just_skill_members():
@@ -301,7 +319,167 @@ def test_hold_lane_and_parallel_marks_are_rendered():
     bundle, graph = ordered_fixture()
     rendered = svg(graph, name="样例", operations=bundle["operations"])
     ET.fromstring(rendered)
-    assert "保持" in rendered
+    assert "保持" not in rendered
     assert "gs-hold" in rendered
     assert "∥" in rendered or "平行" in rendered
     assert "经未显示的中间步骤" in rendered or "step_2" in rendered
+
+
+def test_rule_only_skill_is_candidate_and_never_counts_as_observation():
+    bundle, graph = fixture()
+    rule = deepcopy(graph["nodes"][0])
+    rule.update(id="S0", name="靠近目标", status="candidate", outcome="unknown",
+                evidence_refs=[], occurrence="rule_only", R=[],
+                reason="入口政策要求且执行器确有接近移动；模型未识别到独立原子动作段，未计为已观察")
+    graph["nodes"].insert(0, rule)
+    graph["relations"].insert(0, {"from": "S0", "to": "S1", "relation": "sequence",
+                                  "basis": "declared_rule", "source_refs": [], "status": "candidate",
+                                  "reason": "入口政策要求的初始靠近"})
+    result = validate(graph, bundle)
+    assert result["rule_only_skills"] == ["S0"]
+    rendered = svg(graph, name="样例")
+    assert "规则补充 · 未直接观察" in rendered
+
+
+def test_rule_only_skill_cannot_borrow_evidence_or_claim_success():
+    bundle, graph = fixture()
+    rule = deepcopy(graph["nodes"][0])
+    rule.update(id="S0", name="靠近目标", status="candidate", outcome="unknown",
+                evidence_refs=[], occurrence="rule_only", R=[],
+                reason="入口政策要求但模型未识别到独立原子动作段")
+    graph["nodes"].insert(0, rule)
+    graph["relations"].insert(0, {"from": "S0", "to": "S1", "relation": "sequence",
+                                  "basis": "declared_rule", "source_refs": [], "status": "candidate",
+                                  "reason": "入口政策要求的初始靠近"})
+    for change in ("evidence", "observed_relation", "success"):
+        bad = deepcopy(graph)
+        if change == "evidence":
+            bad["nodes"][0]["evidence_refs"] = [1]
+        elif change == "observed_relation":
+            bad["relations"][0].update(basis="observed_order", status="observed", source_refs=[1])
+        else:
+            bad["nodes"][0].update(status="observed", outcome="success")
+        with pytest.raises(ValueError, match="rule-only"):
+            validate(bad, bundle)
+
+
+def test_gcase_svg_is_a_start_to_end_flow_with_gates():
+    _, graph = fixture()
+    rendered = svg(graph, name="样例")
+    ET.fromstring(rendered)
+    assert "开始" in rendered and "结束" in rendered
+    assert 'class="gs-node"' in rendered and 'class="gs-gate"' in rendered
+    assert "门控 ①" in rendered
+    # 开始/结束固定画在链路两端，而不是只画技能集合
+    assert rendered.count('data-skill="__start__"') == 1
+    assert rendered.count('data-skill="__end__"') == 1
+
+
+def policy_fixture():
+    """抓取1 形态：开始 → 靠近(规则补充) → 清障 → 靠近(观察) → 抓取 → 搬运。"""
+    bundle = {
+        "pipeline": {"model": "qwen3.8-27b", "base_url": "http://127.0.0.1:8032"},
+        "source_video_sha256": "abc123",
+        "intents": {"intents": [{"id": "task", "statement": "取目标", "confidence": 0.7}]},
+        "atomic": {"atomic_actions": [
+            {"id": i, "inferred": False, "start": i - 1, "end": i} for i in range(1, 6)
+        ]},
+        "operations": {
+            "nodes": [
+                {"id": "step_1", "name": "靠近玻璃杯", "atomic_refs": [1]},
+                {"id": "step_2", "name": "抓取玻璃杯", "atomic_refs": [2]},
+                {"id": "step_3", "name": "移动玻璃杯", "atomic_refs": [3]},
+                {"id": "step_4", "name": "放开玻璃杯", "atomic_refs": [4]},
+                {"id": "step_5", "name": "靠近红笔", "atomic_refs": [5]},
+            ],
+            "edges": [
+                {"from": "step_1", "to": "step_2", "relation": "sequence"},
+                {"from": "step_2", "to": "step_3", "relation": "sequence"},
+                {"from": "step_3", "to": "step_4", "relation": "sequence"},
+            ],
+        },
+    }
+
+    def node(sid, name, role, atoms):
+        ops = [f"step_{a}" for a in atoms]
+        return {"id": sid, "name": name, "role": role, "purpose": f"{name}的目的",
+                "expected_effects": ["效果"], "status": "observed", "occurrence": "observed",
+                "X": {"role": "左手"}, "O": {"target": "红笔"},
+                "C_pre": ["进入条件"], "C_const": [], "C_post": ["效果"],
+                "E": {"completion": ["完成"], "process_constraint": [],
+                      "implementation_applicability": ["适用"], "binding_status": "unbound",
+                      "detector_ref": None, "controller_ref": None},
+                "R": [{"id": f"R_{sid}", "name": f"{name}实现", "operation_refs": ops,
+                       "atomic_refs": atoms, "status": "observed"}],
+                "outcome": "success", "evidence_refs": atoms, "intent_refs": ["task"]}
+
+    clearance = node("S2", "清障", "clearance", [1, 2, 3, 4])
+    approach2 = node("S3", "靠近", "approach", [5])
+    # Target trials occur after reapproach; do not borrow obstacle actions 2/3.
+    bundle["atomic"]["atomic_actions"].extend(
+        {"id": i, "inferred": False, "start": i - 1, "end": i} for i in (6, 7))
+    bundle["operations"]["nodes"].extend([
+        {"id": "step_6", "name": "抓取红笔", "atomic_refs": [6]},
+        {"id": "step_7", "name": "搬运红笔", "atomic_refs": [7]}])
+    grasp = node("S4", "抓取", "grasp", [6])
+    transport = node("S5", "搬运", "transport", [7])
+    rule = {**node("S1", "靠近", "approach", []), "status": "candidate", "outcome": "unknown",
+            "evidence_refs": [], "occurrence": "rule_only", "R": [], "C_pre": [],
+            "reason": "执行器确有接近移动，但模型未识别到独立原子动作段；未计为已观察"}
+    graph = {"schema_version": "case_graph.v1",
+             "nodes": [rule, clearance, approach2, grasp, transport],
+             "relations": [
+                 {"from": "S1", "to": "S2", "relation": "sequence", "basis": "declared_rule",
+                  "source_refs": [], "status": "candidate", "reason": "起点后的第一步清障"},
+                 {"from": "S2", "to": "S3", "relation": "sequence", "basis": "observed_order",
+                  "source_refs": [4, 5], "status": "observed", "reason": "清障后再次靠近"},
+                 {"from": "S3", "to": "S4", "relation": "sequence", "basis": "observed_order",
+                   "source_refs": [5, 6], "status": "observed", "reason": "靠近后抓取"},
+                 {"from": "S4", "to": "S5", "relation": "sequence", "basis": "observed_order",
+                   "source_refs": [6, 7], "status": "observed", "reason": "抓取后搬运"},
+             ],
+              "task_outcome": {"value": "success", "evidence_refs": [6, 7], "reason": "目标被取走"},
+             "condition_observations": [], "unresolved": []}
+    return bundle, graph
+
+
+def test_single_video_policy_requires_a_linear_chain():
+    bundle, graph = policy_fixture()
+    requirements = {"single_video": {"chain": "linear", "start_role": "approach",
+                                     "add_approach_when_unobserved": True},
+                    "task_policy": {"forbidden_roles": ["release", "place"]}}
+    assert validate(graph, bundle, requirements)["rule_only_skills"] == ["S1"]
+    # 单视频不画条件分支
+    bad = deepcopy(graph)
+    bad["relations"][0].update(relation="branch", guard="条件", guard_truth="U", gate_outcome="F")
+    with pytest.raises(ValueError, match="单个视频只画一条链"):
+        validate(bad, bundle, requirements)
+    # 起点必须是靠近
+    bad = deepcopy(graph)
+    bad["relations"] = [r for r in bad["relations"] if r["from"] != "S1"]
+    with pytest.raises(ValueError, match="第一个技能应为|起点"):
+        validate(bad, bundle, requirements)
+    # 释放/放置超出任务范围
+    bad = deepcopy(graph)
+    release = deepcopy(bad["nodes"][-1])
+    release.update(id="S6", name="释放", role="release", evidence_refs=[8])
+    release["R"] = [{"id": "R_S6", "name": "释放实现", "operation_refs": ["step_8"], "atomic_refs": [8], "status": "observed"}]
+    bundle["atomic"]["atomic_actions"].append({"id": 8, "start": 7, "end": 8})
+    bundle["operations"]["nodes"].append({"id": "step_8", "name": "释放红笔", "atomic_refs": [8]})
+    bad["nodes"].append(release)
+    bad["relations"].append({"from": "S5", "to": "S6", "relation": "sequence",
+                             "basis": "observed_order", "source_refs": [7, 8],
+                             "status": "observed", "reason": "任务后放开"})
+    with pytest.raises(ValueError, match="任务范围 policy 禁止"):
+        validate(bad, bundle, requirements)
+
+
+def test_gcase_renders_gate_to_clearance_only_in_a_single_video():
+    bundle, graph = policy_fixture()
+    template = svg(graph, name="抓取1", operations=bundle["operations"])
+    import re
+    edges = re.findall(r'data-from="([^"]+)" data-to="([^"]+)"', template)
+    gate_to = {b for a, b in edges if a.startswith("__gate_")}
+    # 单视频：每个门控只有一条出边，且不去抓取之外凭空分支
+    assert len([a for a, _ in edges if a.startswith("__gate_")]) == len(gate_to)
+    assert "抓取" in template

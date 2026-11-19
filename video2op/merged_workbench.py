@@ -9,7 +9,7 @@ import xml.etree.ElementTree as ET
 from copy import deepcopy
 from pathlib import Path
 
-from .case_outputs import safe_name
+from .single_video.case_outputs import safe_name
 from .model_contrastive_review import analyze as analyze_contrastive
 from .model_contrastive_review import load_review
 from .model_merged_graph import analyze, load_model_graph

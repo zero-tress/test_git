@@ -13,8 +13,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from video2op import graph, media, semantic
 from video2op.llm import VLMClient
-from video2op.pipeline import build_operation_graph
-from video2op.stages import s02b_atomic, s02b_merge, s02c_task, s06_validate
+from video2op.single_video.pipeline import build_operation_graph
+from video2op.single_video.stages import s02b_atomic, s02b_merge, s02c_task, s06_validate
 
 
 def main() -> None:

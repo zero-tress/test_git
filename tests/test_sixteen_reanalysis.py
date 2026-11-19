@@ -45,8 +45,8 @@ def test_analysis_cannot_use_an_unapproved_model_endpoint(monkeypatch):
 
 
 def test_task_validation_feedback_names_the_invalid_node_and_allowed_functions():
-    from video2op.stages.common import ValidationFailure
-    from video2op.stages.s02c_task import _validate
+    from video2op.single_video.stages.common import ValidationFailure
+    from video2op.single_video.stages.s02c_task import _validate
 
     payload = {
         "task_nodes": [

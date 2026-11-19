@@ -264,17 +264,17 @@ def catalog():
 
 
 def export(bundle: dict, out: Path, *, export_clips: bool = True, clip_padding: float = .25, cache_dir=None) -> None:
-    from .case_outputs import export_metadata
+    from .single_video.case_outputs import export_metadata
     export_metadata(bundle, out)
-    from .case_outputs import export_case_clips
+    from .single_video.case_outputs import export_case_clips
     export_case_clips(bundle, out, enabled=export_clips, padding=clip_padding, cache_dir=cache_dir)
     from .skill_episodes import export_clips as export_episode_clips
     export_episode_clips(bundle, out, enabled=export_clips)
-    from .case_outputs import attach_classified_clips
+    from .single_video.case_outputs import attach_classified_clips
     attach_classified_clips(out)
     from .semantic_interface import export as export_interface
     export_interface(bundle, out)
-    from .case_graph import export as export_case_graph
+    from .single_video.case_graph import export as export_case_graph
     export_case_graph(bundle, out)
 
 
@@ -286,7 +286,7 @@ def render(bundle: dict, out: Path) -> None:
     original_render.render_operations(bundle, out)
     data = workbench.build(out, bundle=bundle)
     page = workbench.render(data)
-    from .case_outputs import clip_panel
+    from .single_video.case_outputs import clip_panel
     panel = clip_panel(out)
     if bundle.get("case_graph") is not None:
         panel += ('<section style="margin:24px;padding:20px;border:1px solid #71977b;border-radius:12px">'
@@ -299,7 +299,7 @@ def render(bundle: dict, out: Path) -> None:
 
 
 def validate(bundle: dict) -> dict:
-    from .stages import s06_validate as v
+    from .single_video.stages import s06_validate as v
     graph = bundle["semantic_graph"]
     checks = [v._check_param_discipline(bundle), v._check_time_sanity(
         (bundle.get("atomic") or {}).get("atomic_actions") or [], float((bundle.get("meta") or {}).get("duration") or 0)),

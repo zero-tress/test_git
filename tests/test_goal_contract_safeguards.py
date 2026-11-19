@@ -34,7 +34,7 @@ def test_invalid_source_graph_cannot_be_hidden_by_valid_cross_video_schema():
 
 
 def test_state_goal_rules_map_without_fabricating_an_observed_opening():
-    from video2op.pipeline import build_learning_graph
+    from video2op.single_video.pipeline import build_learning_graph
     b = scoped_case()
     original = {"id": "open_goal", "name": "打开", "atomic_refs": [], "inferred": True,
                 "tuple": {"X": {"subject": "右手", "parts": ["右手"]}, "O": ["笔"],
@@ -50,7 +50,7 @@ def test_state_goal_rules_map_without_fabricating_an_observed_opening():
 
 
 def test_unobserved_release_proposal_is_preserved_without_inserting_a_release():
-    from video2op.pipeline import build_learning_graph
+    from video2op.single_video.pipeline import build_learning_graph
     b = scoped_case()
     b["atomic"]["atomic_actions"] = [a for a in b["atomic"]["atomic_actions"] if a["id"] < 6]
     b["task_nodes_source"]["task_nodes"] = [n for n in b["task_nodes_source"]["task_nodes"] if n["id"] in {"n1", "n2"}]

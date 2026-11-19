@@ -3,8 +3,8 @@ import pytest
 
 from video2op.arm_hand import function
 from video2op.semantic import catalog
-from video2op.stages.s02b_atomic import _validate
-from video2op.stages.s02c_task import _validate as validate_task
+from video2op.single_video.stages.s02b_atomic import _validate
+from video2op.single_video.stages.s02c_task import _validate as validate_task
 
 
 @pytest.mark.parametrize(

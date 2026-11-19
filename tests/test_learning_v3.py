@@ -6,9 +6,9 @@ import pytest
 import yaml
 
 from video2op import semantic
-from video2op.pipeline import build_learning_graph
-from video2op.stages import s02b_atomic, s02d_link
-from video2op.stages.common import load_prompt
+from video2op.single_video.pipeline import build_learning_graph
+from video2op.single_video.stages import s02b_atomic, s02d_link
+from video2op.single_video.stages.common import load_prompt
 
 
 def fixture():
@@ -154,7 +154,7 @@ def test_state_evidence_survives_pre_task_normalization():
 
 
 def test_public_operation_builder_delivers_semantic_layer():
-    from video2op.pipeline import build_operation_graph
+    from video2op.single_video.pipeline import build_operation_graph
     b = fixture()
     build_operation_graph(b)
     assert b["learning_layer"] == "semantic"

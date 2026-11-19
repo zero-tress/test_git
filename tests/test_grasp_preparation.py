@@ -4,8 +4,8 @@ import pytest
 
 from video2op import grasp_preparation as gp
 from video2op import semantic
-from video2op.pipeline import build_learning_graph
-from video2op.stages.common import atomic_table
+from video2op.single_video.pipeline import build_learning_graph
+from video2op.single_video.stages.common import atomic_table
 
 
 def grasp(before="", source="observed"):

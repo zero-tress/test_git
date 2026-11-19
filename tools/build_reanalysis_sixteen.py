@@ -13,13 +13,13 @@ from zoneinfo import ZoneInfo
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from video2op import semantic
-from video2op.case_outputs import attach_classified_clips
+from video2op.single_video.case_outputs import attach_classified_clips
 from video2op.contrastive_learning import enrich
 from video2op.cross_video_delivery import export as export_legacy
 from video2op.generalized_holdout import explain
 from video2op.knowledge import aggregate, render
 from video2op.learning_tracks import split
-from video2op.pipeline import build_learning_graph
+from video2op.single_video.pipeline import build_learning_graph
 from video2op.skill_clips import save, sha256
 from video2op.task_observations import reference_from_annotation
 from video2op.two_track_delivery import export
@@ -64,7 +64,7 @@ def dense_process_evidence(b, row, run, folder):
     relevant = [e for e in response["events"] if any(w in e["kind"] for w in ["分离", "落", "支撑"])]
     times = [frames[f]["timestamp"] for e in relevant for f in e["evidence_frames"]]
     if times:
-        from video2op.case_outputs import analysis_stamp, safe_name
+        from video2op.single_video.case_outputs import analysis_stamp, safe_name
         from video2op.skill_clips import cut
 
         start = max(0, min(times) - 0.2)

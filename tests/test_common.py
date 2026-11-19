@@ -9,7 +9,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from video2op.stages.common import expand_parts, normalize_force, normalize_part
+from video2op.single_video.stages.common import expand_parts, normalize_force, normalize_part
 
 
 def test_force_role_of_head_part_dropped():

@@ -4,8 +4,8 @@ from copy import deepcopy
 
 import pytest
 
-from video2op.semantic_aggregation import export, validate_conditions, validate_graph
-from video2op.semantic_skill_render import svg
+from video2op.cross_video.semantic_aggregation import export, validate_conditions, validate_graph
+from video2op.presentation.semantic_skill_render import svg
 
 
 def fixture():
@@ -170,3 +170,82 @@ def test_unassigned_instance_requires_reason_instead_of_silent_drop():
         validate_graph(graph, cases, conditions, rules)
     graph["unassigned_members"] = [{"member_ref": "C2:S1", "reason": "暂不归类"}]
     assert validate_graph(graph, cases, conditions, rules)["passed"]
+
+
+def test_rule_only_task_node_requires_entry_policy():
+    cases, conditions, rules, graph = fixture()
+    graph["skills"][0]["role"] = "approach_target"
+    graph["task_nodes"].append({"id": "T0", "skill_id": "K1", "source_members": [],
+                                "occurrence": "rule_only", "reason": "入口政策补初始靠近，无独立来源观察"})
+    graph["relations"] = [{"from": "T0", "to": "T1", "relation": "sequence",
+                           "basis": "inferred_dependency", "reason": "policy entry",
+                           "source_relation_refs": [], "status": "candidate"}]
+    with pytest.raises(ValueError, match="task policy"):
+        validate_graph(graph, cases, conditions, rules)
+    assert validate_graph(graph, cases, conditions, rules,
+                          {"cross_video": {"entry_role": "approach"}})["passed"]
+    graph["task_nodes"][-1]["source_members"] = ["C1:S1"]
+    graph["task_nodes"][-1]["source_members"] = ["C1:S1"]
+    with pytest.raises(ValueError, match="may only claim other rule-only instances"):
+        validate_graph(graph, cases, conditions, rules,
+                       {"cross_video": {"entry_role": "approach"}})
+
+
+def test_relation_rewrite_requires_branch_policy_and_keeps_source_refs():
+    cases, conditions, rules, graph = fixture()
+    second = deepcopy(cases[0]["graph"]["nodes"][0])
+    second["id"] = "S2"
+    cases[0]["graph"]["nodes"].append(second)
+    cases[0]["graph"]["relations"] = [{"from": "S1", "to": "S2", "relation": "sequence", "basis": "observed_order"}]
+    graph["skills"][0]["source_members"].append("C1:S2")
+    graph["realizations"][0]["source_realization_refs"].append("C1:S2:r1")
+    graph["task_nodes"].append({"id": "T2", "skill_id": "K1", "source_members": ["C1:S2"]})
+    graph["relations"] = [{"from": "T1", "to": "T2", "relation": "branch",
+                           "basis": "inferred_dependency", "reason": "condition branch",
+                           "source_relation_refs": ["C1:e0"], "status": "candidate",
+                           "guard": "grasp condition", "guard_truth": "U", "gate_outcome": "F",
+                           "rewrite": {"reason": "prepare only when the condition fails", "policy": "branch_policy"}}]
+    with pytest.raises(ValueError, match="branch policy"):
+        validate_graph(graph, cases, conditions, rules)
+    result = validate_graph(graph, cases, conditions, rules, {"branch_policy": {"mode": "clearance"}})
+    assert result["relation_rewrites"][0]["source_relation_refs"] == ["C1:e0"]
+    bad = deepcopy(graph)
+    bad["relations"][0]["source_relation_refs"] = []
+    with pytest.raises(ValueError, match="retain its source relation refs"):
+        validate_graph(bad, cases, conditions, rules, {"branch_policy": {"mode": "clearance"}})
+
+
+def test_cross_video_merge_requires_one_node_per_skill_occurrence():
+    cases, conditions, rules, graph = fixture()
+    second = deepcopy(cases[0])
+    second.update(case_id="C2", video_uid="video-two")
+    cases.append(second)
+    graph["skills"][0]["source_members"] = ["C1:S1", "C2:S1"]
+    graph["realizations"][0]["source_realization_refs"] = ["C1:S1:r1", "C2:S1:r1"]
+    graph["task_nodes"] = [
+        {"id": "T1", "skill_id": "K1", "source_members": ["C1:S1"]},
+        {"id": "T2", "skill_id": "K1", "source_members": ["C2:S1"]},
+    ]
+    policy = {"semantic_merge_policy": {"share_nodes_across_videos": True}}
+    with pytest.raises(ValueError, match="跨视频合并要求技能"):
+        validate_graph(graph, cases, conditions, rules, policy)
+    graph["task_nodes"] = [{"id": "T1", "skill_id": "K1", "source_members": ["C1:S1", "C2:S1"]}]
+    assert validate_graph(graph, cases, conditions, rules, policy)["passed"]
+
+
+def test_same_video_repeats_stay_separate_under_merge_policy():
+    cases, conditions, rules, graph = fixture()
+    duplicate = deepcopy(cases[0]["graph"]["nodes"][0])
+    duplicate["id"] = "S2"
+    cases[0]["graph"]["nodes"].append(duplicate)
+    cases[0]["atomic"].append({"id": 2})
+    cases[0]["operations"]["nodes"].append({"id": "step_2", "name": "test action"})
+    duplicate["evidence_refs"] = [2]
+    duplicate["R"] = [{"id": "r1", "name": "impl", "operation_refs": ["step_2"],
+                       "atomic_refs": [2], "status": "observed"}]
+    graph["skills"][0]["source_members"] = ["C1:S1", "C1:S2"]
+    graph["realizations"][0]["source_realization_refs"] = ["C1:S1:r1", "C1:S2:r1"]
+    graph["task_nodes"] = [{"id": "T1", "skill_id": "K1", "source_members": ["C1:S1", "C1:S2"]}]
+    policy = {"semantic_merge_policy": {"share_nodes_across_videos": True}}
+    with pytest.raises(ValueError, match="same-video occurrences|同一视频"):
+        validate_graph(graph, cases, conditions, rules, policy)

@@ -8,7 +8,9 @@
 !/archive/experiments/semantic_16_20261107/source_backup/
 !/archive/experiments/semantic_16_20261107/source_backup/**
 /archive/fixtures/*
-/archive/source_backups/
+/archive/source_backups
+/archive/baselines
+/revisions/relocation_methods_20261118
 /archive/logs/
 /archive/maintenance/*.json
 /logs/
@@ -39,3 +41,7 @@ Thumbs.db
 
 # Local agent/runtime state
 /.codewhale/
+
+# Local analysis reports and picture assets (code-only push)
+/task_picture/
+/节点检查报告/

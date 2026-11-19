@@ -5,9 +5,9 @@ from test_arm_hand_scope import example
 
 from video2op import condition_induction, knowledge, learning_alignment, temporal_learning
 from video2op.goal_semantics import contract
-from video2op.pipeline import build_learning_graph
-from video2op.stages import s05_rules, s08_scope
-from video2op.stages.common import ValidationFailure
+from video2op.single_video.pipeline import build_learning_graph
+from video2op.single_video.stages import s05_rules, s08_scope
+from video2op.single_video.stages.common import ValidationFailure
 
 
 def scoped_case(obj="笔", category="pen", goal="acquire_object", uid="video1"):

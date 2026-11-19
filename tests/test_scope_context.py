@@ -3,7 +3,7 @@ from copy import deepcopy
 
 import pytest
 
-from video2op.stages.s08_scope import validate
+from video2op.single_video.stages.s08_scope import validate
 
 
 def fixture():

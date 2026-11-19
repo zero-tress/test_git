@@ -9,7 +9,7 @@ from zoneinfo import ZoneInfo
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from video2op import semantic
-from video2op.case_outputs import export_case_clips
+from video2op.single_video.case_outputs import export_case_clips
 from video2op.cross_video_delivery import export as export_cross
 from video2op.cross_video_delivery import refine
 from video2op.generalized_holdout import explain
